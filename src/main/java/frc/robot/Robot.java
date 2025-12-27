@@ -13,7 +13,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import frc.robot.utilities.HoorayConfig;
 
 import java.io.File;
 
@@ -66,38 +65,38 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    // Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
-    //     if (isReal()) {
-    //         File logFolder = findThumbDir();
-    //         if (logFolder != null) {
-    //             Logger.addDataReceiver(
-    //                     new WPILOGWriter(logFolder.getAbsolutePath())); // Log to a USB stick ("/U/logs")
-    //         }
-    //         Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-    //         Constants.robotMode = Mode.REAL;
-    //         SignalLogger.setPath(logFolder.getAbsolutePath());
-    //     } else if (isSimulation()) {
-    //         Logger.addDataReceiver(new NT4Publisher());
-    //         Constants.robotMode = Mode.SIM;
+    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+        if (isReal()) {
+            File logFolder = findThumbDir();
+            if (logFolder != null) {
+                Logger.addDataReceiver(
+                        new WPILOGWriter(logFolder.getAbsolutePath())); // Log to a USB stick ("/U/logs")
+            }
+            Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+            Constants.robotMode = Mode.REAL;
+            SignalLogger.setPath(logFolder.getAbsolutePath());
+        } else if (isSimulation()) {
+            Logger.addDataReceiver(new NT4Publisher());
+            Constants.robotMode = Mode.SIM;
 
-    //     } else {
-    //         setUseTiming(false); // Run as fast as possible
-    //         String logPath =
-    //                 LogFileUtil
-    //                         .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-    //         Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-    //         Logger.addDataReceiver(
-    //                 new WPILOGWriter(
-    //                         LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-    //         Constants.robotMode = Mode.REPLAY;
-    //     }
+        } else {
+            setUseTiming(false); // Run as fast as possible
+            String logPath =
+                    LogFileUtil
+                            .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+            Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+            Logger.addDataReceiver(
+                    new WPILOGWriter(
+                            LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+            Constants.robotMode = Mode.REPLAY;
+        }
 
-    // // Logger setup complete, start logging
-    // SignalLogger.start();
-    // Logger.recordMetadata("mode", Constants.robotMode.toString());
-    // Logger.recordMetadata("encoderType", HoorayConfig.gimmeConfig().getEncoderType().toString());
-    // Logger.registerURCL(URCL.startExternal());
-    // Logger.start();
+    // Logger setup complete, start logging
+    SignalLogger.start();
+    Logger.recordMetadata("mode", Constants.robotMode.toString());
+    Logger.recordMetadata("encoderType", HoorayConfig.gimmeConfig().getEncoderType().toString());
+    Logger.registerURCL(URCL.startExternal());
+    Logger.start();
   }
 
   /**
@@ -127,7 +126,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    // Logger.recordOutput("Auto", m_robotContainer.getAutoName(m_autonomousCommand));
+    Logger.recordOutput("Auto", m_robotContainer.getAutoName(m_autonomousCommand));
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
