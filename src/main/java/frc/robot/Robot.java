@@ -4,19 +4,55 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utilities.HoorayConfig;
+
+import java.io.File;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the Main.java file in the project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+
+  /**
+   * Finds a suitable directory for logging data.
+   */
+  private File findThumbDir() {
+      // First checks if /media contains any writable "logs" directories on flash drives
+      File f = new File("/media");
+      for (File kid : f.listFiles()) {
+          File logs = new File(kid, "logs");
+          if (logs.exists() && logs.canWrite()) {
+              Logger.recordMetadata("Logging On:", "Flash Drive");
+              return logs;
+          } else if (logs.mkdir()) {
+              Logger.recordMetadata("Logging On:", "Flash Drive");
+              return logs;
+          }
+      }
+      // If no flash drive found, logs to the robot's internal storage
+      File homeDir = new File("/home/lvuser/logs");
+      if (homeDir.exists() || homeDir.mkdir()) {
+          Logger.recordMetadata("Logging On:", "Robot");
+          return homeDir;
+      } else {
+          Logger.recordMetadata("Logging On:", "Nothing");
+          return null;
+      }
+  }
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -26,6 +62,42 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+  }
+
+  @Override
+  public void robotInit() {
+    Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
+        if (isReal()) {
+            File logFolder = findThumbDir();
+            if (logFolder != null) {
+                Logger.addDataReceiver(
+                        new WPILOGWriter(logFolder.getAbsolutePath())); // Log to a USB stick ("/U/logs")
+            }
+            Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+            Constants.robotMode = Mode.REAL;
+            SignalLogger.setPath(logFolder.getAbsolutePath());
+        } else if (isSimulation()) {
+            Logger.addDataReceiver(new NT4Publisher());
+            Constants.robotMode = Mode.SIM;
+
+        } else {
+            setUseTiming(false); // Run as fast as possible
+            String logPath =
+                    LogFileUtil
+                            .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+            Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+            Logger.addDataReceiver(
+                    new WPILOGWriter(
+                            LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+            Constants.robotMode = Mode.REPLAY;
+        }
+
+    // Logger setup complete, start logging
+    SignalLogger.start();
+    Logger.recordMetadata("mode", Constants.robotMode.toString());
+    Logger.recordMetadata("encoderType", HoorayConfig.gimmeConfig().getEncoderType().toString());
+    Logger.registerURCL(URCL.startExternal());
+    Logger.start();
   }
 
   /**
@@ -55,7 +127,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    Logger.recordOutput("Auto", m_robotContainer.getAutoName(m_autonomousCommand));
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
