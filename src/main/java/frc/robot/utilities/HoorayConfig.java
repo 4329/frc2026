@@ -7,7 +7,7 @@ import frc.robot.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import org.apache.commons.io.FileUtils;
+import java.nio.file.Files;
 
 public class HoorayConfig {
 
@@ -34,7 +34,7 @@ public class HoorayConfig {
 
         try {
 
-            String json = FileUtils.readFileToString(configFile, Charset.defaultCharset());
+            String json = Files.readString(configFile.toPath(), Charset.defaultCharset()); // TODO: Check that this works.
 
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(json, Config.class);
