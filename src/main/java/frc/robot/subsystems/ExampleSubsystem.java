@@ -4,10 +4,16 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class ExampleSubsystem extends SubsystemBase implements LoggedSubsystem{
+
+  private ExampleSubsystemAutoLogged exampleSubsystemAutoLogged = new ExampleSubsystemAutoLogged();
+
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {}
 
@@ -43,5 +49,11 @@ public class ExampleSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  @Override
+  public LoggableInputs log() {
+    exampleSubsystemAutoLogged.exampleValue = 6.7;
+    return exampleSubsystemAutoLogged;
   }
 }
