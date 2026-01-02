@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.Map;
 
+import org.littletonrobotics.junction.Logger;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -35,6 +37,12 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+  }
+
+  public void robotPeriodic() {
+    // Log driver controller inputs
+    Logger.recordOutput("Controller/Driver/LeftX", driverController.getLeftX());
+    Logger.recordOutput("Controller/Driver/AButton", driverController.a().getAsBoolean());
   }
 
   /**
