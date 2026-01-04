@@ -9,10 +9,11 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
+import frc.robot.model.ExampleSubsystemLogAutoLogged;
 
-public class ExampleSubsystem extends SubsystemBase implements LoggedSubsystem{
+public class ExampleSubsystem extends SubsystemBase implements LoggedSubsystem { 
 
-  private ExampleSubsystemAutoLogged exampleSubsystemAutoLogged = new ExampleSubsystemAutoLogged();
+  private ExampleSubsystemLogAutoLogged exampleSubsystemAutoLogged = new ExampleSubsystemLogAutoLogged();
 
   /** Creates a new ExampleSubsystem. */
   public ExampleSubsystem() {}
