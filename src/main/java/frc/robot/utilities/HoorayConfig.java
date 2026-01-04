@@ -34,7 +34,7 @@ public class HoorayConfig {
 
         try {
 
-            String json = Files.readString(configFile.toPath(), Charset.defaultCharset()); // TODO: Check that this works.
+            String json = Files.readString(configFile.toPath(), Charset.defaultCharset());
 
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(json, Config.class);
