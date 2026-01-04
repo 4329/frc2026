@@ -67,6 +67,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
+    // Set up Logger
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
         if (isReal()) {
             File logFolder = findThumbDir();
