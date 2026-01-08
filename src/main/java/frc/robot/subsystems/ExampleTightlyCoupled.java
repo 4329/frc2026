@@ -16,7 +16,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import frc.robot.model.ExampleSubsystemLogAutoLogged;
+import frc.robot.model.TightlyCoupledLog;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -48,7 +48,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ExampleTightlyCoupled extends SubsystemBase implements LoggedSubsystem { 
 
   // Create an instance of the log model
-  private ExampleSubsystemLogAutoLogged exampleSubsystemAutoLogged = new ExampleSubsystemLogAutoLogged();
+  private TightlyCoupledLog tightlyCoupledAutoLogged = new TightlyCoupledLog();
 
     // Example SmartMotorControllerConfig setup
     private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
@@ -153,7 +153,7 @@ public class ExampleTightlyCoupled extends SubsystemBase implements LoggedSubsys
   /**
  * Updates and returns the loggable inputs for this subsystem.
  * <p>
- * This method populates the {@link ExampleSubsystemLogAutoLogged} instance with current
+ * This method populates the {@link TightlyCoupledLog} instance with current
  * subsystem data (e.g., setting {@code exampleValue} to 6.7) and returns it for logging purposes.
  * It is required by the {@link LoggedSubsystem} interface to ensure telemetry data is recorded every loop.
  *
@@ -161,7 +161,7 @@ public class ExampleTightlyCoupled extends SubsystemBase implements LoggedSubsys
  */
   @Override
   public LoggableInputs log() {
-    exampleSubsystemAutoLogged.exampleValue = 6.7;
-    return exampleSubsystemAutoLogged;
+    tightlyCoupledAutoLogged.speed = 6.7;
+    return tightlyCoupledAutoLogged;
   }
 }
