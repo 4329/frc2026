@@ -48,45 +48,45 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ExampleTightlyCoupled extends SubsystemBase implements LoggedSubsystem { 
 
   // Create an instance of the log model
-  private TightlyCoupledLog tightlyCoupledAutoLogged = new TightlyCoupledLog();
+  private final TightlyCoupledLog tightlyCoupledAutoLogged = new TightlyCoupledLog();
 
-    // Example SmartMotorControllerConfig setup
-    private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
-    .withControlMode(ControlMode.CLOSED_LOOP)
-    .withClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-    .withSimClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-    // Feedforward Constants
-    .withFeedforward(new SimpleMotorFeedforward(0, 0, 0)) // No feedforward
-    .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0)) // No feedforward
-    // Telemetry name and verbosity level
-    .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
-    // Gearing from the motor rotor to final shaft.
-    // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
-    // You could also use .withGearing(12) which does the same thing.
-    .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
-    // Motor properties to prevent over currenting.
-    .withMotorInverted(false)
-    .withIdleMode(MotorMode.COAST)
-    .withStatorCurrentLimit(Amps.of(40));
-    
-    // Vendor motor controller object
-    private SparkMax spark = new SparkMax(4, MotorType.kBrushless);
+  // Example SmartMotorControllerConfig setup
+  private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
+  .withControlMode(ControlMode.CLOSED_LOOP)
+  .withClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withSimClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  // Feedforward Constants
+  .withFeedforward(new SimpleMotorFeedforward(0, 0, 0)) // No feedforward
+  .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0)) // No feedforward
+  // Telemetry name and verbosity level
+  .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+  // Gearing from the motor rotor to final shaft.
+  // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
+  // You could also use .withGearing(12) which does the same thing.
+  .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+  // Motor properties to prevent over currenting.
+  .withMotorInverted(false)
+  .withIdleMode(MotorMode.COAST)
+  .withStatorCurrentLimit(Amps.of(40));
+  
+  // Vendor motor controller object
+  private SparkMax spark = new SparkMax(4, MotorType.kBrushless);
 
-    // Create our SmartMotorController from our Spark and config with the NEO.
-    private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
+  // Create our SmartMotorController from our Spark and config with the NEO.
+  private SmartMotorController sparkSmartMotorController = new SparkWrapper(spark, DCMotor.getNEO(1), smcConfig);
 
-    private final FlyWheelConfig shooterConfig = new FlyWheelConfig(sparkSmartMotorController)
-    // Diameter of the flywheel.
-    .withDiameter(Inches.of(4))
-    // Mass of the flywheel.
-    .withMass(Pounds.of(1))
-    // Maximum speed of the shooter.
-    .withUpperSoftLimit(RPM.of(1000))
-    // Telemetry name and verbosity for the arm.
-    .withTelemetry("ShooterMech", TelemetryVerbosity.HIGH);
+  private final FlyWheelConfig shooterConfig = new FlyWheelConfig(sparkSmartMotorController)
+  // Diameter of the flywheel.
+  .withDiameter(Inches.of(4))
+  // Mass of the flywheel.
+  .withMass(Pounds.of(1))
+  // Maximum speed of the shooter.
+  .withUpperSoftLimit(RPM.of(1000))
+  // Telemetry name and verbosity for the arm.
+  .withTelemetry("ShooterMech", TelemetryVerbosity.HIGH);
 
-    // Shooter Mechanism
-    private FlyWheel shooter = new FlyWheel(shooterConfig);
+  // Shooter Mechanism
+  private FlyWheel shooter = new FlyWheel(shooterConfig);
 
   /** Creates a new ExampleSubsystem. */
   public ExampleTightlyCoupled() {}
@@ -161,7 +161,7 @@ public class ExampleTightlyCoupled extends SubsystemBase implements LoggedSubsys
  */
   @Override
   public LoggableInputs log() {
-    tightlyCoupledAutoLogged.speed = 6.7;
+    tightlyCoupledAutoLogged.speed = getVelocity().magnitude();
     return tightlyCoupledAutoLogged;
   }
 }
