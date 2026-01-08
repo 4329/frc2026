@@ -5,19 +5,16 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ExampleShooter;
-
 import static edu.wpi.first.units.Units.RPM;
-
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
+/** A Shoot command that uses the ExampleShooter subsystem. */
 public class Shoot extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ExampleShooter m_subsystem;
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new Shoot command.
    *
    * @param subsystem The subsystem used by this command.
    */

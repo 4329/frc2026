@@ -82,7 +82,7 @@ public class ExampleShooter extends SubsystemBase implements LoggedSubsystem {
   // Shooter Mechanism
   private FlyWheel shooter = new FlyWheel(shooterConfig);
 
-  /** Creates a new ExampleSubsystem. */
+  /** Creates a new ExampleShooter subsystem. */
   public ExampleShooter() {}
 
   /**
