@@ -16,28 +16,22 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import frc.robot.model.TightlyCoupledLog;
+import frc.robot.model.TightlyCoupledLogAutoLogged;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RPM;
 
-import yams.mechanisms.SmartMechanism;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 
-
-
-import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Pounds;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import yams.motorcontrollers.SmartMotorController;
@@ -48,7 +42,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ExampleTightlyCoupled extends SubsystemBase implements LoggedSubsystem { 
 
   // Create an instance of the log model
-  private final TightlyCoupledLog tightlyCoupledAutoLogged = new TightlyCoupledLog();
+  private final TightlyCoupledLogAutoLogged tightlyCoupledAutoLogged = new TightlyCoupledLogAutoLogged();
 
   // Example SmartMotorControllerConfig setup
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
@@ -153,7 +147,7 @@ public class ExampleTightlyCoupled extends SubsystemBase implements LoggedSubsys
   /**
  * Updates and returns the loggable inputs for this subsystem.
  * <p>
- * This method populates the {@link TightlyCoupledLog} instance with current
+ * This method populates the {@link TightlyCoupledLogAutoLogged} instance with current
  * subsystem data (e.g., setting {@code exampleValue} to 6.7) and returns it for logging purposes.
  * It is required by the {@link LoggedSubsystem} interface to ensure telemetry data is recorded every loop.
  *
