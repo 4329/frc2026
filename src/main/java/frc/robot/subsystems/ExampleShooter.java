@@ -148,7 +148,7 @@ public class ExampleShooter extends SubsystemBase implements LoggedSubsystem {
  * Updates and returns the loggable inputs for this subsystem.
  * <p>
  * This method populates the {@link ShooterLogAutoLogged} instance with current
- * subsystem data (e.g., setting {@code exampleValue} to 6.7) and returns it for logging purposes.
+ * subsystem data returns it for logging purposes.
  * It is required by the {@link LoggedSubsystem} interface to ensure telemetry data is recorded every loop.
  *
  * @return The updated {@link LoggableInputs} object containing the current state of the subsystem.
