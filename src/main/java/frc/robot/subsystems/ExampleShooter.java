@@ -155,7 +155,7 @@ public class ExampleShooter extends SubsystemBase implements LoggedSubsystem {
  */
   @Override
   public LoggableInputs log() {
-    tightlyCoupledAutoLogged.speed = getVelocity().magnitude();
+    tightlyCoupledAutoLogged.speed = getVelocity();
     return tightlyCoupledAutoLogged;
   }
 }

@@ -1,5 +1,8 @@
 package frc.robot.model;
+
+import static edu.wpi.first.units.Units.RPM;
 import org.littletonrobotics.junction.AutoLog;
+import edu.wpi.first.units.measure.AngularVelocity;
 
 /**
  * The ExampleSubsystemLog class is a data model used for logging purposes in the robot code.
@@ -15,5 +18,5 @@ import org.littletonrobotics.junction.AutoLog;
  */
 @AutoLog
 public class ShooterLog {
-    public double speed = 0;
+    public AngularVelocity speed = RPM.of(0);
 }
