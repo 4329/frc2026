@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ExampleTightlyCoupled;
+import frc.robot.subsystems.ExampleShooter;
 
 import static edu.wpi.first.units.Units.RPM;
 
@@ -14,14 +14,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class Shoot extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ExampleTightlyCoupled m_subsystem;
+  private final ExampleShooter m_subsystem;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public Shoot(ExampleTightlyCoupled subsystem) {
+  public Shoot(ExampleShooter subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

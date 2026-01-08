@@ -14,6 +14,6 @@ import org.littletonrobotics.junction.AutoLog;
  * other subsystem-specific data. A new model should be created for each subsystem.
  */
 @AutoLog
-public class TightlyCoupledLog {
+public class ShooterLog {
     public double speed = 0;
 }
