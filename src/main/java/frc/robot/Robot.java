@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Mode;
 import com.ctre.phoenix6.SignalLogger;
-import frc.robot.utilities.HoorayConfig;
+// import frc.robot.utilities.HoorayConfig;
 import java.io.File;
 
 /**
@@ -105,7 +105,7 @@ public class Robot extends LoggedRobot {
     // Logger setup complete, start logging
     SignalLogger.start();
     Logger.recordMetadata("mode", Constants.robotMode.toString());
-    Logger.recordMetadata("encoderType", HoorayConfig.gimmeConfig().getEncoderType().toString());
+    // Logger.recordMetadata("encoderType", HoorayConfig.gimmeConfig().getEncoderType().toString());
     Logger.registerURCL(URCL.startExternal());
     Logger.start();
   }

@@ -6,7 +6,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import frc.robot.utilities.HoorayConfig;
+// import frc.robot.utilities.HoorayConfig;
 
 /** Static method containing all constant values for the robot in one location */
 public final class Constants {
@@ -28,59 +28,59 @@ public final class Constants {
                 12.0; // Sets a voltage compensation value ideally 12.0V
         public static final double kLoopTime = 20.0;
 
-        public static final int kFrontLeftDriveMotorPort =
-                (HoorayConfig.gimmeConfig().getFrontLeftDriveMotorPort()); // CANID of the
-        // Translation
-        // SparkMAX
-        public static final int kFrontRightDriveMotorPort =
-                (HoorayConfig.gimmeConfig().getFrontRightDriveMotorPort()); // CANID of the
-        // Translation
-        // SparkMAX
-        public static final int kBackLeftDriveMotorPort =
-                (HoorayConfig.gimmeConfig().getBackLeftDriveMotorPort()); // CANID of the
-        // Translation
-        // SparkMAX
-        public static final int kBackRightDriveMotorPort =
-                (HoorayConfig.gimmeConfig().getBackRightDriveMotorPort()); // CANID of the
-        // Translation
-        // SparkMAX
-        public static final int kFrontLeftTurningMotorPort =
-                (HoorayConfig.gimmeConfig().getFrontLeftTurningMotorPort()); // CANID of
-        // the
-        // Rotation
-        // SparkMAX
-        public static final int kFrontRightTurningMotorPort =
-                (HoorayConfig.gimmeConfig().getFrontRightTurningMotorPort()); // CANID of
-        // the
-        // Rotation
-        // SparkMAX
-        public static final int kBackLeftTurningMotorPort =
-                (HoorayConfig.gimmeConfig().getBackLeftTurningMotorPort()); // CANID of the
-        // Rotation
-        // SparkMAX
-        public static final int kBackRightTurningMotorPort =
-                (HoorayConfig.gimmeConfig().getBackRightTurningMotorPort()); // CANID of
-        // the
-        // Rotation
-        // SparkMAX
+        // public static final int kFrontLeftDriveMotorPort =
+        //         (HoorayConfig.gimmeConfig().getFrontLeftDriveMotorPort()); // CANID of the
+        // // Translation
+        // // SparkMAX
+        // public static final int kFrontRightDriveMotorPort =
+        //         (HoorayConfig.gimmeConfig().getFrontRightDriveMotorPort()); // CANID of the
+        // // Translation
+        // // SparkMAX
+        // public static final int kBackLeftDriveMotorPort =
+        //         (HoorayConfig.gimmeConfig().getBackLeftDriveMotorPort()); // CANID of the
+        // // Translation
+        // // SparkMAX
+        // public static final int kBackRightDriveMotorPort =
+        //         (HoorayConfig.gimmeConfig().getBackRightDriveMotorPort()); // CANID of the
+        // // Translation
+        // // SparkMAX
+        // public static final int kFrontLeftTurningMotorPort =
+        //         (HoorayConfig.gimmeConfig().getFrontLeftTurningMotorPort()); // CANID of
+        // // the
+        // // Rotation
+        // // SparkMAX
+        // public static final int kFrontRightTurningMotorPort =
+        //         (HoorayConfig.gimmeConfig().getFrontRightTurningMotorPort()); // CANID of
+        // // the
+        // // Rotation
+        // // SparkMAX
+        // public static final int kBackLeftTurningMotorPort =
+        //         (HoorayConfig.gimmeConfig().getBackLeftTurningMotorPort()); // CANID of the
+        // // Rotation
+        // // SparkMAX
+        // public static final int kBackRightTurningMotorPort =
+        //         (HoorayConfig.gimmeConfig().getBackRightTurningMotorPort()); // CANID of
+        // // the
+        // // Rotation
+        // // SparkMAX
 
-        public static final int kFrontLeftTurningEncoderPort =
-                (HoorayConfig.gimmeConfig().getFrontLeftTurningEncoderPort());
-        public static final int kFrontRightTurningEncoderPort =
-                (HoorayConfig.gimmeConfig().getFrontRightTurningEncoderPort());
-        public static final int kBackLeftTurningEncoderPort =
-                (HoorayConfig.gimmeConfig().getBackLeftTurningEncoderPort());
-        public static final int kBackRightTurningEncoderPort =
-                (HoorayConfig.gimmeConfig().getBackRightTurningEncoderPort());
+        // public static final int kFrontLeftTurningEncoderPort =
+        //         (HoorayConfig.gimmeConfig().getFrontLeftTurningEncoderPort());
+        // public static final int kFrontRightTurningEncoderPort =
+        //         (HoorayConfig.gimmeConfig().getFrontRightTurningEncoderPort());
+        // public static final int kBackLeftTurningEncoderPort =
+        //         (HoorayConfig.gimmeConfig().getBackLeftTurningEncoderPort());
+        // public static final int kBackRightTurningEncoderPort =
+        //         (HoorayConfig.gimmeConfig().getBackRightTurningEncoderPort());
 
-        public static final double kFrontLeftOffset =
-                HoorayConfig.gimmeConfig().getFrontLeftOffset(); // Encoder Offset in Radians
-        public static final double kFrontRightOffset =
-                HoorayConfig.gimmeConfig().getFrontRightOffset(); // Encoder Offset in Radians
-        public static final double kBackLeftOffset =
-                HoorayConfig.gimmeConfig().getBackLeftOffset(); // Encoder Offset in Radians
-        public static final double kBackRightOffset =
-                HoorayConfig.gimmeConfig().getBackRightOffset(); // Encoder Offset in Radians
+        // public static final double kFrontLeftOffset =
+        //         HoorayConfig.gimmeConfig().getFrontLeftOffset(); // Encoder Offset in Radians
+        // public static final double kFrontRightOffset =
+        //         HoorayConfig.gimmeConfig().getFrontRightOffset(); // Encoder Offset in Radians
+        // public static final double kBackLeftOffset =
+        //         HoorayConfig.gimmeConfig().getBackLeftOffset(); // Encoder Offset in Radians
+        // public static final double kBackRightOffset =
+        //         HoorayConfig.gimmeConfig().getBackRightOffset(); // Encoder Offset in Radians
 
         public static final double[] kFrontLeftTuningVals = {0.0150, 0.2850, 0.25, 0};
         public static final double[] kFrontRightTuningVals = {0.0150, 0.2850, 0.25, 1};
