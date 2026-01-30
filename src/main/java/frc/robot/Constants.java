@@ -28,6 +28,11 @@ public final class Constants {
                 12.0; // Sets a voltage compensation value ideally 12.0V
         public static final double kLoopTime = 20.0;
 
+        public static double kMaxSpeedMultiplier = 1.0;
+        public static double kMaxAngularRotationsPerSecond = 0.75;
+
+        public static final double kFieldCentricSeedAngleDegrees = 180;
+
         // public static final int kFrontLeftDriveMotorPort =
         //         (HoorayConfig.gimmeConfig().getFrontLeftDriveMotorPort()); // CANID of the
         // // Translation

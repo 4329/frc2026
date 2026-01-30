@@ -18,6 +18,8 @@ import org.littletonrobotics.urcl.URCL;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.LoggingSubsystem;
+
 import com.ctre.phoenix6.SignalLogger;
 // import frc.robot.utilities.HoorayConfig;
 import java.io.File;
@@ -30,7 +32,9 @@ import java.io.File;
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer;
+
+  private LoggingSubsystem m_LoggingSubsystem;
 
   private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
         .withTimestampReplay()
@@ -75,6 +79,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
+    m_robotContainer = new RobotContainer();
+
+
+    m_LoggingSubsystem = new LoggingSubsystem(m_robotContainer.drivetrain);
+
     // Set up Logger
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
         if (isReal()) {
