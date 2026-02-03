@@ -4,73 +4,123 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.Shoot;
-import frc.robot.subsystems.ExampleShooter;
+import static edu.wpi.first.units.Units.*;
+
 import java.util.HashMap;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.Map;
 
 import org.littletonrobotics.junction.Logger;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.Drive5mAuto;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.PositionSpinNEO550Command;
+import frc.robot.commands.VoltageSpinNEO550Command;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
+
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleShooter exampleTightlyCoupled = new ExampleShooter();
+    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController driverController =
-      new CommandXboxController(OIConstants.kDriverControllerPort);
+    /* Setting up bindings for necessary control of the swerve drive platform */
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-  Map<Command, PathPlannerAuto> autoName = new HashMap<>();
+    private boolean isFieldCentric = true;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-  }
+    private final Telemetry logger = new Telemetry(MaxSpeed);
 
-  public void robotPeriodic() {
-    // Log driver controller inputs
-    Logger.recordOutput("Controller/Driver/LeftX", driverController.getLeftX());
-    Logger.recordOutput("Controller/Driver/AButton", driverController.a().getAsBoolean());
-  }
+    private final CommandXboxController joystick = new CommandXboxController(Constants.OIConstants.kDriverControllerPort);
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `Shoot` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    driverController.b().whileTrue(new Shoot(exampleTightlyCoupled));
-  }
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(exampleTightlyCoupled);
-  }
+    private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
 
-  public String getAutoName(Command command) {
+    private final Field2d field = new Field2d();
+
+    Map<Command, PathPlannerAuto> autoName = new HashMap<>();
+
+    public RobotContainer() {
+
+        drivetrain.seedFieldCentric(Rotation2d.fromDegrees(180));
+
+        SmartDashboard.putData("Field", field);
+
+        configureBindings();
+    }
+
+    public void robotPeriodic() {
+        // Log driver controller inputs
+        Logger.recordOutput("Controller/Driver/LeftX", joystick.getLeftX());
+        Logger.recordOutput("Controller/Driver/AButton", joystick.a().getAsBoolean());
+
+        field.setRobotPose(drivetrain.getState().Pose);
+
+        Logger.recordOutput("Drivetrain/Pose", drivetrain.getState().Pose);
+        Logger.recordOutput("Drivetrain/Speeds", new double[] {
+            drivetrain.getState().Speeds.vxMetersPerSecond,
+            drivetrain.getState().Speeds.vyMetersPerSecond,
+            drivetrain.getState().Speeds.omegaRadiansPerSecond
+        });
+    }
+
+
+
+    private void configureBindings() {
+        // Note that X is defined as forward according to WPILib convention,
+        // and Y is defined as to the left according to WPILib convention.
+        drivetrain.setDefaultCommand(new DriveCommand(drivetrain, joystick::getLeftX, joystick::getLeftY, joystick::getRightX, () -> isFieldCentric, MaxSpeed, MaxAngularRate));
+
+        // Idle while the robot is disabled. This ensures the configured
+        // neutral mode is applied to the drive motors while disabled.
+        final var idle = new SwerveRequest.Idle();
+        RobotModeTriggers.disabled().whileTrue(
+            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+        );
+
+        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // joystick.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+
+        joystick.a().onTrue(new PositionSpinNEO550Command(spinner, 0.0));
+        joystick.b().onTrue(new PositionSpinNEO550Command(spinner, 20.0));
+        joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
+        joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
+
+        joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
+
+
+        // Run SysId routines when holding back/start and X/Y.
+        // Note that each routine should be run exactly once in a single log.
+        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        // Reset the field-centric heading on left bumper press.
+        drivetrain.registerTelemetry(logger::telemeterize);                         
+    }
+
+    public Command getAutonomousCommand() {
+        return Drive5mAuto.create(drivetrain);
+    }
+
+    public String getAutoName(Command command) {
     return autoName.containsKey(command) ? autoName.get(command).getName() : "Nothing?????/?///?";
-}
+    }
 }

@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.HootAutoReplay;
+
+import edu.wpi.first.wpilibj.TimedRobot;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -14,8 +18,10 @@ import org.littletonrobotics.urcl.URCL;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Mode;
+import frc.robot.subsystems.LoggingSubsystem;
+
 import com.ctre.phoenix6.SignalLogger;
-import frc.robot.utilities.HoorayConfig;
+// import frc.robot.utilities.HoorayConfig;
 import java.io.File;
 
 /**
@@ -26,7 +32,13 @@ import java.io.File;
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer;
+
+  private LoggingSubsystem m_LoggingSubsystem;
+
+  private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
+        .withTimestampReplay()
+        .withJoystickReplay();
 
   /**
    * Finds a suitable directory for logging data.
@@ -67,6 +79,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
+    m_robotContainer = new RobotContainer();
+
+
+    m_LoggingSubsystem = new LoggingSubsystem(m_robotContainer.drivetrain);
+
     // Set up Logger
     Logger.recordMetadata("ProjectName", "MyProject"); // Set a metadata value
         if (isReal()) {
@@ -97,7 +114,7 @@ public class Robot extends LoggedRobot {
     // Logger setup complete, start logging
     SignalLogger.start();
     Logger.recordMetadata("mode", Constants.robotMode.toString());
-    Logger.recordMetadata("encoderType", HoorayConfig.gimmeConfig().getEncoderType().toString());
+    // Logger.recordMetadata("encoderType", HoorayConfig.gimmeConfig().getEncoderType().toString());
     Logger.registerURCL(URCL.startExternal());
     Logger.start();
   }
@@ -111,6 +128,7 @@ public class Robot extends LoggedRobot {
    */
   @Override
   public void robotPeriodic() {
+    m_timeAndJoystickReplay.update();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -130,7 +148,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     Logger.recordOutput("Auto", m_robotContainer.getAutoName(m_autonomousCommand));
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
