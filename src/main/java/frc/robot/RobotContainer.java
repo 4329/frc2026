@@ -116,8 +116,8 @@ public class RobotContainer {
             System.out.println("Distance: " + vision.getTargetDistance());
     
             // Check raw Limelight data
-            System.out.println("LL TV: " + LimelightHelpers.getTV("limelight"));
-            System.out.println("LL TX: " + LimelightHelpers.getTX("limelight"));
+            System.out.println("LL TV: " + LimelightHelpers.getTV("limelight-swerve"));
+            System.out.println("LL TX: " + LimelightHelpers.getTX("limelight-swerve"));
         }));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

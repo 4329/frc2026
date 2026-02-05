@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 public class FollowAprilTagCommand extends Command {
     private final VisionSubsystem vision;
@@ -15,89 +17,100 @@ public class FollowAprilTagCommand extends Command {
     private final PIDController forwardController;
     private final PIDController rotationController;
     
+    private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric()
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    
+    private int framesWithoutTarget = 0;
+    private static final int MAX_FRAMES_WITHOUT_TARGET = 10; // 0.2 seconds at 50Hz
+    
     public FollowAprilTagCommand(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain) {
         this.vision = vision;
         this.drivetrain = drivetrain;
         
-        // Create PID controllers for robot movement
-        this.forwardController = new PIDController(
-            VisionConstants.FOLLOW_KP_TRANSLATION, 0, 0
-        );
-        this.rotationController = new PIDController(
-            VisionConstants.FOLLOW_KP_ROTATION, 0, 0
-        );
+        // Increased gains for faster movement
+        this.forwardController = new PIDController(1.2, 0, 0);  // Increased for faster translation
+        this.rotationController = new PIDController(0.15, 0, 0); // Increased for much faster rotation
         
-        // Set rotation controller to be continuous (wraps around at +/- 180°)
         rotationController.enableContinuousInput(-180, 180);
-        rotationController.setTolerance(VisionConstants.ANGLE_TOLERANCE);
+        rotationController.setTolerance(2.0);
         
         addRequirements(vision, drivetrain);
     }
     
     @Override
     public void initialize() {
-        // Reset PID controllers
         forwardController.reset();
         rotationController.reset();
-        System.out.println("FollowAprilTag command initialized");
+        framesWithoutTarget = 0;
+        System.out.println("FollowAprilTag - STARTED");
     }
     
     @Override
     public void execute() {
-        // Check if we have a target
-        boolean hasTarget = vision.hasTarget();
-        SmartDashboard.putBoolean("FollowTag/HasTarget", hasTarget);
-        
-        if (!hasTarget) {
-            // No target, stop the robot
-            System.out.println("No target - stopping");
-            drivetrain.setControl(new com.ctre.phoenix6.swerve.SwerveRequest.SwerveDriveBrake());
+        // CRITICAL: If no target, STOP IMMEDIATELY
+        if (!vision.hasTarget()) {
+            framesWithoutTarget++;
+            System.out.println("No target seen - STOPPING - frames without: " + framesWithoutTarget);
+            
+            // Stop all movement immediately
+            driveRequest
+                .withVelocityX(0)
+                .withVelocityY(0)
+                .withRotationalRate(0);
+            drivetrain.setControl(driveRequest);
             return;
         }
         
-        // Get target information
-        double tx = vision.getTargetTX(); // Horizontal offset in degrees
-        double distance = vision.getTargetDistance(); // Distance to tag in meters
+        // Reset counter when we see the target
+        framesWithoutTarget = 0;
         
-        // Calculate speeds using PID controllers
-        double forwardSpeed = forwardController.calculate(distance, VisionConstants.FOLLOW_DISTANCE_METERS);
-        double rotationSpeed = rotationController.calculate(tx, 0); // We want tx to be 0 (centered)
+        double tx = vision.getTargetTX();
+        double distance = vision.getTargetDistance();
         
-        // Print raw PID outputs
-        System.out.printf("TX: %.2f, Dist: %.2f, RawFwd: %.3f, RawRot: %.3f%n", 
+        // Calculate speeds
+        double forwardSpeed = -forwardController.calculate(distance, VisionConstants.FOLLOW_DISTANCE_METERS);
+        double rotationSpeed = -rotationController.calculate(tx, 0);
+        
+        // Smaller deadband for rotation
+        if (Math.abs(tx) < 1.5) {
+            rotationSpeed = 0.0;
+        }
+        
+        // Increased speed limits for faster movement
+        forwardSpeed = MathUtil.clamp(forwardSpeed, -2.0, 2.0);   // Increased from 1.5
+        rotationSpeed = MathUtil.clamp(rotationSpeed, -4.0, 4.0); // Increased from 2.0 for much faster rotation
+        
+        System.out.printf("TX: %.2f, Dist: %.2f, Fwd: %.3f, Rot: %.3f%n", 
             tx, distance, forwardSpeed, rotationSpeed);
         
-        // Very aggressive clamping for testing
-        forwardSpeed = MathUtil.clamp(forwardSpeed, -0.3, 0.3); // Max 0.3 m/s
-        rotationSpeed = MathUtil.clamp(rotationSpeed, -0.5, 0.5); // Max 0.5 rad/s
-        
-        // Print clamped outputs
-        System.out.printf("  Clamped - Fwd: %.3f, Rot: %.3f%n", forwardSpeed, rotationSpeed);
-        
-        // Put on dashboard
         SmartDashboard.putNumber("FollowTag/TX", tx);
         SmartDashboard.putNumber("FollowTag/Distance", distance);
         SmartDashboard.putNumber("FollowTag/ForwardSpeed", forwardSpeed);
         SmartDashboard.putNumber("FollowTag/RotationSpeed", rotationSpeed);
         
-        // Apply speeds to drivetrain using robot-centric control
-        var request = new com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric()
+        driveRequest
             .withVelocityX(forwardSpeed)
-            .withVelocityY(0) // No strafe
+            .withVelocityY(0.0)
             .withRotationalRate(rotationSpeed);
         
-        drivetrain.setControl(request);
+        drivetrain.setControl(driveRequest);
     }
     
     @Override
     public void end(boolean interrupted) {
-        System.out.println("FollowAprilTag command ended");
-        // Stop the robot when command ends
-        drivetrain.setControl(new com.ctre.phoenix6.swerve.SwerveRequest.SwerveDriveBrake());
+        System.out.println("FollowAprilTag ended - interrupted: " + interrupted);
+        
+        // Stop all movement when command ends
+        driveRequest
+            .withVelocityX(0)
+            .withVelocityY(0)
+            .withRotationalRate(0);
+        drivetrain.setControl(driveRequest);
     }
     
     @Override
     public boolean isFinished() {
-        return false;
+        // End command if we haven't seen target for too long
+        return framesWithoutTarget >= MAX_FRAMES_WITHOUT_TARGET;
     }
 }

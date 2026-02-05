@@ -228,11 +228,11 @@ public final class Constants {
 
 
         public static final int TARGET_TAG_ID = 4;
-        public static final double FOLLOW_DISTANCE_METERS = 0.1;
-        public static final double FOLLOW_SPEED = 0.3;
-        public static final double FOLLOW_KP_TRANSLATION = 0.3;
-        public static final double FOLLOW_KP_STRAFE = 2.0;
-        public static final double FOLLOW_KP_ROTATION = 0.05;
+        public static final double FOLLOW_DISTANCE_METERS = 1.5;
+        public static final double FOLLOW_SPEED = 0.5;
+
+        public static final double FOLLOW_KP_TRANSLATION = 0.2;
+        public static final double FOLLOW_KP_ROTATION = 0.02;
 
         public static final double DISTANCE_TOLERANCE = 0.1;
         public static final double ANGLE_TOLERANCE = 2.0;
