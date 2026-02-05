@@ -26,9 +26,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PositionSpinNEO550Command;
+import frc.robot.commands.VolKrakenMotorSpinCommand;
 import frc.robot.commands.VoltageSpinNEO550Command;
+import frc.robot.commands.PosKrakenMotorSpinCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.KrakenMotorSubsystem;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 
 public class RobotContainer {
@@ -50,6 +53,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
+
+    private final KrakenMotorSubsystem motorYes = new KrakenMotorSubsystem();
 
     private final Field2d field = new Field2d();
 
@@ -96,10 +101,15 @@ public class RobotContainer {
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-        joystick.a().onTrue(new PositionSpinNEO550Command(spinner, 0.0));
-        joystick.b().onTrue(new PositionSpinNEO550Command(spinner, 20.0));
-        joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
-        joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
+        //joystick.a().onTrue(new PositionSpinNEO550Command(spinner, 0.0));
+        //joystick.b().onTrue(new PositionSpinNEO550Command(spinner, 20.0));
+        //joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
+        //joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
+
+        joystick.a().onTrue(new PosKrakenMotorSpinCommand(motorYes, 90.0));
+        joystick.b().onTrue(new PosKrakenMotorSpinCommand(motorYes, 0.0));
+        joystick.x().whileTrue(new VolKrakenMotorSpinCommand(motorYes, 12.0));
+        joystick.y().whileTrue(new VolKrakenMotorSpinCommand(motorYes, -0.5));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
