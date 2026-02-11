@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -49,6 +50,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
+
+
+    private final PIDController visionForwardController;
+    private final PIDController visionRotationController;
 
 
     private final DrivetrainLogAutoLogged drivetrainLog = new DrivetrainLogAutoLogged();
@@ -135,6 +140,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, modules);
+
+        visionForwardController = new PIDController(1.2, 0, 0);
+        visionRotationController = new PIDController(0.15, 0, 0);
+        visionRotationController.enableContinuousInput(-180, 180);
+        visionRotationController.setTolerance(2.0);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -159,6 +169,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
+
+        visionForwardController = new PIDController(1.2, 0, 0);
+        visionRotationController = new PIDController(0.15, 0, 0);
+        visionRotationController.enableContinuousInput(-180, 180);
+        visionRotationController.setTolerance(2.0);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -191,6 +206,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
+
+        visionForwardController = new PIDController(1.2, 0, 0);
+        visionRotationController = new PIDController(0.15, 0, 0);
+        visionRotationController.enableContinuousInput(-180, 180);
+        visionRotationController.setTolerance(2.0);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -322,5 +342,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
+    }
+
+    public PIDController getVisionForwardController() {
+        return visionForwardController;
+    }
+
+    public PIDController getVisionRotationController() {
+        return visionRotationController;
+    }
+
+    public void resetVisionControllers() {
+        visionForwardController.reset();
+        visionRotationController.reset();
     }
 }
