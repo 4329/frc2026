@@ -12,6 +12,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -26,12 +27,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PositionSpinNEO550Command;
-import frc.robot.commands.VolKrakenMotorSpinCommand;
+import frc.robot.commands.SetHoodPositionCommand;
 import frc.robot.commands.VoltageSpinNEO550Command;
-import frc.robot.commands.PosKrakenMotorSpinCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.KrakenMotorSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 
 public class RobotContainer {
@@ -54,7 +54,7 @@ public class RobotContainer {
 
     private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
 
-    private final KrakenMotorSubsystem motorYes = new KrakenMotorSubsystem();
+    private final HoodSubsystem hood = new HoodSubsystem();
 
     private final Field2d field = new Field2d();
 
@@ -106,10 +106,17 @@ public class RobotContainer {
         //joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
         //joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
 
-        joystick.a().onTrue(new PosKrakenMotorSpinCommand(motorYes, 90.0));
-        joystick.b().onTrue(new PosKrakenMotorSpinCommand(motorYes, 0.0));
-        joystick.x().whileTrue(new VolKrakenMotorSpinCommand(motorYes, 12.0));
-        joystick.y().whileTrue(new VolKrakenMotorSpinCommand(motorYes, -0.5));
+        // joystick.a().onTrue(new PosHoodSpinCommand(motorYes, 0.25));
+        // joystick.b().onTrue(new PosKrakenMotorSpinCommand(motorYes, 0.0));
+        // joystick.x().whileTrue(new VolHoodSpinCommand(motorYes, 0.5));
+        // joystick.y().whileTrue(new VolHoodSpinCommand(motorYes, -0.5));
+
+        joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.05)); // Minimum position
+        joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.25)); // Mid position
+
+        joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 0.44));
+        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 1.0));
+
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
