@@ -25,11 +25,13 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.PositionSpinNEO550Command;
 import frc.robot.commands.VoltageSpinNEO550Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -48,6 +50,8 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(Constants.OIConstants.kDriverControllerPort);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
 
     private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
 
@@ -100,6 +104,21 @@ public class RobotContainer {
         joystick.b().onTrue(new PositionSpinNEO550Command(spinner, 20.0));
         joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
         joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
+
+        joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
+        
+        // Temporary test - print when button pressed
+        joystick.rightBumper().onTrue(Commands.runOnce(() -> {
+            System.out.println("=== VISION TEST ===");
+            System.out.println("Has target: " + vision.hasTarget());
+            System.out.println("TX: " + vision.getTargetTX());
+            System.out.println("TY: " + vision.getTargetTY());
+            System.out.println("Distance: " + vision.getTargetDistance());
+    
+            // Check raw Limelight data
+            System.out.println("LL TV: " + LimelightHelpers.getTV("limelight-swerve"));
+            System.out.println("LL TX: " + LimelightHelpers.getTX("limelight-swerve"));
+        }));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
