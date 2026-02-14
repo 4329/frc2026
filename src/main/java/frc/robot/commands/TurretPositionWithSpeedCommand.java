@@ -6,19 +6,18 @@ import frc.robot.subsystems.TurretMotorSubsystem;
 public class TurretPositionWithSpeedCommand extends Command {
     private final TurretMotorSubsystem turretMotor;
     private final double targetPosition;
-    private static final double TOLERANCE = 0.1;
+    private static final double TOLERANCE = 0.0;
 
-
+    // UPDATE CONSTRUCTOR
     public TurretPositionWithSpeedCommand(TurretMotorSubsystem turretMotor, double targetPosition) {
         this.turretMotor = turretMotor;
         this.targetPosition = targetPosition;
         addRequirements(turretMotor);
     }
 
-
     @Override
     public void execute() {
-        turretMotor.setPosition(targetPosition);
+        turretMotor.setPositionWithVelocity(targetPosition);
     }
 
     @Override

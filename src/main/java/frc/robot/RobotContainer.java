@@ -123,8 +123,8 @@ public class RobotContainer {
 
         joystick.x().whileTrue(new TurretRotationsPerSecCommand(turretMotor, 5));
         joystick.y().whileTrue(new TurretRotationsPerSecCommand(turretMotor, -5));
-        joystick.a().onTrue(new TurretPositionWithSpeedCommand(turretMotor, 180));
-        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turretMotor, 180));
+        joystick.a().onTrue(new TurretPositionWithSpeedCommand(turretMotor, 1));
+        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turretMotor, -1));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
