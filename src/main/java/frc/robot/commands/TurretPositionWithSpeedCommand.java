@@ -1,28 +1,32 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.TurretMotorSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
 
 public class TurretPositionWithSpeedCommand extends Command {
-    private final TurretMotorSubsystem turretMotor;
+    private final TurretSubsystem turret;
     private final double targetPosition;
-    private static final double TOLERANCE = 0.0;
+    private static final double TOLERANCE = 0.01;
 
-    // UPDATE CONSTRUCTOR
-    public TurretPositionWithSpeedCommand(TurretMotorSubsystem turretMotor, double targetPosition) {
-        this.turretMotor = turretMotor;
+    public TurretPositionWithSpeedCommand(TurretSubsystem turret, double targetPosition) {
+        this.turret = turret;
         this.targetPosition = targetPosition;
-        addRequirements(turretMotor);
+        addRequirements(turret);
+    }
+
+       @Override
+    public void initialize() {
+        turret.setPositionWithVelocity(targetPosition);
     }
 
     @Override
     public void execute() {
-        turretMotor.setPositionWithVelocity(targetPosition);
+        turret.setPositionWithVelocity(targetPosition);
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(turretMotor.getPosition() - targetPosition) < TOLERANCE;
+        return turret.atPosition(targetPosition, TOLERANCE);
     }
 
     @Override
