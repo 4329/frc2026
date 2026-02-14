@@ -125,8 +125,8 @@ public class RobotContainer {
         // joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 1.0));
 
 
-        joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 3));
-        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -4));
+        joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1.2));
+        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -1.2));
         joystick.x().onTrue(new TurretPositionWithSpeedCommand(turret, 0));
         // joystick.y().onTrue(new SetTurretZeroCommand(turret));
         // joystick.x().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
