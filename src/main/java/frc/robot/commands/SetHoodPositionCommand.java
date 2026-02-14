@@ -27,7 +27,6 @@ public class SetHoodPositionCommand extends Command {
 
     @Override
     public void execute() {
-        // Position request is sent continuously in case of disturbances
         hood.setPosition(targetPosition);
     }
 
