@@ -28,11 +28,14 @@ import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PositionSpinNEO550Command;
 import frc.robot.commands.SetHoodPositionCommand;
+import frc.robot.commands.TurretPositionWithSpeedCommand;
+import frc.robot.commands.TurretRotationsPerSecCommand;
 import frc.robot.commands.VoltageSpinNEO550Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
+import frc.robot.subsystems.TurretMotorSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -55,6 +58,8 @@ public class RobotContainer {
     private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
 
     private final HoodSubsystem hood = new HoodSubsystem();
+
+    private final TurretMotorSubsystem turretMotor = new TurretMotorSubsystem();
 
     private final Field2d field = new Field2d();
 
@@ -111,12 +116,15 @@ public class RobotContainer {
         // joystick.x().whileTrue(new VolHoodSpinCommand(motorYes, 0.5));
         // joystick.y().whileTrue(new VolHoodSpinCommand(motorYes, -0.5));
 
-        joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.05)); // Minimum position
-        joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.25)); // Mid position
+        // joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.05)); // Minimum position
+        // joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.25)); // Mid position
+        // joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 0.44));
+        // joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 1.0));
 
-        joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 0.44));
-        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 1.0));
-
+        joystick.x().whileTrue(new TurretRotationsPerSecCommand(turretMotor, 5));
+        joystick.y().whileTrue(new TurretRotationsPerSecCommand(turretMotor, -5));
+        joystick.a().onTrue(new TurretPositionWithSpeedCommand(turretMotor, 180));
+        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turretMotor, 180));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));

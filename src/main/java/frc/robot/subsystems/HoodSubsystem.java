@@ -111,8 +111,8 @@ Logger.recordOutput("Hood/Position", getPosition());
 Logger.recordOutput("Hood/Velocity", getVelocity());
 Logger.recordOutput("Hood/MotorCurrent", hoodMotor.getSupplyCurrent().getValueAsDouble());
 
-System.out.println("HOOD ROTATION POSITION: " + getPosition());
-System.out.println("TARGET POSITION: " + positionRequest.Position);
+// System.out.println("HOOD ROTATION POSITION: " + getPosition());
+// System.out.println("TARGET POSITION: " + positionRequest.Position);
 
 }
 }

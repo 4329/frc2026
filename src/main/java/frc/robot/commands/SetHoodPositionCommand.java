@@ -7,7 +7,7 @@ import frc.robot.subsystems.HoodSubsystem;
 public class SetHoodPositionCommand extends Command {
     private final HoodSubsystem hood;
     private final double targetPosition;
-    private static final double TOLERANCE = 0.000000001; // 0.01 rotations tolerance
+    private static final double TOLERANCE = 0.000000001; // 0.000000001 rotations tolerance
 
     /**
      * Command to move hood to a specific position
