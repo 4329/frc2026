@@ -125,13 +125,20 @@ public class RobotContainer {
         // joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 1.0));
 
 
-        joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1.2));
-        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -1.2));
-        joystick.x().onTrue(new TurretPositionWithSpeedCommand(turret, 0));
+        // joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1.2));
+        // joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -1.2));
+        // joystick.x().onTrue(new TurretPositionWithSpeedCommand(turret, 0));
         // joystick.y().onTrue(new SetTurretZeroCommand(turret));
         // joystick.x().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
         // joystick.y().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
 
+        // joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1));
+        // joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.2));
+        joystick.a().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
+
+        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -0.7));
+        joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.3));
+        joystick.b().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));

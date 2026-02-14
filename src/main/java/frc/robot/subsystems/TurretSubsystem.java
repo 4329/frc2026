@@ -64,10 +64,6 @@ public class TurretSubsystem extends SubsystemBase {
         setDefaultCommand(Commands.run(() -> stop(), this));
     }
 
-    // public void zero() {
-    //     turretMotor.setPosition(0);
-    // }
-
     public void spinVoltage(double voltage) {
         turretMotor.setControl(voltageRequest.withOutput(voltage));
     }
