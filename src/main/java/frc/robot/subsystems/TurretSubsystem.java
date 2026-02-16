@@ -28,7 +28,7 @@ public class TurretSubsystem extends SubsystemBase {
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(0.5);
+        Slot0Configs.withKP(1);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.02);
         Slot0Configs.withKV(0.12);
@@ -95,9 +95,9 @@ public class TurretSubsystem extends SubsystemBase {
         turretMotor.stopMotor();
     }
 
-    @Override
-    public void periodic() {
-        System.out.println("TURRET ROTATION POSITION: " + getPosition());
-        super.periodic();
-    }
+    // @Override
+    // public void periodic() {
+    //     System.out.println("TURRET ROTATION POSITION: " + getPosition());
+    //     super.periodic();
+    // }
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ShooterSubsystem extends SubsystemBase {
     private final TalonFX shooterMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
+    private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
 
     public ShooterSubsystem() {
@@ -21,7 +23,7 @@ public class ShooterSubsystem extends SubsystemBase {
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(10.0);
+        Slot0Configs.withKP(1.0);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
 
@@ -48,8 +50,16 @@ public class ShooterSubsystem extends SubsystemBase {
         shooterMotor.setControl(positionRequest.withPosition(rotations));
     }
 
+     public void setVelocity(double rotationsPerSecond) {
+        shooterMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond));
+    }
+
     public double getPosition() {
         return shooterMotor.getPosition().getValueAsDouble();
+    }
+
+    public double getVelocity() {
+        return shooterMotor.getVelocity().getValueAsDouble();
     }
 
     public void stop() {

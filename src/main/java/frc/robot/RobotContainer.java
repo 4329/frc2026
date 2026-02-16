@@ -28,8 +28,11 @@ import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PositionSpinNEO550Command;
 import frc.robot.commands.SetHoodPositionCommand;
+import frc.robot.commands.ShooterVelocityCommand;
 import frc.robot.commands.ShooterVolSpinCommand;
 import frc.robot.commands.TurretPositionWithSpeedCommand;
+import frc.robot.commands.TurretStuffCommandGroupMin;
+import frc.robot.commands.TurretStuffCommandGroupMax;
 import frc.robot.commands.VoltageSpinNEO550Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -119,26 +122,28 @@ public class RobotContainer {
         // joystick.x().whileTrue(new VolHoodSpinCommand(motorYes, 0.5));
         // joystick.y().whileTrue(new VolHoodSpinCommand(motorYes, -0.5));
 
-        // joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.05)); // Minimum position
-        // joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.25)); // Mid position
-        // joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 0.44));
+        joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.05)); // Minimum position
+        joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.25)); // Mid position
+        joystick.x().onTrue(new SetHoodPositionCommand(hood, 0.45));
         // joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 1.0));
 
 
-        // joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1.2));
-        // joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -1.2));
+        // joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1));
+        // joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -1));
         // joystick.x().onTrue(new TurretPositionWithSpeedCommand(turret, 0));
         // joystick.y().onTrue(new SetTurretZeroCommand(turret));
         // joystick.x().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
         // joystick.y().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
 
-        // joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1));
-        // joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.2));
-        joystick.a().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
+        // joystick.x().onTrue(new TurretPositionWithSpeedCommand(turret, 1));
+        // joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.4));
+        // joystick.a().whileTrue(new ShooterVelocityCommand(shooter, 50));
 
-        joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -0.7));
-        joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.3));
-        joystick.b().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
+        // joystick.b().whileTrue(new TurretStuffCommandGroupMax(turret, hood, shooter));
+
+        // joystick.a().whileTrue(new TurretStuffCommandGroupMin(turret, hood, shooter));
+
+        // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 100));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));

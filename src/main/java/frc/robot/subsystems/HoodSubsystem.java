@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -22,84 +23,59 @@ private static final double MAX_POSITION = 0.5;
 public HoodSubsystem() {
 hoodMotor = new TalonFX(42);
 
-// Create configuration object
-TalonFXConfiguration config = new TalonFXConfiguration();
+        var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
+        motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
+        motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
-// Configure motor output
-config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
+        Slot0Configs.withKP(25);
+        Slot0Configs.withKI(0.0);
+        Slot0Configs.withKD(0.05);
+        Slot0Configs.withKV(0.12);
 
-// Configure PID gains (tune these values for your mechanism)
-config.Slot0.kP = 8.0; // Start with this, tune as needed
-config.Slot0.kI = 0.0;
-config.Slot0.kD = 0.05; // Small D term helps with stability
-config.Slot0.kV = 0.0; // Feedforward velocity term
-config.Slot0.kS = 0.0; // Feedforward static friction term
-
-// Configure feedback sensor
-config.Feedback.SensorToMechanismRatio = 1.0; // Adjust based on your gearing
-
-// Configure motion magic for smooth movement (optional but recommended)
-// config.MotionMagic.MotionMagicCruiseVelocity = 2.0; // rotations per second
-// config.MotionMagic.MotionMagicAcceleration = 4.0; // rotations per second^2
-// config.MotionMagic.MotionMagicJerk = 40.0; // rotations per second^3
-
-// Apply configuration
-hoodMotor.getConfigurator().apply(config);
+        // ADD MOTION MAGIC CONFIGURATION
+        var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
+        motionMagicConfigs.withMotionMagicCruiseVelocity(3);   // rotations per second - tune this
+        motionMagicConfigs.withMotionMagicAcceleration(8);   // rotations per second^2 - tune this
+        motionMagicConfigs.withMotionMagicJerk(80);   // rotations per second^3 - tune this
+        
+        var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
+        feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
+        feedbackConfigs.withSensorToMechanismRatio(1.0);
+        feedbackConfigs.withRotorToSensorRatio(1.0);
+        
+        hoodMotor.getConfigurator().apply(motorOutputConfigs);
+        hoodMotor.getConfigurator().apply(Slot0Configs);
+        hoodMotor.getConfigurator().apply(motionMagicConfigs); // APPLY THIS
+        hoodMotor.getConfigurator().apply(feedbackConfigs);
 
 // Set initial position
-hoodMotor.setPosition(0.0);
+        hoodMotor.setPosition(0.0);
 
-// Default command holds current position
-setDefaultCommand(Commands.run(() -> holdPosition(), this));
+        setDefaultCommand(Commands.run(() -> holdPosition(), this));
 }
 
-/*
-  Sets the hood to a target position with safety checks
-  @param rotations Target position in rotations
- */
 public void setPosition(double rotations) {
-// Clamp position to safe range
-double clampedPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, rotations));
-hoodMotor.setControl(positionRequest.withPosition(clampedPosition));
+    double clampedPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, rotations));
+    hoodMotor.setControl(positionRequest.withPosition(clampedPosition));
 }
 
-/*
-  Holds the hood at its current position
- */
 public void holdPosition() {
-setPosition(getPosition());
+    setPosition(getPosition());
 }
 
-/*
-  Gets the current hood position
-  @return Current position in rotations
- */
 public double getPosition() {
 return hoodMotor.getPosition().getValueAsDouble();
 }
 
-/*
-  Gets the current velocity
-  @return Current velocity in rotations per second
- */
 public double getVelocity() {
 return hoodMotor.getVelocity().getValueAsDouble();
 }
 
-/*
- Checks if hood is at the target position
-  @param targetPosition Target position in rotations
- @param tolerance Tolerance in rotations
- @return true if within tolerance
- */
 public boolean atPosition(double targetPosition, double tolerance) {
 return Math.abs(getPosition() - targetPosition) < tolerance;
 }
 
-/*
-  Stops the hood motor
- */
 public void stop() {
 hoodMotor.stopMotor();
 }
@@ -111,7 +87,7 @@ Logger.recordOutput("Hood/Position", getPosition());
 Logger.recordOutput("Hood/Velocity", getVelocity());
 Logger.recordOutput("Hood/MotorCurrent", hoodMotor.getSupplyCurrent().getValueAsDouble());
 
-// System.out.println("HOOD ROTATION POSITION: " + getPosition());
+System.out.println("HOOD ROTATION: " + hoodMotor.getPosition());
 // System.out.println("TARGET POSITION: " + positionRequest.Position);
 
 }
