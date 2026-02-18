@@ -1,18 +1,13 @@
-package frc.robot.commands;
+package frc.robot.commands.TurretCommands.HoodCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.HoodSubsystem;
+import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 
 public class SetHoodPositionCommand extends Command {
     private final HoodSubsystem hood;
     private final double targetPosition;
-    private static final double TOLERANCE = 0.0000001; // 0.000000001 rotations tolerance
+    private static final double TOLERANCE = 0.0000001;
 
-    /**
-     * Command to move hood to a specific position
-     * @param hood Hood subsystem
-     * @param targetPosition Target position in rotations (0.0 to 0.5)
-     */
     public SetHoodPositionCommand(HoodSubsystem hood, double targetPosition) {
         this.hood = hood;
         this.targetPosition = targetPosition;
@@ -36,7 +31,6 @@ public class SetHoodPositionCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        // Hold position when command ends
         hood.holdPosition();
     }
 }

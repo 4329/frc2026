@@ -12,7 +12,6 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -26,20 +25,13 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.PositionSpinNEO550Command;
-import frc.robot.commands.SetHoodPositionCommand;
-import frc.robot.commands.ShooterVelocityCommand;
-import frc.robot.commands.ShooterVolSpinCommand;
-import frc.robot.commands.TurretPositionWithSpeedCommand;
-import frc.robot.commands.TurretStuffCommandGroupMin;
-import frc.robot.commands.TurretStuffCommandGroupMax;
-import frc.robot.commands.VoltageSpinNEO550Command;
+import frc.robot.commands.CommandGroups.TurretStuffCommandGroupMax;
+import frc.robot.commands.CommandGroups.TurretStuffCommandGroupMin;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.HoodSubsystem;
-import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
+import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
+import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -59,11 +51,9 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
-
     private final HoodSubsystem hood = new HoodSubsystem();
 
-    private final TurretSubsystem turret = new TurretSubsystem();
+    private final RotateSubsystem turret = new RotateSubsystem();
 
     private final ShooterSubsystem shooter = new ShooterSubsystem();
 
@@ -109,41 +99,9 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // joystick.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
+        joystick.b().whileTrue(new TurretStuffCommandGroupMax(turret, hood, shooter));
 
-        //joystick.a().onTrue(new PositionSpinNEO550Command(spinner, 0.0));
-        //joystick.b().onTrue(new PositionSpinNEO550Command(spinner, 20.0));
-        //joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
-        //joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
-
-        // joystick.a().onTrue(new PosHoodSpinCommand(motorYes, 0.25));
-        // joystick.b().onTrue(new PosKrakenMotorSpinCommand(motorYes, 0.0));
-        // joystick.x().whileTrue(new VolHoodSpinCommand(motorYes, 0.5));
-        // joystick.y().whileTrue(new VolHoodSpinCommand(motorYes, -0.5));
-
-        joystick.a().onTrue(new SetHoodPositionCommand(hood, 0.05)); // Minimum position
-        joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.25)); // Mid position
-        joystick.x().onTrue(new SetHoodPositionCommand(hood, 0.45));
-        // joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 1.0));
-
-
-        // joystick.a().onTrue(new TurretPositionWithSpeedCommand(turret, 1));
-        // joystick.b().onTrue(new TurretPositionWithSpeedCommand(turret, -1));
-        // joystick.x().onTrue(new TurretPositionWithSpeedCommand(turret, 0));
-        // joystick.y().onTrue(new SetTurretZeroCommand(turret));
-        // joystick.x().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
-        // joystick.y().whileTrue(new ShooterVolSpinCommand(shooter, 0.5));
-
-        // joystick.x().onTrue(new TurretPositionWithSpeedCommand(turret, 1));
-        // joystick.b().onTrue(new SetHoodPositionCommand(hood, 0.4));
-        // joystick.a().whileTrue(new ShooterVelocityCommand(shooter, 50));
-
-        // joystick.b().whileTrue(new TurretStuffCommandGroupMax(turret, hood, shooter));
-
-        // joystick.a().whileTrue(new TurretStuffCommandGroupMin(turret, hood, shooter));
-
-        // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 100));
+        joystick.a().whileTrue(new TurretStuffCommandGroupMin(turret, hood, shooter));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));

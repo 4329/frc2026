@@ -1,7 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.TurretCommands.ShooterCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 
 public class ShooterVelocityCommand extends Command {
     private final ShooterSubsystem shooter;

@@ -1,14 +1,14 @@
-package frc.robot.commands;
+package frc.robot.commands.TurretCommands.RotationCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
 
-public class TurretPositionWithSpeedCommand extends Command {
-    private final TurretSubsystem turret;
+public class TurretRotationPositionWithSpeedCommand extends Command {
+    private final RotateSubsystem turret;
     private final double targetPosition;
     private static final double TOLERANCE = 0.01;
 
-    public TurretPositionWithSpeedCommand(TurretSubsystem turret, double targetPosition) {
+    public TurretRotationPositionWithSpeedCommand(RotateSubsystem turret, double targetPosition) {
         this.turret = turret;
         this.targetPosition = targetPosition;
         addRequirements(turret);
