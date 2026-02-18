@@ -39,8 +39,8 @@ public class DriveCommand extends Command{
 
     @Override
     public void execute() {
-        double xSpeed = -xSupplier.getAsDouble() * maxSpeed;
-        double ySpeed = -ySupplier.getAsDouble() * maxSpeed;
+        double xSpeed = -ySupplier.getAsDouble() * maxSpeed;
+        double ySpeed = -xSupplier.getAsDouble() * maxSpeed;
         double rotSpeed = -rotationSupplier.getAsDouble() * maxAngularRate;
 
         if (fieldCentricSupplier.getAsBoolean()) {

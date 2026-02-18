@@ -32,6 +32,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
+import frc.robot.commands.FollowAprilTagCommand;
+import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -56,6 +59,9 @@ public class RobotContainer {
     private final RotateSubsystem turret = new RotateSubsystem();
 
     private final ShooterSubsystem shooter = new ShooterSubsystem();
+    private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
+
+    private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
 
     private final Field2d field = new Field2d();
 
@@ -102,6 +108,21 @@ public class RobotContainer {
         joystick.b().whileTrue(new TurretStuffCommandGroupMax(turret, hood, shooter));
 
         joystick.a().whileTrue(new TurretStuffCommandGroupMin(turret, hood, shooter));
+
+        joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
+        
+        // Temporary test - print when button pressed
+        joystick.rightBumper().onTrue(Commands.runOnce(() -> {
+            System.out.println("=== VISION TEST ===");
+            System.out.println("Has target: " + vision.hasTarget());
+            System.out.println("TX: " + vision.getTargetTX());
+            System.out.println("TY: " + vision.getTargetTY());
+            System.out.println("Distance: " + vision.getTargetDistance());
+    
+            // Check raw Limelight data
+            System.out.println("LL TV: " + LimelightHelpers.getTV("limelight-swerve"));
+            System.out.println("LL TX: " + LimelightHelpers.getTX("limelight-swerve"));
+        }));
 
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
