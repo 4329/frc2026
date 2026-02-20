@@ -59,12 +59,31 @@ public class Robot extends LoggedRobot {
       // If no flash drive found, logs to the robot's internal storage
       File homeDir = new File("/home/lvuser/logs");
       if (homeDir.exists() || homeDir.mkdir()) {
+          clearLogs(homeDir);
           Logger.recordMetadata("Logging On:", "Robot");
           return homeDir;
       } else {
           Logger.recordMetadata("Logging On:", "Nothing");
           return null;
       }
+  }
+
+  private void clearLogs(File logDir) {
+    File[] files = logDir.listFiles();
+    if (files == null || files.length == 0) return;
+
+    File newest = files[0];
+    for (File f : files) {
+      if (f.lastModified() > newest.lastModified()) {
+        newest = f;
+      }
+    }
+
+    for (File f : files) {
+      if (!f.equals(newest)) {
+        f.delete();
+      }
+    }
   }
 
   /**
