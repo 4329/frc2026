@@ -3,7 +3,6 @@ package frc.robot.subsystems.TurretSubsystem;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -26,7 +25,6 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private final TalonFX turretMotor;
     private final VoltageOut voltageRequest             = new VoltageOut(0);
-    private final PositionVoltage positionRequest       = new PositionVoltage(0);
     private final VelocityVoltage velocityRequest       = new VelocityVoltage(0);
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private final TurretRotateLogAutoLogged rotateLog   = new TurretRotateLogAutoLogged();
@@ -122,11 +120,6 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public void spinVoltage(double voltage) {
         turretMotor.setControl(voltageRequest.withOutput(voltage));
-    }
-
-    public void setPosition(double rotations) {
-        targetPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, rotations));
-        turretMotor.setControl(positionRequest.withPosition(targetPosition));
     }
 
     public void setVelocity(double rotationsPerSecond) {

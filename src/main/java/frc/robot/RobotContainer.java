@@ -25,8 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.CommandGroups.TurretStuffCommandGroupMax;
-import frc.robot.commands.CommandGroups.TurretStuffCommandGroupMin;
+import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
+import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
@@ -105,9 +105,9 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.b().whileTrue(new TurretStuffCommandGroupMax(turret, hood, shooter));
+        joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
 
-        joystick.a().whileTrue(new TurretStuffCommandGroupMin(turret, hood, shooter));
+        joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
 
         joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
         
