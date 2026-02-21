@@ -21,12 +21,16 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.intakeCommands.HeeheehahaGoToPositionCommand;
+import frc.robot.commands.IntakeAndSpinCommandGroup;
+import frc.robot.commands.intakeCommands.IntakeGoToPositionCommand;
 import frc.robot.commands.intakeCommands.VoltageSpinNEO550Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.SpinMotor13thingy;
+//import frc.robot.subsystems.SpinMotor44Subsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
+import frc.robot.subsystems.SpinDexterSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); 
@@ -38,13 +42,16 @@ public class RobotContainer {
     private boolean isFieldCentric = true;
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    // Controller Mapping
+    // Controller
     private final CommandXboxController joystick = new CommandXboxController(Constants.OIConstants.kDriverControllerPort);
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
-    private final Intake m_intake = new Intake(); 
+    private final IntakeSubsystem m_intake = new IntakeSubsystem();
+    private final SpinMotor13thingy m_crashout = new SpinMotor13thingy();         // CAN ID 13
+    //private final SpinMotor44Subsystem m_crashout13 = new SpinMotor44Subsystem(); // CAN ID 44
+    private final NEO550ThroughTalonFXSSubsytem m_spinner = new NEO550ThroughTalonFXSSubsytem(44);
+    private final SpinDexterSubsystem m_spinDexter = new SpinDexterSubsystem();
 
     private final Field2d field = new Field2d();
     Map<Command, PathPlannerAuto> autoName = new HashMap<>();
@@ -78,14 +85,17 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // --- KRAKEN INTAKE BINDINGS ---
-        
-    joystick.a().onTrue(new HeeheehahaGoToPositionCommand(m_intake, MaxAngularRate, true));  // Go to 215°
-    joystick.a().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
-    joystick.a().onFalse(new HeeheehahaGoToPositionCommand(m_intake, MaxAngularRate, false)); // Go to 0°
-        // --- NEO 550 BINDINGS ---
-        joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
-        joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
+        // --- INTAKE BINDINGS ---
+        joystick.a().onTrue(
+            new IntakeAndSpinCommandGroup(m_intake, m_crashout, m_spinner, m_spinDexter, MaxAngularRate)
+        );
+
+        joystick.a().onFalse(
+            new IntakeGoToPositionCommand(m_intake, MaxAngularRate, false)
+        );
+
+        joystick.x().whileTrue(new VoltageSpinNEO550Command(m_spinner, 6.0));
+        joystick.y().whileTrue(new VoltageSpinNEO550Command(m_spinner, -6.0));
 
         // --- UTILITY BINDINGS ---
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

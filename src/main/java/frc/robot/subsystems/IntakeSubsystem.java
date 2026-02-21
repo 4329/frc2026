@@ -6,8 +6,9 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utilities.MotorLogger;
 
-public class Intake extends SubsystemBase {
+public class IntakeSubsystem extends SubsystemBase {
     // Hardware - Kraken X60 on CAN ID 43
     private final TalonFX m_kraken = new TalonFX(43);
     
@@ -19,7 +20,7 @@ public class Intake extends SubsystemBase {
     private final double kPos0 = (0.0 / 360.0) * kGearRatio;
     private final double kPos215 = (215.0 / 360.0) * kGearRatio;
 
-    public Intake() {
+    public IntakeSubsystem() {
         // 1. Configure PID
         var slot0Configs = new Slot0Configs();
         slot0Configs.kP = 12.0; 
@@ -77,5 +78,10 @@ public class Intake extends SubsystemBase {
     /** Get the target position for 215 degrees */
     public double getPos215() {
         return kPos215;
+    }
+
+    @Override
+    public void periodic() {
+        MotorLogger.logTalonFX(m_kraken, "Intake/Kraken");
     }
 }

@@ -1,14 +1,14 @@
 package frc.robot.commands.intakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class HeeheehahaGoToPositionCommand extends Command {
-    private final Intake m_intake;
+public class IntakeGoToPositionCommand extends Command {
+    private final IntakeSubsystem m_intake;
     private final double m_maxAngularRate;
     private final boolean m_goTo215; // true = go to 215°, false = go to 0°
     
-    public HeeheehahaGoToPositionCommand(Intake intake, double maxAngularRate, boolean goTo215) {
+    public IntakeGoToPositionCommand(IntakeSubsystem intake, double maxAngularRate, boolean goTo215) {
         this.m_intake = intake;
         this.m_maxAngularRate = maxAngularRate;
         this.m_goTo215 = goTo215;

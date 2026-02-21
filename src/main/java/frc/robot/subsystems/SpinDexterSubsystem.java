@@ -9,19 +9,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utilities.MotorLogger;
 
-//im not using this ssm rn but ima keep it js in case
-
-public class NEO550ThroughTalonFXSSubsytem extends SubsystemBase {
+public class SpinDexterSubsystem extends SubsystemBase {
     private final TalonFX spinnerMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
 
-    // Store the motor ID so we can use it in the Shuffleboard name
-    private final int m_motorID;
-
-    public NEO550ThroughTalonFXSSubsytem(int motorID) {
-        m_motorID = motorID;
-        spinnerMotor = new TalonFX(motorID);
+    public SpinDexterSubsystem() {
+        spinnerMotor = new TalonFX(44);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
@@ -63,8 +57,6 @@ public class NEO550ThroughTalonFXSSubsytem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Uses the CAN ID in the name so multiple instances don't overwrite each other
-        // e.g. "NEO550/Motor_7" and "NEO550/Motor_12"
-        MotorLogger.logTalonFX(spinnerMotor, "NEO550/Motor_" + m_motorID);
+        MotorLogger.logTalonFX(spinnerMotor, "SpinDexter/SpinnerMotor");
     }
 }
