@@ -27,6 +27,7 @@ import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.PositionSpinNEO550Command;
+import frc.robot.commands.RotateMotorByLimelightCommand;
 import frc.robot.commands.VoltageSpinNEO550Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -100,10 +101,12 @@ public class RobotContainer {
         // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // joystick.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-        joystick.a().onTrue(new PositionSpinNEO550Command(spinner, 0.0));
+        //joystick.a().onTrue(new PositionSpinNEO550Command(spinner, 0.0));
         joystick.b().onTrue(new PositionSpinNEO550Command(spinner, 20.0));
         joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
         joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
+        
+        joystick.a().whileTrue(new RotateMotorByLimelightCommand());
 
         joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
         
