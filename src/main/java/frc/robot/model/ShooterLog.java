@@ -1,17 +1,21 @@
 package frc.robot.model;
 
+import static edu.wpi.first.units.Units.RPM;
 import org.littletonrobotics.junction.AutoLog;
+import edu.wpi.first.units.measure.AngularVelocity;
 
+/**
+ * The ShooterLog class is a data model used for logging purposes in the robot code.
+ * It is annotated with @AutoLog, which indicates that the fields of this class
+ * will be automatically logged or processed by the logger.
+ * 
+ * This class contains a single field:
+ * - speed: Represents the angular velocity of a shooter mechanism in RPM (Revolutions Per Minute).
+ * 
+ * This class can be extended or modified to include additional fields for logging
+ * other subsystem-specific data. A new model should be created for each subsystem.
+ */
 @AutoLog
 public class ShooterLog {
-    public double positionRotations = 0.0;
-    public double velocityRotationsPerSec = 0.0;
-    public double appliedVolts = 0.0;
-    public double supplyCurrentAmps = 0.0;
-    public double torqueCurrentAmps = 0.0;
-    public double tempCelsius = 0.0;
-    public double targetVelocity = 0.0;
-    public double velocityError = 0.0;
-    public boolean atSpeed = false;
-    public boolean motorConnected = false;
+    public AngularVelocity speed = RPM.of(0);
 }

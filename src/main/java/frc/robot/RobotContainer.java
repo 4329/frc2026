@@ -25,14 +25,11 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
-import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
+import frc.robot.commands.FollowAprilTagCommand;
+import frc.robot.commands.PositionSpinNEO550Command;
+import frc.robot.commands.VoltageSpinNEO550Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
-import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
-import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
-import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -54,11 +51,6 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final HoodSubsystem hood = new HoodSubsystem();
-
-    private final RotateSubsystem turret = new RotateSubsystem();
-
-    private final ShooterSubsystem shooter = new ShooterSubsystem();
     private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
 
     private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
@@ -105,9 +97,13 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
+        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // joystick.b().whileTrue(drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
 
-        joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
+        joystick.a().onTrue(new PositionSpinNEO550Command(spinner, 0.0));
+        joystick.b().onTrue(new PositionSpinNEO550Command(spinner, 20.0));
+        joystick.x().whileTrue(new VoltageSpinNEO550Command(spinner, 6.0));
+        joystick.y().whileTrue(new VoltageSpinNEO550Command(spinner, -6.0));
 
         joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
         
