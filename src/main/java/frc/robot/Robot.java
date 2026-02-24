@@ -6,8 +6,6 @@ package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;

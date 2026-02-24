@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import org.xml.sax.SAXException;
-
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
