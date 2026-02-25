@@ -12,6 +12,10 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -145,6 +149,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         visionRotationController = new PIDController(0.15, 0, 0);
         visionRotationController.enableContinuousInput(-180, 180);
         visionRotationController.setTolerance(2.0);
+
+        configurePathPlanner();
+
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -174,6 +181,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         visionRotationController = new PIDController(0.15, 0, 0);
         visionRotationController.enableContinuousInput(-180, 180);
         visionRotationController.setTolerance(2.0);
+
+        configurePathPlanner();
+
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -211,8 +221,38 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         visionRotationController = new PIDController(0.15, 0, 0);
         visionRotationController.enableContinuousInput(-180, 180);
         visionRotationController.setTolerance(2.0);
+
+        configurePathPlanner();
+
         if (Utils.isSimulation()) {
             startSimThread();
+        }
+    }
+
+    private void configurePathPlanner() {
+        try {
+            RobotConfig config = RobotConfig.fromGUISettings();
+
+            AutoBuilder.configure(
+                () -> getState().Pose,                  // Supplier<Pose2d>: current robot pose
+                this::resetPose,                        // Consumer<Pose2d>: reset odometry
+                () -> getState().Speeds,                // Supplier<ChassisSpeeds>: robot-relative speeds
+                (speeds, feedforwards) -> setControl(   // Consumer: apply ChassisSpeeds to modules
+                    new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds)
+                ),
+                new PPHolonomicDriveController(
+                    new PIDConstants(5.0, 0, 0),        // Translation PID - tune as needed
+                    new PIDConstants(5.0, 0, 0)         // Rotation PID - tune as needed
+                ),
+                config,
+                () -> DriverStation.getAlliance()        // Flip paths for red alliance
+                        .filter(a -> a == Alliance.Red)
+                        .isPresent(),
+                this
+            );
+        } catch (Exception e) {
+            System.err.println("[PathPlanner] Failed to load RobotConfig: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -6,24 +6,21 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.Drive5mAuto;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
@@ -65,7 +62,7 @@ public class RobotContainer {
 
     private final Field2d field = new Field2d();
 
-    Map<Command, PathPlannerAuto> autoName = new HashMap<>();
+    private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
 
@@ -73,7 +70,16 @@ public class RobotContainer {
 
         SmartDashboard.putData("Field", field);
 
+        registerNamedCommands();
+
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
         configureBindings();
+    }
+
+    private void registerNamedCommands() {
+        NamedCommands.registerCommand("maxShoot", new TurretSubsystemCommandGroupMax(turret, hood, shooter));
     }
 
     public void robotPeriodic() {
@@ -140,10 +146,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return Drive5mAuto.create(drivetrain);
-    }
-
-    public String getAutoName(Command command) {
-    return autoName.containsKey(command) ? autoName.get(command).getName() : "Nothing?????/?///?";
+        return autoChooser.getSelected();
     }
 }
