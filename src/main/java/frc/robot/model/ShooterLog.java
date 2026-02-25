@@ -1,4 +1,4 @@
-// package frc.robot.model;
+package frc.robot.model;
 
 import org.littletonrobotics.junction.AutoLog;
 
