@@ -1,5 +1,5 @@
 
-package frc.robot.commands.intakeCommands;
+package frc.robot.commands.NEO550Commands;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
