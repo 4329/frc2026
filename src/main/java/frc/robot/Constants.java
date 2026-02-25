@@ -4,8 +4,16 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
+
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.numbers.N3;
+// import frc.robot.utilities.HoorayConfig;
 
 /** Static method containing all constant values for the robot in one location */
 public final class Constants {
@@ -133,5 +141,27 @@ public final class Constants {
 
         public static final int pigeon = 29;
         public static final int climber = 17;
+    }
+
+    public static final class VisionConstants {
+
+        public static final String LIMELIGHT_NAME = "limelight-swerve";
+
+
+        public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(new Translation3d(0.3683, -0.1016, 0.0889), new Rotation3d(Math.toRadians(180), Math.toRadians(45), 0));
+
+        public static final Vector<N3> SINGLE_TAG_STD_DEVS = VecBuilder.fill(1.0, 1.0, 2.0);
+        public static final Vector<N3> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1.0); 
+
+
+        public static final int TARGET_TAG_ID = 4;
+        public static final double FOLLOW_DISTANCE_METERS = 1.5;
+        public static final double FOLLOW_SPEED = 0.5;
+
+        public static final double FOLLOW_KP_TRANSLATION = 0.2;
+        public static final double FOLLOW_KP_ROTATION = 0.02;
+
+        public static final double DISTANCE_TOLERANCE = 0.1;
+        public static final double ANGLE_TOLERANCE = 2.0;
     }
 }
