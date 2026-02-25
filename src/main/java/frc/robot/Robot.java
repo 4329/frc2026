@@ -89,9 +89,7 @@ public class Robot extends LoggedRobot {
    * initialization code.
    */
   public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+
   }
 
   @Override
@@ -165,13 +163,15 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    Logger.recordOutput("Auto", m_robotContainer.getAutoName(m_autonomousCommand));
-    // schedule the autonomous command (example)
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    Logger.recordOutput("Auto/Selected", m_autonomousCommand != null ? m_autonomousCommand.getName() : "None");
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
+    } else {
+      System.out.println("[Auto] No autonomous command selected!");
     }
   }
+  
 
   /** This function is called periodically during autonomous. */
   @Override
