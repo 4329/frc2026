@@ -27,7 +27,7 @@ import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
-import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
+import frc.robot.subsystems.TurretSubsystem.TurretRotateSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
@@ -53,7 +53,7 @@ public class RobotContainer {
 
     private final HoodSubsystem hood = new HoodSubsystem();
 
-    private final RotateSubsystem turret = new RotateSubsystem();
+    private final TurretRotateSubsystem turret = new TurretRotateSubsystem();
 
     private final ShooterSubsystem shooter = new ShooterSubsystem();
     private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
@@ -116,6 +116,7 @@ public class RobotContainer {
         joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
 
         joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
+
         
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {

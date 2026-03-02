@@ -21,7 +21,7 @@ import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
-public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
+public class TurretRotateSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private final TalonFX turretMotor;
     private final VoltageOut voltageRequest             = new VoltageOut(0);
@@ -42,7 +42,7 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<Current> torqueCurrentSignal;
     private final StatusSignal<Temperature> tempSignal;
 
-    public RotateSubsystem() {
+    public TurretRotateSubsystem() {
         turretMotor = new TalonFX(41);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
