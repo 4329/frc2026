@@ -5,14 +5,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DevCommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSubsystem;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 public class FollowAprilTagCommand extends Command {
     private final VisionSubsystem vision;
-    private final CommandSwerveDrivetrain drivetrain;
+    private final DevCommandSwerveDrivetrain drivetrain;
     
     private final PIDController forwardController;
     private final PIDController rotationController;
@@ -20,7 +20,7 @@ public class FollowAprilTagCommand extends Command {
     private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric()
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     
-    public FollowAprilTagCommand(VisionSubsystem vision, CommandSwerveDrivetrain drivetrain) {
+    public FollowAprilTagCommand(VisionSubsystem vision, DevCommandSwerveDrivetrain drivetrain) {
         this.vision = vision;
         this.drivetrain = drivetrain;
         

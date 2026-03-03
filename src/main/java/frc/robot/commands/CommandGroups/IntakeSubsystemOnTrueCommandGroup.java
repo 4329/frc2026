@@ -7,10 +7,10 @@ import frc.robot.commands.IntakeSpinCommand;
 import frc.robot.subsystems.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSpinSubsystem;
 
-public class IntakeSubsystemCommandGroup extends ParallelCommandGroup {
-    public IntakeSubsystemCommandGroup(IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
+public class IntakeSubsystemOnTrueCommandGroup extends ParallelCommandGroup {
+    public IntakeSubsystemOnTrueCommandGroup(IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
         addCommands(
-            new IntakePivotCommand(pivot, 215),
+            new IntakePivotCommand(pivot, 4),
             new IntakeSpinCommand(spin, 0.45));
           Commands.run(() -> 
                  System.out.println("Intake Pivot Rotation: " + pivot.getPosition() + 

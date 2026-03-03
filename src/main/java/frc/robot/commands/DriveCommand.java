@@ -7,10 +7,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DevCommandSwerveDrivetrain;
 
 public class DriveCommand extends Command{
-    private final CommandSwerveDrivetrain drivetrain;
+    private final DevCommandSwerveDrivetrain drivetrain;
     private final DoubleSupplier xSupplier;
     private final DoubleSupplier ySupplier;
     private final DoubleSupplier rotationSupplier;
@@ -21,7 +21,7 @@ public class DriveCommand extends Command{
     private final SwerveRequest.FieldCentric fieldCentricRequest;
     private final SwerveRequest.RobotCentric robotCentricRequest;
 
-    public DriveCommand(CommandSwerveDrivetrain drivetrain, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, BooleanSupplier fieldCentricSupplier, double maxSpeed, double maxAngularRate) {
+    public DriveCommand(DevCommandSwerveDrivetrain drivetrain, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, BooleanSupplier fieldCentricSupplier, double maxSpeed, double maxAngularRate) {
 
         this.drivetrain = drivetrain;
         this.xSupplier = xSupplier;

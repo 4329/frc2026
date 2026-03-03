@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,10 +18,11 @@ public class IntakeSpinSubsystem extends SubsystemBase {
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
 
     public IntakeSpinSubsystem() {
-        spinMotor =  new TalonFX(13);
+        spinMotor =  new TalonFX(14);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
-        motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
+        motorOutputConfigs.withNeutralMode(NeutralModeValue.Coast);
+        motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
         Slot0Configs.withKP(10.0);
@@ -32,10 +34,17 @@ public class IntakeSpinSubsystem extends SubsystemBase {
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
         feedbackConfigs.withSensorToMechanismRatio(1.0);
         feedbackConfigs.withRotorToSensorRatio(1.0);
+
+        var currentLimitConfigs = new com.ctre.phoenix6.configs.CurrentLimitsConfigs();
+        currentLimitConfigs.withStatorCurrentLimit(40);
+        currentLimitConfigs.withStatorCurrentLimitEnable(true);
+        currentLimitConfigs.withSupplyCurrentLimit(40);
+        currentLimitConfigs.withSupplyCurrentLimitEnable(true);
         
         spinMotor.getConfigurator().apply(motorOutputConfigs);
         spinMotor.getConfigurator().apply(Slot0Configs);
         spinMotor.getConfigurator().apply(feedbackConfigs);
+        spinMotor.getConfigurator().apply(currentLimitConfigs);
 
         spinMotor.setPosition(0);
 

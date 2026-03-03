@@ -22,19 +22,26 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.CommandGroups.IntakeSubsystemOnFalseCommandGroup;
+import frc.robot.commands.CommandGroups.IntakeSubsystemOnTrueCommandGroup;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.generated.CompTunerConstants;
+import frc.robot.generated.DevTunerConstants;
+import frc.robot.subsystems.DevCommandSwerveDrivetrain;
+import frc.robot.subsystems.IntakePivotSubsystem;
+import frc.robot.subsystems.IntakeSpinSubsystem;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 import frc.robot.subsystems.TurretSubsystem.TurretRotateSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 import frc.robot.commands.FollowAprilTagCommand;
-import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
+import frc.robot.commands.IntakePivotCommand;
+import frc.robot.commands.IntakeSpinCommand;
+// import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 1.0 * CompTunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -49,16 +56,21 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(Constants.OIConstants.kDriverControllerPort);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final DevCommandSwerveDrivetrain drivetrain = CompTunerConstants.createDrivetrain();
 
     private final HoodSubsystem hood = new HoodSubsystem();
 
     private final TurretRotateSubsystem turret = new TurretRotateSubsystem();
 
     private final ShooterSubsystem shooter = new ShooterSubsystem();
+
     private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
 
-    private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
+    // private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem();
+
+    private final IntakePivotSubsystem pivot = new IntakePivotSubsystem();
+
+    private final IntakeSpinSubsystem spin = new IntakeSpinSubsystem();
 
     private final Field2d field = new Field2d();
 
@@ -97,8 +109,6 @@ public class RobotContainer {
         });
     }
 
-
-
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
@@ -111,11 +121,22 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
+        // joystick.a().whileTrue(new IntakeSubsystemOnTrueCommandGroup(pivot, spin));
+        // joystick.a().whileFalse(new IntakeSubsystemOnFalseCommandGroup(pivot, spin));
+        joystick.a().onTrue(new IntakePivotCommand(pivot, 4));
+        joystick.a().onFalse(new IntakePivotCommand(pivot, 0));
 
-        joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
+        joystick.b().whileTrue(new IntakeSpinCommand(spin, 80));
+        joystick.x().whileTrue(new IntakeSpinCommand(spin, 30));
+        joystick.y().whileTrue(new IntakeSpinCommand(spin, 50));
 
-        joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
+
+
+        // joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
+
+        // joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
+
+        // joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
 
         
         // Temporary test - print when button pressed
