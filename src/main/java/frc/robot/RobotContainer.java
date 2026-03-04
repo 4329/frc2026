@@ -123,12 +123,8 @@ public class RobotContainer {
 
         // joystick.a().whileTrue(new IntakeSubsystemOnTrueCommandGroup(pivot, spin));
         // joystick.a().whileFalse(new IntakeSubsystemOnFalseCommandGroup(pivot, spin));
-        joystick.a().onTrue(new IntakePivotCommand(pivot, 4));
-        joystick.a().onFalse(new IntakePivotCommand(pivot, 0));
-
-        joystick.b().whileTrue(new IntakeSpinCommand(spin, 80));
-        joystick.x().whileTrue(new IntakeSpinCommand(spin, 30));
-        joystick.y().whileTrue(new IntakeSpinCommand(spin, 50));
+        joystick.a().whileTrue(new IntakePivotCommand(pivot, 5.9));
+        joystick.b().whileTrue(new IntakeSpinCommand(spin, 60));
 
 
 

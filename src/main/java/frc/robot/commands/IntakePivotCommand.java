@@ -23,10 +23,11 @@ public class IntakePivotCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(pivot.getPosition() - targetPosition) < TOLERANCE;
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
+        pivot.setPosition(0);
     }
 }
