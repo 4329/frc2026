@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.IntakeSubsystem;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;

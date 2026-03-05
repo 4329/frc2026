@@ -1,7 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.IntakeCommands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSpinSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 
 public class IntakeSpinCommand extends Command {
     private final IntakeSpinSubsystem spin;

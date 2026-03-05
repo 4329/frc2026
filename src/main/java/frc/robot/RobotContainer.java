@@ -25,19 +25,19 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
+import frc.robot.commands.IntakeCommands.IntakePivotCommand;
+import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.generated.CompTunerConstants;
 import frc.robot.generated.DevTunerConstants;
 import frc.robot.subsystems.DevCommandSwerveDrivetrain;
-import frc.robot.subsystems.IntakePivotSubsystem;
-import frc.robot.subsystems.IntakeSpinSubsystem;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 import frc.robot.subsystems.TurretSubsystem.TurretRotateSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 import frc.robot.commands.FollowAprilTagCommand;
-import frc.robot.commands.IntakePivotCommand;
-import frc.robot.commands.IntakeSpinCommand;
 // import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * CompTunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
