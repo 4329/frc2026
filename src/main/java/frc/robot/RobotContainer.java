@@ -22,8 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.CommandGroups.IntakeSubsystemOnFalseCommandGroup;
-import frc.robot.commands.CommandGroups.IntakeSubsystemOnTrueCommandGroup;
+import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.generated.CompTunerConstants;
@@ -121,12 +120,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // joystick.a().whileTrue(new IntakeSubsystemOnTrueCommandGroup(pivot, spin));
-        // joystick.a().whileFalse(new IntakeSubsystemOnFalseCommandGroup(pivot, spin));
         joystick.a().whileTrue(new IntakePivotCommand(pivot, 5.9));
         joystick.b().whileTrue(new IntakeSpinCommand(spin, 60));
 
-
+        joystick.x().whileTrue(new IntakeSubsystemCommandGroup(pivot, spin));
 
         // joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
 

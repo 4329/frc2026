@@ -29,7 +29,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
         motorOutputConfigs.withInverted(InvertedValue.CounterClockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(0.4);
+        Slot0Configs.withKP(0.45);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
         Slot0Configs.withKV(0.12);
@@ -42,9 +42,9 @@ public class IntakePivotSubsystem extends SubsystemBase {
         feedbackConfigs.withRotorToSensorRatio(1.0);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(0.001);
-        motionMagicConfigs.withMotionMagicAcceleration(0.001);
-        motionMagicConfigs.withMotionMagicJerk(0.001);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(0.0001);
+        motionMagicConfigs.withMotionMagicAcceleration(0.0001);
+        motionMagicConfigs.withMotionMagicJerk(0.0001);
 
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
         softLimitConfigs.withForwardSoftLimitThreshold(5.9);

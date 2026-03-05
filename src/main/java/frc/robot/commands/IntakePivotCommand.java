@@ -6,8 +6,6 @@ import frc.robot.subsystems.IntakePivotSubsystem;
 public class IntakePivotCommand extends Command {
     private final IntakePivotSubsystem pivot;
     private final double targetPosition;
-    private static final double TOLERANCE = 0.1;
-
 
     public IntakePivotCommand(IntakePivotSubsystem pivot, double targetPosition) {
         this.pivot = pivot;
