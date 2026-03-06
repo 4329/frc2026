@@ -18,20 +18,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveCommand;
-// import frc.robot.commands.IntakeAndSpinCommandGroup;
-import frc.robot.commands.intakeCommands.IntakeGoToPositionCommand;
-import frc.robot.commands.intakeCommands.KickerCommand;
-import frc.robot.commands.intakeCommands.SpinMotor13IndefinitelyCommand;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 // import frc.robot.subsystems.Motor13Spinner;
 //import frc.robot.subsystems.SpinMotor44Subsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.subsystems.SpinDexterSubsystem;
-import frc.robot.subsystems.SpinMotor13Subsystem;
+import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.generated.TunerConstants;
@@ -40,9 +35,10 @@ import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 import frc.robot.commands.FollowAprilTagCommand;
-import frc.robot.commands.IntakeAndSpinCommandGroup;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); 
@@ -59,11 +55,9 @@ public class RobotContainer {
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final IntakeSubsystem m_intake = new IntakeSubsystem();
     // private final Motor13Spinner m_crashout = new Motor13Spinner();         // CAN ID 13
     //private final SpinMotor44Subsystem m_crashout13 = new SpinMotor44Subsystem(); // CAN ID 44
     private final SpinDexterSubsystem m_spinDexter = new SpinDexterSubsystem();
-    private final SpinMotor13Subsystem m_spin13 = new SpinMotor13Subsystem(13);
     private final KickerSubsystem m_kicker = new KickerSubsystem(60);
 
 
@@ -75,6 +69,9 @@ public class RobotContainer {
     private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
 
     private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem(44);
+
+    private final IntakePivotSubsystem pivot = new IntakePivotSubsystem();
+    private final IntakeSpinSubsystem spin = new IntakeSpinSubsystem();
 
     private final Field2d field = new Field2d();
 
@@ -133,14 +130,7 @@ public class RobotContainer {
 
             // --- INTAKE BINDINGS ---
     // Run the intake + spin group while button A is held
-        joystick.x().whileTrue(
-            new IntakeAndSpinCommandGroup(m_intake, m_spin13, m_kicker, m_spinDexter, MaxAngularRate)
-        );
-
-    // Return intake to resting position when button A is released
-        joystick.x().onFalse(
-            new IntakeGoToPositionCommand(m_intake, MaxAngularRate, false)
-        );
+        joystick.x().whileTrue(new IntakeSubsystemCommandGroup(pivot, spin));    
 
         joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
         
