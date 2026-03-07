@@ -7,7 +7,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.MotorLogger;
 
 //im not using this ssm rn but ima keep it js in case
 
@@ -27,7 +26,7 @@ public class NEO550ThroughTalonFXSSubsytem extends SubsystemBase {
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(10.0);
+        Slot0Configs.withKP(1.0);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
 
@@ -61,10 +60,4 @@ public class NEO550ThroughTalonFXSSubsytem extends SubsystemBase {
         spinnerMotor.stopMotor();
     }
 
-    @Override
-    public void periodic() {
-        // Uses the CAN ID in the name so multiple instances don't overwrite each other
-        // e.g. "NEO550/Motor_7" and "NEO550/Motor_12"
-        MotorLogger.logTalonFX(spinnerMotor, "NEO550/Motor_" + m_motorID);
-    }
 }

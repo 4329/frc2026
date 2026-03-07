@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.model.IntakeLogAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
-import frc.robot.utilities.MotorLogger;
 
 public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final TalonFX spinnerMotor;
@@ -46,7 +45,7 @@ public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsyste
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(10.0);
+        Slot0Configs.withKP(1.0);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
 
@@ -125,10 +124,4 @@ public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsyste
         spinnerMotor.stopMotor();
     }
 
-    @Override
-    public void periodic() {
-        // Note: if LoggedSubsystem handles logging via log(), 
-        // you may not need MotorLogger here too — double check with your logging setup
-        MotorLogger.logTalonFX(spinnerMotor, "SpinDexter/SpinnerMotor");
-    }
 }

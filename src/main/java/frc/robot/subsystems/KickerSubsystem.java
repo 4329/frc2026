@@ -16,7 +16,6 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.MotorLogger;
 
 // not in use currently, keeping as backup
 
@@ -45,7 +44,7 @@ public class KickerSubsystem extends SubsystemBase {
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(10.0);
+        Slot0Configs.withKP(1.0);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
 
@@ -101,10 +100,5 @@ public class KickerSubsystem extends SubsystemBase {
 
     public void stop() {
         spinnerMotor.stopMotor();
-    }
-
-    @Override
-    public void periodic() {
-        MotorLogger.logTalonFX(spinnerMotor, "Kicker/Motor_" + m_motorID);
     }
 }

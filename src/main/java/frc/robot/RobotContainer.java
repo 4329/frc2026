@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -25,10 +26,17 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 //import frc.robot.subsystems.SpinMotor44Subsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
+import frc.robot.commands.KickerSpinCommand;
+import frc.robot.commands.SpindexerCommand;
 import frc.robot.subsystems.SpinDexterSubsystem;
 import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
+import frc.robot.commands.IntakeCommands.IntakePivotCommand;
+import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
+import frc.robot.commands.TurretCommands.HoodCommands.SetHoodPositionCommand;
+import frc.robot.commands.TurretCommands.RotationCommands.TurretPositionCommand;
+import frc.robot.commands.TurretCommands.ShooterCommands.ShooterVelocityCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
@@ -39,6 +47,7 @@ import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
+import frc.robot.subsystems.KickerSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); 
@@ -58,7 +67,7 @@ public class RobotContainer {
     // private final Motor13Spinner m_crashout = new Motor13Spinner();         // CAN ID 13
     //private final SpinMotor44Subsystem m_crashout13 = new SpinMotor44Subsystem(); // CAN ID 44
     private final SpinDexterSubsystem m_spinDexter = new SpinDexterSubsystem();
-    private final KickerSubsystem m_kicker = new KickerSubsystem(60);
+    private final KickerSubsystem m_kicker = new KickerSubsystem(16);
 
 
     private final HoodSubsystem hood = new HoodSubsystem();
@@ -120,19 +129,30 @@ public class RobotContainer {
         // joystick.a().onTrue(
         //     new IntakeAndSpinCommandGroup(m_intake, m_crashout, spinner, m_spinDexter, MaxAngularRate)
         // );
-
+            
         // joystick.a().onFalse(
         //     new IntakeGoToPositionCommand(m_intake, MaxAngularRate, false)
-        // );
-        joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
+    //     // );
+    //     joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
+           joystick.x().whileTrue(new IntakeSpinCommand(spin, 60));
+           
+           joystick.a().whileTrue(new ShooterVelocityCommand(shooter, 75));
+           
+           joystick.b().whileTrue(new IntakePivotCommand(pivot, 5.8));
+           
+           joystick.povLeft().whileTrue(new SetHoodPositionCommand(hood, -0.1));
+           joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 0.1));
+                      
+           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, 10));
+           
+           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, 10));
+    //     joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
+           
+    //         // --- INTAKE BINDINGS ---
+    // // Run the intake + spin group while button A is held
+    //     joystick.x().whileTrue(new IntakeSubsystemCommandGroup(pivot, spin));    
 
-        joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
-
-            // --- INTAKE BINDINGS ---
-    // Run the intake + spin group while button A is held
-        joystick.x().whileTrue(new IntakeSubsystemCommandGroup(pivot, spin));    
-
-        joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
+    //     joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
         
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {
