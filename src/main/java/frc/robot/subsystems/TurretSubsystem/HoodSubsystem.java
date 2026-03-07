@@ -26,8 +26,8 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(true);
     private final HoodLogAutoLogged hoodLog = new HoodLogAutoLogged();
 
-    private static final double MIN_POSITION = -0.5;
-    private static final double MAX_POSITION = 0.5;
+    private static final double MIN_POSITION = 0.1;
+    private static final double MAX_POSITION = 6.3;
     private static final double TOLERANCE = 0.01;
 
     private double targetPosition = MIN_POSITION;
@@ -47,15 +47,21 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(1);
+        Slot0Configs.withKP(10);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
         Slot0Configs.withKV(0.12);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(1);
-        motionMagicConfigs.withMotionMagicAcceleration(0.5);
-        motionMagicConfigs.withMotionMagicJerk(5);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(0.0001);
+        motionMagicConfigs.withMotionMagicAcceleration(0.00001);
+        motionMagicConfigs.withMotionMagicJerk(0.00001);
+
+        var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
+        softLimitConfigs.withForwardSoftLimitThreshold(6.3);
+        softLimitConfigs.withForwardSoftLimitEnable(true);
+        softLimitConfigs.withReverseSoftLimitThreshold(0.1);
+        softLimitConfigs.withReverseSoftLimitEnable(true);
 
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
@@ -82,6 +88,8 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         hoodMotor.optimizeBusUtilization();
 
         setDefaultCommand(Commands.run(() -> holdPosition(), this));
+        // setDefaultCommand(Commands.run(() -> stop(), this));
+
     }
 
     @Override

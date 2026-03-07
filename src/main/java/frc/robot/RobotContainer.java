@@ -68,7 +68,7 @@ public class RobotContainer {
     // private final Motor13Spinner m_crashout = new Motor13Spinner();         // CAN ID 13
     //private final SpinMotor44Subsystem m_crashout13 = new SpinMotor44Subsystem(); // CAN ID 44
     private final SpinDexterSubsystem m_spinDexter = new SpinDexterSubsystem();
-    private final KickerSubsystem m_kicker = new KickerSubsystem(0);
+    private final KickerSubsystem m_kicker = new KickerSubsystem(16);
 
 
     private final HoodSubsystem hood = new HoodSubsystem();
@@ -137,14 +137,16 @@ public class RobotContainer {
     //     joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
            joystick.x().whileTrue(new IntakeSpinCommand(spin, 60));
            
-           joystick.a().whileTrue(new ShooterVelocityCommand(shooter, -100));
            
-           joystick.b().whileTrue(new IntakePivotCommand(pivot, 5.8));
+           joystick.b().whileTrue(new IntakePivotCommand(pivot, 4));
+
+           joystick.y().whileTrue(new SpindexerAndKickerAndShooterCommandGroup(m_kicker, m_spinDexter, shooter));
            
-           joystick.povLeft().whileTrue(new SetHoodPositionCommand(hood, -0.1));
-           joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 0.1));
+           joystick.povLeft().whileTrue(new SetHoodPositionCommand(hood, 3));
+           joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 5));
+           joystick.a().whileTrue(new SetHoodPositionCommand(hood, 0));
                       
-           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, -40));
+           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, -200));
            
            joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, -40));
         //   joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));

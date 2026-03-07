@@ -29,9 +29,9 @@ public class IntakePivotSubsystem extends SubsystemBase {
         motorOutputConfigs.withInverted(InvertedValue.CounterClockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(0.45);
+        Slot0Configs.withKP(0.7);
         Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.0);
+        Slot0Configs.withKD(0.001);
         Slot0Configs.withKV(0.12);
         Slot0Configs.withKG(0.3);
         Slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);

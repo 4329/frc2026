@@ -12,9 +12,9 @@ import frc.robot.commands.TurretCommands.ShooterCommands.ShooterVelocityCommand;
 public class SpindexerAndKickerAndShooterCommandGroup extends ParallelCommandGroup {
     public SpindexerAndKickerAndShooterCommandGroup(KickerSubsystem kicker, SpinDexterSubsystem spinDexer, ShooterSubsystem shooter) {
         addCommands(
-            new KickerSpinCommand(kicker, 5.9),
-            new SpindexerCommand(spinDexer, 5.9),
-            new ShooterVelocityCommand(shooter, 100));
+            new KickerSpinCommand(kicker, -200),
+            new SpindexerCommand(spinDexer, -40),
+            new ShooterVelocityCommand(shooter, -200));
           Commands.run(() -> 
                  System.out.println("Kicker Position: " + kicker.getPosition() + 
                                   " | Spin RPS: " + spinDexer.getVelocity())
