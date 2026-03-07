@@ -6,7 +6,7 @@ import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 public class SetHoodPositionCommand extends Command {
     private final HoodSubsystem hood;
     private final double targetPosition;
-    private static final double TOLERANCE = 0.0000001;
+    private static final double TOLERANCE = 0.00001;
 
     public SetHoodPositionCommand(HoodSubsystem hood, double targetPosition) {
         this.hood = hood;

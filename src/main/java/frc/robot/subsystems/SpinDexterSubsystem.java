@@ -39,7 +39,7 @@ public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsyste
     private final StatusSignal<Temperature> tempSignal;
 
     public SpinDexterSubsystem() {
-        spinnerMotor = new TalonFX(44);
+        spinnerMotor = new TalonFX(15);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);

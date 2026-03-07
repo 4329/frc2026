@@ -26,7 +26,7 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(true);
     private final HoodLogAutoLogged hoodLog = new HoodLogAutoLogged();
 
-    private static final double MIN_POSITION = 0.05;
+    private static final double MIN_POSITION = -0.5;
     private static final double MAX_POSITION = 0.5;
     private static final double TOLERANCE = 0.01;
 
@@ -40,22 +40,22 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<Temperature> tempSignal;
 
     public HoodSubsystem() {
-        hoodMotor = new TalonFX(42);
+        hoodMotor = new TalonFX(18);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
         motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(25);
+        Slot0Configs.withKP(1);
         Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.05);
+        Slot0Configs.withKD(0.0);
         Slot0Configs.withKV(0.12);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(3);
-        motionMagicConfigs.withMotionMagicAcceleration(8);
-        motionMagicConfigs.withMotionMagicJerk(80);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(1);
+        motionMagicConfigs.withMotionMagicAcceleration(0.5);
+        motionMagicConfigs.withMotionMagicJerk(5);
 
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);

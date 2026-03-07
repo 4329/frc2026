@@ -40,7 +40,7 @@ public class ShooterSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<Temperature> tempSignal;
 
     public ShooterSubsystem() {
-        shooterMotor = new TalonFX(44);
+        shooterMotor = new TalonFX(19);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);

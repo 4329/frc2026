@@ -30,6 +30,7 @@ import frc.robot.commands.KickerSpinCommand;
 import frc.robot.commands.SpindexerCommand;
 import frc.robot.subsystems.SpinDexterSubsystem;
 import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
+import frc.robot.commands.CommandGroups.SpindexerAndKickerAndShooterCommandGroup;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
@@ -67,7 +68,7 @@ public class RobotContainer {
     // private final Motor13Spinner m_crashout = new Motor13Spinner();         // CAN ID 13
     //private final SpinMotor44Subsystem m_crashout13 = new SpinMotor44Subsystem(); // CAN ID 44
     private final SpinDexterSubsystem m_spinDexter = new SpinDexterSubsystem();
-    private final KickerSubsystem m_kicker = new KickerSubsystem(16);
+    private final KickerSubsystem m_kicker = new KickerSubsystem(0);
 
 
     private final HoodSubsystem hood = new HoodSubsystem();
@@ -136,24 +137,26 @@ public class RobotContainer {
     //     joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
            joystick.x().whileTrue(new IntakeSpinCommand(spin, 60));
            
-           joystick.a().whileTrue(new ShooterVelocityCommand(shooter, 75));
+           joystick.a().whileTrue(new ShooterVelocityCommand(shooter, -100));
            
            joystick.b().whileTrue(new IntakePivotCommand(pivot, 5.8));
            
            joystick.povLeft().whileTrue(new SetHoodPositionCommand(hood, -0.1));
            joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 0.1));
                       
-           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, 10));
+           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, -40));
            
-           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, 10));
-    //     joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
-           
+           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, -40));
+        //   joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
+    //       joystick.rightTrigger().whileTrue(new SpindexerAndKickerAndShooterCommandGroup(m_kicker, m_spinDexter, shooter));
+    //
+        
     //         // --- INTAKE BINDINGS ---
     // // Run the intake + spin group while button A is held
     //     joystick.x().whileTrue(new IntakeSubsystemCommandGroup(pivot, spin));    
 
     //     joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
-        
+
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {
             System.out.println("=== VISION TEST ===");
