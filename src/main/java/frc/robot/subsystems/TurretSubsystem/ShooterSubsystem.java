@@ -46,7 +46,7 @@ public class ShooterSubsystem extends SubsystemBase implements LoggedSubsystem {
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(1.0);
+        Slot0Configs.withKP(3.0);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
 
@@ -54,6 +54,7 @@ public class ShooterSubsystem extends SubsystemBase implements LoggedSubsystem {
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
         feedbackConfigs.withSensorToMechanismRatio(1.0);
         feedbackConfigs.withRotorToSensorRatio(1.0);
+
 
         shooterMotor.getConfigurator().apply(motorOutputConfigs);
         shooterMotor.getConfigurator().apply(Slot0Configs);

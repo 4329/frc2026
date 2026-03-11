@@ -9,6 +9,13 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.WebServer;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +37,7 @@ import frc.robot.commands.KickerSpinCommand;
 import frc.robot.commands.SpindexerCommand;
 import frc.robot.subsystems.SpinDexterSubsystem;
 import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
+import frc.robot.commands.CommandGroups.SDandKCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerAndKickerAndShooterCommandGroup;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
@@ -56,6 +64,8 @@ public class RobotContainer {
 
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
+    private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
     private boolean isFieldCentric = true;
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -97,6 +107,41 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         configureBindings();
+
+        SmartDashboard.putNumber("Tuning/ShooterSpeed", 50.0);
+        SmartDashboard.putNumber("Tuning/HoodAngle", 0.1);
+
+        WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
+        SmartDashboard.putData("PDH", pdh);
+        SmartDashboard.putData("Swerve Drive", new Sendable() {
+            @Override
+            public void initSendable(SendableBuilder builder) {
+                builder.setSmartDashboardType("SwerveDrive");
+
+                builder.addDoubleProperty("Front Left Angle",
+                    () -> drivetrain.getState().ModuleStates[0].angle.getRadians(), null);
+                builder.addDoubleProperty("Front Left Velocity",
+                    () -> drivetrain.getState().ModuleStates[0].speedMetersPerSecond, null);
+
+                builder.addDoubleProperty("Front Right Angle",
+                    () -> drivetrain.getState().ModuleStates[1].angle.getRadians(), null);
+                builder.addDoubleProperty("Front Right Velocity",
+                    () -> drivetrain.getState().ModuleStates[1].speedMetersPerSecond, null);
+
+                builder.addDoubleProperty("Back Left Angle",
+                    () -> drivetrain.getState().ModuleStates[2].angle.getRadians(), null);
+                builder.addDoubleProperty("Back Left Velocity",
+                    () -> drivetrain.getState().ModuleStates[2].speedMetersPerSecond, null);
+
+                builder.addDoubleProperty("Back Right Angle",
+                    () -> drivetrain.getState().ModuleStates[3].angle.getRadians(), null);
+                builder.addDoubleProperty("Back Right Velocity",
+                    () -> drivetrain.getState().ModuleStates[3].speedMetersPerSecond, null);
+
+
+                builder.addDoubleProperty("Robot Angle", () -> drivetrain.getState().Pose.getRotation().getRadians(), null);
+            }
+        });
     }
 
     private void registerNamedCommands() {
@@ -107,6 +152,16 @@ public class RobotContainer {
         Logger.recordOutput("Controller/Driver/LeftX", joystick.getLeftX());
         field.setRobotPose(drivetrain.getState().Pose);
         Logger.recordOutput("Drivetrain/Pose", drivetrain.getState().Pose);
+        
+        Logger.recordOutput("Drivetrain/Speeds", new double[] {
+            drivetrain.getState().Speeds.vxMetersPerSecond,
+            drivetrain.getState().Speeds.vyMetersPerSecond,
+            drivetrain.getState().Speeds.omegaRadiansPerSecond
+        });
+
+        SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+        SmartDashboard.putString("Drive Mode", isFieldCentric ? "FIELD CENTRIC" : "ROBOT CENTRIC");
+        SmartDashboard.putBoolean("Field Oriented", isFieldCentric);
     }
 
     private void configureBindings() {
@@ -126,38 +181,22 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // --- INTAKE BINDINGS ---
-        // joystick.a().onTrue(
-        //     new IntakeAndSpinCommandGroup(m_intake, m_crashout, spinner, m_spinDexter, MaxAngularRate)
-        // );
-            
-        // joystick.a().onFalse(
-        //     new IntakeGoToPositionCommand(m_intake, MaxAngularRate, false)
-    //     // );
-    //     joystick.b().whileTrue(new TurretSubsystemCommandGroupMax(turret, hood, shooter));
+        // joystick.a().whileTrue(new ShooterVelocityCommand(shooter, SmartDashboard.getNumber("Tuning/ShooterSpeed", 50)));
+        // joystick.b().whileTrue(new SetHoodPositionCommand(hood, SmartDashboard.getNumber("Tuning/HoodAngle", 0.1)));
+
+        joystick.a().whileTrue(new SetHoodPositionCommand(hood, 0.1));
+        joystick.b().whileTrue(new ShooterVelocityCommand(shooter, -60));
+
            joystick.x().whileTrue(new IntakeSpinCommand(spin, 60));
            
-           
-           joystick.b().whileTrue(new IntakePivotCommand(pivot, 4));
-
            joystick.y().whileTrue(new SpindexerAndKickerAndShooterCommandGroup(m_kicker, m_spinDexter, shooter));
            
            joystick.povLeft().whileTrue(new SetHoodPositionCommand(hood, 3));
-           joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 5));
-           joystick.a().whileTrue(new SetHoodPositionCommand(hood, 0));
+           joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 6));
                       
            joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, -200));
            
-           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, -40));
-        //   joystick.a().whileTrue(new TurretSubsystemCommandGroupMin(turret, hood, shooter));
-    //       joystick.rightTrigger().whileTrue(new SpindexerAndKickerAndShooterCommandGroup(m_kicker, m_spinDexter, shooter));
-    //
-        
-    //         // --- INTAKE BINDINGS ---
-    // // Run the intake + spin group while button A is held
-    //     joystick.x().whileTrue(new IntakeSubsystemCommandGroup(pivot, spin));    
-
-    //     joystick.leftBumper().whileTrue(new FollowAprilTagCommand(vision, drivetrain));
+           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, -75));
 
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {
