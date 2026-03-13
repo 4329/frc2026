@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -47,6 +48,7 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
+        motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
         Slot0Configs.withKP(1);

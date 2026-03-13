@@ -43,6 +43,7 @@ import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
+import frc.robot.commands.TurretCommands.HoodCommands.AmpZeroing;
 import frc.robot.commands.TurretCommands.HoodCommands.SetHoodPositionCommand;
 import frc.robot.commands.TurretCommands.RotationCommands.TurretPositionCommand;
 import frc.robot.commands.TurretCommands.ShooterCommands.ShooterVelocityCommand;
@@ -79,7 +80,7 @@ public class RobotContainer {
     //private final SpinMotor44Subsystem m_crashout13 = new SpinMotor44Subsystem(); // CAN ID 44
     private final SpinDexterSubsystem m_spinDexter = new SpinDexterSubsystem();
     private final KickerSubsystem m_kicker = new KickerSubsystem(16);
-
+    
 
     private final HoodSubsystem hood = new HoodSubsystem();
 
@@ -182,9 +183,7 @@ public class RobotContainer {
         );
 
         // joystick.a().whileTrue(new ShooterVelocityCommand(shooter, SmartDashboard.getNumber("Tuning/ShooterSpeed", 50)));
-        // joystick.b().whileTrue(new SetHoodPositionCommand(hood, SmartDashboard.getNumber("Tuning/HoodAngle", 0.1)));
-
-        joystick.a().whileTrue(new SetHoodPositionCommand(hood, 0.1));
+        // joystick.b().whileTrue(new SetHoodPositionComman
         joystick.b().whileTrue(new ShooterVelocityCommand(shooter, -60));
 
            joystick.x().whileTrue(new IntakeSpinCommand(spin, 60));
@@ -195,7 +194,7 @@ public class RobotContainer {
            joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 6));
                       
            joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, -200));
-           
+           joystick.rightTrigger().onTrue(new AmpZeroing(hood));
            joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, -75));
 
         // Temporary test - print when button pressed
