@@ -11,7 +11,7 @@ import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
 
 public class VisionSubsystem extends SubsystemBase {
-    private final DevCommandSwerveDrivetrain drivetrain;
+    private final CompCommandSwerveDrivetrain drivetrain;
     private final String limelightName;
     
     private boolean hasTarget = false;
@@ -20,7 +20,7 @@ public class VisionSubsystem extends SubsystemBase {
     private double targetArea = 0.0;
     private double targetDistance = 0.0;
     
-    public VisionSubsystem(DevCommandSwerveDrivetrain drivetrain) {
+    public VisionSubsystem(CompCommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         this.limelightName = VisionConstants.LIMELIGHT_NAME;
         

@@ -28,6 +28,7 @@ public class LoggingSubsystem extends SubsystemBase {
         this.subsystems = subsystems;
     }
 
+
     @Override
     public void periodic() {
         // Increment timer and wrap around based on 'oftenness'

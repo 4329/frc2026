@@ -29,6 +29,7 @@ import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.generated.CompTunerConstants;
 import frc.robot.generated.DevTunerConstants;
+import frc.robot.subsystems.CompCommandSwerveDrivetrain;
 import frc.robot.subsystems.DevCommandSwerveDrivetrain;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 import frc.robot.subsystems.TurretSubsystem.TurretRotateSubsystem;
@@ -55,7 +56,7 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(Constants.OIConstants.kDriverControllerPort);
 
-    public final DevCommandSwerveDrivetrain drivetrain = CompTunerConstants.createDrivetrain();
+    public final CompCommandSwerveDrivetrain drivetrain = CompTunerConstants.createDrivetrain();
 
     private final HoodSubsystem hood = new HoodSubsystem();
 

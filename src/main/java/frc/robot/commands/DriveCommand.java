@@ -7,10 +7,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DevCommandSwerveDrivetrain;
+import frc.robot.subsystems.CompCommandSwerveDrivetrain;
 
 public class DriveCommand extends Command{
-    private final DevCommandSwerveDrivetrain drivetrain;
+    private final CompCommandSwerveDrivetrain drivetrain;
     private final DoubleSupplier xSupplier;
     private final DoubleSupplier ySupplier;
     private final DoubleSupplier rotationSupplier;
@@ -21,9 +21,9 @@ public class DriveCommand extends Command{
     private final SwerveRequest.FieldCentric fieldCentricRequest;
     private final SwerveRequest.RobotCentric robotCentricRequest;
 
-    public DriveCommand(DevCommandSwerveDrivetrain drivetrain, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, BooleanSupplier fieldCentricSupplier, double maxSpeed, double maxAngularRate) {
+    public DriveCommand(CompCommandSwerveDrivetrain drivetrain2, DoubleSupplier xSupplier, DoubleSupplier ySupplier, DoubleSupplier rotationSupplier, BooleanSupplier fieldCentricSupplier, double maxSpeed, double maxAngularRate) {
 
-        this.drivetrain = drivetrain;
+        this.drivetrain = drivetrain2;
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         this.rotationSupplier = rotationSupplier;
@@ -34,7 +34,7 @@ public class DriveCommand extends Command{
         this.fieldCentricRequest = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
         this.robotCentricRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-        addRequirements(drivetrain);
+        addRequirements(drivetrain2);
     }
 
     @Override
