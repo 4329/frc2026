@@ -60,7 +60,7 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
         softLimitConfigs.withForwardSoftLimitThreshold(6.3);
         softLimitConfigs.withForwardSoftLimitEnable(true);
-        softLimitConfigs.withReverseSoftLimitThreshold(0.1);
+        softLimitConfigs.withReverseSoftLimitThreshold(0.0);
         softLimitConfigs.withReverseSoftLimitEnable(true);
 
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
@@ -87,8 +87,8 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         );
         hoodMotor.optimizeBusUtilization();
 
-        setDefaultCommand(Commands.run(() -> holdPosition(), this));
-        // setDefaultCommand(Commands.run(() -> stop(), this));
+        // setDefaultCommand(Commands.run(() -> holdPosition(), this));
+        setDefaultCommand(Commands.run(() -> stop(), this));
 
     }
 
@@ -132,6 +132,11 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public double getVelocity() {
         return velocitySignal.getValueAsDouble();
+    }
+
+    public double getSupplyCurrent() {
+        supplyCurrentSignal.refresh();
+        return supplyCurrentSignal.getValueAsDouble();
     }
 
     public boolean atPosition(double targetPosition, double tolerance) {

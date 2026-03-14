@@ -43,10 +43,12 @@ import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
-import frc.robot.commands.TurretCommands.HoodCommands.AmpZeroing;
+import frc.robot.commands.TurretCommands.HoodCommands.HoodZeroCommand;
+import frc.robot.commands.TurretCommands.HoodCommands.ManualHoodCommand;
 import frc.robot.commands.TurretCommands.HoodCommands.SetHoodPositionCommand;
 import frc.robot.commands.TurretCommands.RotationCommands.TurretPositionCommand;
 import frc.robot.commands.TurretCommands.ShooterCommands.ShooterVelocityCommand;
+import frc.robot.commands.TurretCommands.ShooterCommands.ShooterVolSpinCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
@@ -182,20 +184,22 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // joystick.a().whileTrue(new ShooterVelocityCommand(shooter, SmartDashboard.getNumber("Tuning/ShooterSpeed", 50)));
-        // joystick.b().whileTrue(new SetHoodPositionComman
-        joystick.b().whileTrue(new ShooterVelocityCommand(shooter, -60));
 
-           joystick.x().whileTrue(new IntakeSpinCommand(spin, 60));
+        joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", -50.0)), shooter).finallyDo(() -> shooter.stop()));
+        joystick.b().whileTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 0.5)), hood).finallyDo(() -> hood.holdPosition()));
+        // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 80));
+        joystick.x().onTrue(new HoodZeroCommand(hood));
+        joystick.y().whileTrue(new IntakeSpinCommand(spin, 60));
+
            
-           joystick.y().whileTrue(new SpindexerAndKickerAndShooterCommandGroup(m_kicker, m_spinDexter, shooter));
            
-           joystick.povLeft().whileTrue(new SetHoodPositionCommand(hood, 3));
-           joystick.povRight().whileTrue(new SetHoodPositionCommand(hood, 6));
+        //    joystick.povLeft().whileTrue(new ManualHoodCommand(hood, true));
+        //    joystick.povRight().whileTrue(new ManualHoodCommand(hood, false));
+        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 2));
+        joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4));
                       
-           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, -200));
-           joystick.rightTrigger().onTrue(new AmpZeroing(hood));
-           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, -75));
+           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, 200));
+           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, 50));
 
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {
