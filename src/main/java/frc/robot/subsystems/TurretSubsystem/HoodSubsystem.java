@@ -47,7 +47,7 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(10);
+        Slot0Configs.withKP(10.0);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
         Slot0Configs.withKV(0.12);

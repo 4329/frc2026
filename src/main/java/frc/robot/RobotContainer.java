@@ -193,10 +193,10 @@ public class RobotContainer {
 
            
            
-        //    joystick.povLeft().whileTrue(new ManualHoodCommand(hood, true));
-        //    joystick.povRight().whileTrue(new ManualHoodCommand(hood, false));
-        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 2));
-        joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4));
+        joystick.povLeft().whileTrue(new ManualHoodCommand(hood, true));
+        joystick.povRight().whileTrue(new ManualHoodCommand(hood, false));
+        // joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 2));
+        // joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4));
                       
            joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, 200));
            joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, 50));

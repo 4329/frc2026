@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.model.DrivetrainLogAutoLogged;
-import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -55,10 +55,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
 
-
     private final PIDController visionForwardController;
     private final PIDController visionRotationController;
-
 
     private final DrivetrainLogAutoLogged drivetrainLog = new DrivetrainLogAutoLogged();
 

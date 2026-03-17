@@ -8,7 +8,7 @@ import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 
 public class HoodZeroCommand extends Command{
     private static final double CREEEP_DUTY_CYCLE = -0.5;
-    private static final double CURRENT_SPIKE_AMPS = 50.0;
+    private static final double CURRENT_SPIKE_AMPS = 40.0;
 
     private final HoodSubsystem hood;
     private final DutyCycleOut creepRequest = new DutyCycleOut(CREEEP_DUTY_CYCLE).withEnableFOC(true);
@@ -44,6 +44,8 @@ public class HoodZeroCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         hood.hoodMotor.stopMotor();
+        hood.setPosition(0.5);
+
 
         if (!interrupted) {
             hood.hoodMotor.setPosition(0.0);
