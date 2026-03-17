@@ -12,7 +12,8 @@ import frc.robot.LimelightHelpers.RawFiducial;
 
 public class VisionSubsystem extends SubsystemBase {
     private final CommandSwerveDrivetrain drivetrain;
-    private final String limelightName;
+    private final String swerveLimelight;
+    private final String turretLimelight;
     
     private boolean hasTarget = false;
     private double targetTX = 0.0;
@@ -22,20 +23,34 @@ public class VisionSubsystem extends SubsystemBase {
     
     public VisionSubsystem(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
-        this.limelightName = VisionConstants.LIMELIGHT_NAME;
+        this.swerveLimelight = VisionConstants.LIMELIGHT_SWERVE_NAME;
+        this.turretLimelight = VisionConstants.LIMELIGHT_TURRET_NAME;
         
-        // Set camera pose
         LimelightHelpers.setCameraPose_RobotSpace(
-            limelightName,
-            VisionConstants.ROBOT_TO_CAMERA.getTranslation().getX(),  // Forward
-            -VisionConstants.ROBOT_TO_CAMERA.getTranslation().getY(), // Left (negate Y)
-            VisionConstants.ROBOT_TO_CAMERA.getTranslation().getZ(),  // Up
-            Math.toDegrees(VisionConstants.ROBOT_TO_CAMERA.getRotation().getX()), // Roll
-            Math.toDegrees(VisionConstants.ROBOT_TO_CAMERA.getRotation().getY()), // Pitch
-            Math.toDegrees(VisionConstants.ROBOT_TO_CAMERA.getRotation().getZ())  // Yaw
+            swerveLimelight,
+            VisionConstants.ROBOT_TO_SWERVE_CAMERA.getTranslation().getX(),  // Forward
+            -VisionConstants.ROBOT_TO_SWERVE_CAMERA.getTranslation().getY(), // Left (negate Y)
+            VisionConstants.ROBOT_TO_SWERVE_CAMERA.getTranslation().getZ(),  // Up
+            Math.toDegrees(VisionConstants.ROBOT_TO_SWERVE_CAMERA.getRotation().getX()), // Roll
+            Math.toDegrees(VisionConstants.ROBOT_TO_SWERVE_CAMERA.getRotation().getY()), // Pitch
+            Math.toDegrees(VisionConstants.ROBOT_TO_SWERVE_CAMERA.getRotation().getZ())  // Yaw
         );
+
+        LimelightHelpers.setCameraPose_RobotSpace(
+            turretLimelight,
+            VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getX(),
+            -VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getY(), // Left (negate Y)
+            VisionConstants.ROBOT_TO_SWERVE_CAMERA.getTranslation().getZ(),  // Up
+            Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getX()), // Roll
+            Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getY()), // Pitch
+            Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getZ())  // Yaw
+        );
+
+        LimelightHelpers.setPipelineIndex(swerveLimelight, 0);
+        LimelightHelpers.setPipelineIndex(turretLimelight, 1);
         
-        LimelightHelpers.setLEDMode_PipelineControl(limelightName);
+        LimelightHelpers.setLEDMode_PipelineControl(swerveLimelight);
+        LimelightHelpers.setLEDMode_PipelineControl(turretLimelight);
     }
     
     @Override
@@ -44,24 +59,20 @@ public class VisionSubsystem extends SubsystemBase {
         double yaw = pigeon.getYaw().getValueAsDouble();
         double yawRate = pigeon.getAngularVelocityZWorld().getValueAsDouble();
         
-        LimelightHelpers.SetRobotOrientation(
-            limelightName,
-            yaw,
-            yawRate,
-            0, 0, 0, 0  
-        );
+        LimelightHelpers.SetRobotOrientation(swerveLimelight, yaw, yawRate, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(turretLimelight, yaw, yawRate, 0, 0, 0, 0);
         
-        boolean tv = LimelightHelpers.getTV(limelightName);
-        double tid = LimelightHelpers.getFiducialID(limelightName);
+        boolean tv = LimelightHelpers.getTV(swerveLimelight);
+        double tid = LimelightHelpers.getFiducialID(turretLimelight);
         
 
         if (tv && (int)tid == VisionConstants.TARGET_TAG_ID) {
             hasTarget = true;
-            targetTX = LimelightHelpers.getTX(limelightName);
-            targetTY = LimelightHelpers.getTY(limelightName);
-            targetArea = LimelightHelpers.getTA(limelightName);
+            targetTX = LimelightHelpers.getTX(swerveLimelight);
+            targetTY = LimelightHelpers.getTY(swerveLimelight);
+            targetArea = LimelightHelpers.getTA(swerveLimelight);
             
-            RawFiducial[] rawFiducials = LimelightHelpers.getRawFiducials(limelightName);
+            RawFiducial[] rawFiducials = LimelightHelpers.getRawFiducials(swerveLimelight);
             targetDistance = 0.0;
             for (RawFiducial fiducial : rawFiducials) {
                 if (fiducial.id == VisionConstants.TARGET_TAG_ID) {
@@ -82,34 +93,21 @@ public class VisionSubsystem extends SubsystemBase {
         }
         
 
-        PoseEstimate poseEstimate;
-        var alliance = DriverStation.getAlliance();
-        
-        if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-            poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
-        } else {
-            poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        }
-        
-        if (poseEstimate != null && poseEstimate.tagCount > 0) {
-            if (poseEstimate.tagCount >= 2) {
-                drivetrain.addVisionMeasurement(
-                    poseEstimate.pose,
-                    poseEstimate.timestampSeconds,
-                    VisionConstants.MULTI_TAG_STD_DEVS
-                );
-            } else if (poseEstimate.tagCount == 1 && poseEstimate.avgTagDist < 4.0) {
-                drivetrain.addVisionMeasurement(
-                    poseEstimate.pose,
-                    poseEstimate.timestampSeconds,
-                    VisionConstants.SINGLE_TAG_STD_DEVS
-                );
-            }
-            
-            Logger.recordOutput("Vision/RobotPose", poseEstimate.pose);
-            Logger.recordOutput("Vision/TagCount", poseEstimate.tagCount);
-            Logger.recordOutput("Vision/AverageDist", poseEstimate.avgTagDist);
-        }
+        boolean isRed = DriverStation.getAlliance()
+            .map(a -> a == Alliance.Red)
+            .orElse(false);
+
+        processPoseEstimate(
+            isRed ? LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(swerveLimelight)
+                  : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(swerveLimelight),
+            "Swerve"
+        );
+
+        processPoseEstimate(
+            isRed ? LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(turretLimelight)
+                  : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(turretLimelight),
+            "Turret"
+        );
         
         Logger.recordOutput("Vision/TargetFound", hasTarget);
         Logger.recordOutput("Vision/TargetTX", targetTX);
@@ -119,35 +117,33 @@ public class VisionSubsystem extends SubsystemBase {
     }
     
 
-    public boolean hasTarget() {
-        return hasTarget;
-    }
-    
+    private void processPoseEstimate(PoseEstimate poseEstimate, String cameraName) {
+        if (poseEstimate == null || poseEstimate.tagCount == 0) return;
 
-    public double getTargetTX() {
-        return targetTX;
-    }
-    
+        if (poseEstimate.tagCount >= 2) {
+            drivetrain.addVisionMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds, VisionConstants.MULTI_TAG_STD_DEVS);
+        } else if (poseEstimate.tagCount == 1 && poseEstimate.avgTagDist < 4.0) {
+            drivetrain.addVisionMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds, VisionConstants.SINGLE_TAG_STD_DEVS);
+        }
 
-    public double getTargetTY() {
-        return targetTY;
+        Logger.recordOutput("Vision/" + cameraName + "RobotPose/", poseEstimate.pose);
+        Logger.recordOutput("Vision/" + cameraName + "RobotPose/", poseEstimate.tagCount);
+        Logger.recordOutput("Vision/" + cameraName + "RobotPose/", poseEstimate.avgTagDist);
     }
 
-
-    public double getTargetArea() {
-        return targetArea;
-    }
-    
-
-    public double getTargetDistance() {
-        return targetDistance;
-    }
+    public boolean hasTarget() { return hasTarget; }
+    public double getTargetTX() { return targetTX; }
+    public double getTargetTY() { return targetTY; }
+    public double getTargetArea() { return targetArea; }
+    public double getTargetDistance() { return targetDistance; }
     
     public void setLEDsOff() {
-        LimelightHelpers.setLEDMode_ForceOff(limelightName);
+        LimelightHelpers.setLEDMode_ForceOff(swerveLimelight);
+        LimelightHelpers.setLEDMode_ForceOff(turretLimelight);
     }
     
     public void setLEDsOn() {
-        LimelightHelpers.setLEDMode_ForceOn(limelightName);
+        LimelightHelpers.setLEDMode_ForceOn(swerveLimelight);
+        LimelightHelpers.setLEDMode_ForceOn(turretLimelight);
     }
 }

@@ -146,10 +146,12 @@ public final class Constants {
 
     public static final class VisionConstants {
 
-        public static final String LIMELIGHT_NAME = "limelight-swerve";
+        public static final String LIMELIGHT_SWERVE_NAME = "limelight-swerve";
+        public static final String LIMELIGHT_TURRET_NAME = "limelight-turret";
 
 
-        public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(new Translation3d(0.3683, -0.1016, 0.0889), new Rotation3d(Math.toRadians(180), Math.toRadians(45), 0));
+        public static final Transform3d ROBOT_TO_SWERVE_CAMERA = new Transform3d(new Translation3d(0.3683, -0.1016, 0.0889), new Rotation3d(Math.toRadians(180), Math.toRadians(45), 0));
+        public static final Transform3d ROBOT_TO_TURRET_CAMERA = new Transform3d(new Translation3d(0.3683, -0.1016, 0.0889), new Rotation3d(Math.toRadians(180), Math.toRadians(45), 0));
 
         public static final Vector<N3> SINGLE_TAG_STD_DEVS = VecBuilder.fill(1.0, 1.0, 2.0);
         public static final Vector<N3> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1.0); 
