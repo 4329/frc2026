@@ -1,5 +1,6 @@
 package frc.robot.subsystems.IntakeSubsystem;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -8,18 +9,22 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class IntakePivotSubsystem extends SubsystemBase {
-    private final TalonFX pivotMotor;
+    public final TalonFX pivotMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
 
     private static final double MIN_POSITION = 0;
     private static final double MAX_POSITION = 6;
     private double targetPosition = MIN_POSITION;
+
+    private final StatusSignal<Current> supplyCurrentSignal;
+
 
     public IntakePivotSubsystem() {
         pivotMotor =  new TalonFX(13);
@@ -67,6 +72,8 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
         pivotMotor.setPosition(0);
 
+        supplyCurrentSignal = pivotMotor.getSupplyCurrent();
+
         setDefaultCommand(Commands.run(() -> holdCurrentPosition(), this));
     }
 
@@ -81,6 +88,11 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
     public double getPosition() {
         return pivotMotor.getPosition().getValueAsDouble();
+    }
+
+    public double getSupplyCurrent() {
+        supplyCurrentSignal.refresh();
+        return supplyCurrentSignal.getValueAsDouble();
     }
 
     public void holdCurrentPosition() {
