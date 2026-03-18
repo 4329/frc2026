@@ -111,8 +111,9 @@ public class RobotContainer {
 
         configureBindings();
 
-        SmartDashboard.putNumber("Tuning/ShooterSpeed", 50.0);
+        SmartDashboard.putNumber("Tuning/ShooterSpeed", 60.0);
         SmartDashboard.putNumber("Tuning/HoodAngle", 0.1);
+        SmartDashboard.putNumber("Tuning/SpindexerSpeed", 40.0);
 
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         SmartDashboard.putData("PDH", pdh);
@@ -185,21 +186,18 @@ public class RobotContainer {
         );
 
 
-        joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", -50.0)), shooter).finallyDo(() -> shooter.stop()));
-        joystick.b().whileTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 0.5)), hood).finallyDo(() -> hood.holdPosition()));
+        joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", 60.0)), shooter).finallyDo(() -> shooter.stop()));
+        joystick.b().onTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 0.5)), hood).finallyDo(() -> hood.holdPosition()));
+        joystick.x().whileTrue(Commands.run(() -> m_spinDexter.setVelocity(SmartDashboard.getNumber("Tuning/SpindexerSpeed", 50)), m_spinDexter).finallyDo(() -> m_spinDexter.stop()));
+        joystick.y().whileTrue(new KickerSpinCommand(m_kicker, 200));
         // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 80));
-        joystick.x().onTrue(new HoodZeroCommand(hood));
-        joystick.y().whileTrue(new IntakeSpinCommand(spin, 60));
+        // joystick.x().onTrue(new HoodZeroCommand(hood));
+        // joystick.y().whileTrue(new IntakeSpinCommand(spin, 60));
+        joystick.povLeft().whileTrue(new ShooterVelocityCommand(shooter, 100));
+        joystick.povRight().onTrue(new HoodZeroCommand(hood));
 
-           
-           
-        joystick.povLeft().whileTrue(new ManualHoodCommand(hood, true));
-        joystick.povRight().whileTrue(new ManualHoodCommand(hood, false));
-        // joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 2));
-        // joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4));
-                      
-           joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, 200));
-           joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, 50));
+        joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, 200));
+        joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, 50));
 
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {

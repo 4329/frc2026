@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 1.0,
   "grid_size": 128,
   "tabs": [
     {
@@ -9,30 +9,31 @@
         "containers": [
           {
             "title": "Field",
-            "x": 0,
-            "y": 0,
-            "width": 896,
-            "height": 512,
+            "x": 0.0,
+            "y": 0.0,
+            "width": 896.0,
+            "height": 512.0,
             "type": "Field",
             "properties": {
               "topic": "/SmartDashboard/Field",
               "period": 0.06,
-              "data_type": "string",
               "field_game": "Rebuilt",
               "robot_width": 0.762,
               "robot_length": 0.762,
               "show_other_objects": true,
               "show_trajectories": true,
+              "field_rotation": 0.0,
               "robot_color": 4294901760,
-              "trajectory_color": 4294967295
+              "trajectory_color": 4294967295,
+              "show_robot_outside_widget": true
             }
           },
           {
             "title": "Drive Mode",
-            "x": 896,
-            "y": 0,
-            "width": 256,
-            "height": 128,
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/SmartDashboard/Drive Mode",
@@ -42,10 +43,10 @@
           },
           {
             "title": "Field Orient",
-            "x": 1152,
-            "y": 0,
-            "width": 256,
-            "height": 128,
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Field Oriented",
@@ -59,43 +60,40 @@
           },
           {
             "title": "Alerts",
-            "x": 0,
-            "y": 512,
-            "width": 512,
-            "height": 256,
+            "x": 0.0,
+            "y": 512.0,
+            "width": 512.0,
+            "height": 256.0,
             "type": "Alerts",
             "properties": {
               "topic": "/Alerts",
-              "period": 0.06,
-              "data_type": "string"
+              "period": 0.06
             }
           },
           {
             "title": "Swerve Drive",
-            "x": 512,
-            "y": 512,
-            "width": 384,
-            "height": 256,
+            "x": 512.0,
+            "y": 512.0,
+            "width": 384.0,
+            "height": 256.0,
             "type": "SwerveDrive",
             "properties": {
               "topic": "/SmartDashboard/Swerve Drive",
               "period": 0.06,
-              "data_type": "string",
               "show_robot_rotation": true,
               "rotation_unit": "Radians"
             }
           },
           {
             "title": "Power Distribution",
-            "x": 896,
-            "y": 128,
-            "width": 512,
-            "height": 640,
+            "x": 896.0,
+            "y": 128.0,
+            "width": 512.0,
+            "height": 640.0,
             "type": "PowerDistribution",
             "properties": {
               "topic": "/SmartDashboard/PDH",
-              "period": 0.06,
-              "data_type": "string"
+              "period": 0.06
             }
           }
         ]
@@ -108,25 +106,25 @@
         "containers": [
           {
             "title": "Camera Feed",
-            "x": 0,
-            "y": 0,
-            "width": 896,
-            "height": 512,
+            "x": 0.0,
+            "y": 0.0,
+            "width": 896.0,
+            "height": 512.0,
             "type": "Camera Stream",
             "properties": {
               "topic": "/CameraPublisher/limelight-swerve",
               "period": 0.06,
-              "data_type": "string",
+              "rotation_turns": 0,
               "compression": -1,
               "fps": -1
             }
           },
           {
             "title": "Drive Mode",
-            "x": 896,
-            "y": 0,
-            "width": 256,
-            "height": 128,
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
             "type": "Large Text Display",
             "properties": {
               "topic": "/SmartDashboard/Drive Mode",
@@ -136,10 +134,10 @@
           },
           {
             "title": "Field Orient",
-            "x": 1152,
-            "y": 0,
-            "width": 256,
-            "height": 128,
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Field Oriented",
@@ -153,43 +151,40 @@
           },
           {
             "title": "Alerts",
-            "x": 0,
-            "y": 512,
-            "width": 512,
-            "height": 256,
+            "x": 0.0,
+            "y": 512.0,
+            "width": 512.0,
+            "height": 256.0,
             "type": "Alerts",
             "properties": {
               "topic": "/Alerts",
-              "period": 0.06,
-              "data_type": "string"
+              "period": 0.06
             }
           },
           {
             "title": "Swerve Drive",
-            "x": 512,
-            "y": 512,
-            "width": 384,
-            "height": 256,
+            "x": 512.0,
+            "y": 512.0,
+            "width": 384.0,
+            "height": 256.0,
             "type": "SwerveDrive",
             "properties": {
               "topic": "/SmartDashboard/Swerve Drive",
               "period": 0.06,
-              "data_type": "string",
               "show_robot_rotation": true,
               "rotation_unit": "Radians"
             }
           },
           {
             "title": "Power Distribution",
-            "x": 896,
-            "y": 128,
-            "width": 512,
-            "height": 640,
+            "x": 896.0,
+            "y": 128.0,
+            "width": 512.0,
+            "height": 640.0,
             "type": "PowerDistribution",
             "properties": {
               "topic": "/SmartDashboard/PDH",
-              "period": 0.06,
-              "data_type": "string"
+              "period": 0.06
             }
           }
         ]
@@ -202,28 +197,44 @@
         "containers": [
           {
             "title": "Shooter Speed (RPS)",
-            "x": 0,
-            "y": 0,
-            "width": 384,
-            "height": 128,
+            "x": 0.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Tuning/ShooterSpeed",
               "period": 0.06,
-              "data_type": "double"
+              "data_type": "double",
+              "show_submit_button": false
             }
           },
           {
             "title": "Hood Angle (Rotations)",
-            "x": 0,
-            "y": 128,
-            "width": 384,
-            "height": 128,
+            "x": 0.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Tuning/HoodAngle",
               "period": 0.06,
-              "data_type": "double"
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "SpindexerSpeed",
+            "x": 0.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Tuning/SpindexerSpeed",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
             }
           }
         ]

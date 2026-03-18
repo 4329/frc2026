@@ -47,18 +47,18 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(10.0);
+        Slot0Configs.withKP(12.0);
         Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.0);
-        Slot0Configs.withKV(0.12);
+        Slot0Configs.withKD(0.001);
+        Slot0Configs.withKV(1);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(0.0001);
-        motionMagicConfigs.withMotionMagicAcceleration(0.00001);
-        motionMagicConfigs.withMotionMagicJerk(0.00001);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(0.1);
+        motionMagicConfigs.withMotionMagicAcceleration(0.05);
+        motionMagicConfigs.withMotionMagicJerk(0.5);
 
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
-        softLimitConfigs.withForwardSoftLimitThreshold(6.3);
+        softLimitConfigs.withForwardSoftLimitThreshold(6.2);
         softLimitConfigs.withForwardSoftLimitEnable(true);
         softLimitConfigs.withReverseSoftLimitThreshold(0.0);
         softLimitConfigs.withReverseSoftLimitEnable(true);

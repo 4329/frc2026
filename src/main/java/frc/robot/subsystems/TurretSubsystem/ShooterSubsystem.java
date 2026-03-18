@@ -50,10 +50,10 @@ public class ShooterSubsystem extends SubsystemBase implements LoggedSubsystem {
 
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(2.0);
-        Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.01);
-        Slot0Configs.withKV(0.112);
+        Slot0Configs.withKP(0.55);
+        Slot0Configs.withKI(0.002);
+        Slot0Configs.withKD(0.005);
+        Slot0Configs.withKV(0.118);
         Slot0Configs.withKS(0.5);
 
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();

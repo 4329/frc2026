@@ -8,7 +8,8 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class TurretCommandGroup extends Command {
     private static final InterpolatingDoubleTreeMap SHOOTER_TABLE = new InterpolatingDoubleTreeMap();
-    private static final InterpolatingDoubleTreeMap HOOD_TABLE    = new InterpolatingDoubleTreeMap();
+    private static final InterpolatingDoubleTreeMap HOOD_TABLE = new InterpolatingDoubleTreeMap();
+    private static final InterpolatingDoubleTreeMap SPINDEXER_TABLE = new InterpolatingDoubleTreeMap();
 
     static {
         // distance (m) -> shooter velocity (rotations/sec)
@@ -17,6 +18,11 @@ public class TurretCommandGroup extends Command {
 
         // distance (m) -> hood position (rotations)
         HOOD_TABLE.put(1.29, 0.10);
+
+
+
+        // distance (m) -> spindexer speed (rotations/sec)
+        SPINDEXER_TABLE.put(1.29, 90.0);
 
     }
 
