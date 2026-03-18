@@ -2,6 +2,7 @@ package frc.robot.subsystems.TurretSubsystem;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -23,7 +24,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public final TalonFX hoodMotor;
-    private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(true);
+    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(true);
     private final HoodLogAutoLogged hoodLog = new HoodLogAutoLogged();
 
     private static final double MIN_POSITION = 0.1;
@@ -53,9 +54,9 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         Slot0Configs.withKV(1);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(0.1);
-        motionMagicConfigs.withMotionMagicAcceleration(0.05);
-        motionMagicConfigs.withMotionMagicJerk(0.5);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(4.0);
+        motionMagicConfigs.withMotionMagicAcceleration(1.0);
+        motionMagicConfigs.withMotionMagicJerk(40.0);
 
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
         softLimitConfigs.withForwardSoftLimitThreshold(6.2);
