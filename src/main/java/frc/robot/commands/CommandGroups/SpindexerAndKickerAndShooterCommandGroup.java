@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.KickerSpinCommand;
 import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.SpinDexterSubsystem;
+import frc.robot.subsystems.SpindexterSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 import frc.robot.commands.SpindexerCommand;
 import frc.robot.commands.TurretCommands.ShooterCommands.ShooterVelocityCommand;
 
 public class SpindexerAndKickerAndShooterCommandGroup extends ParallelCommandGroup {
-    public SpindexerAndKickerAndShooterCommandGroup(KickerSubsystem kicker, SpinDexterSubsystem spinDexer, ShooterSubsystem shooter) {
+    public SpindexerAndKickerAndShooterCommandGroup(KickerSubsystem kicker, SpindexterSubsystem spinDexer, ShooterSubsystem shooter) {
         addCommands(
             new KickerSpinCommand(kicker, -200),
             new SpindexerCommand(spinDexer, -40),

@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 
 public class KickerSpinCommand extends Command {
     private final KickerSubsystem kicker;

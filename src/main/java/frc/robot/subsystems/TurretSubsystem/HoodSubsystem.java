@@ -3,7 +3,6 @@ package frc.robot.subsystems.TurretSubsystem;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -88,7 +87,6 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         );
         hoodMotor.optimizeBusUtilization();
 
-        // setDefaultCommand(Commands.run(() -> holdPosition(), this));
         setDefaultCommand(Commands.run(() -> stop(), this));
 
     }

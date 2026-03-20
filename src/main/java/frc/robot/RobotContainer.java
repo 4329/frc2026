@@ -29,13 +29,9 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-// import frc.robot.subsystems.Motor13Spinner;
-//import frc.robot.subsystems.SpinMotor44Subsystem;
-import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.commands.KickerSpinCommand;
 import frc.robot.commands.SpindexerCommand;
-import frc.robot.subsystems.SpinDexterSubsystem;
+import frc.robot.subsystems.SpindexterSubsystem;
 import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
 import frc.robot.commands.CommandGroups.SDandKCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerAndKickerAndShooterCommandGroup;
@@ -55,7 +51,6 @@ import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 import frc.robot.commands.FollowAprilTagCommand;
-import frc.robot.subsystems.NEO550ThroughTalonFXSSubsytem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
@@ -78,20 +73,16 @@ public class RobotContainer {
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    // private final Motor13Spinner m_crashout = new Motor13Spinner();         // CAN ID 13
-    //private final SpinMotor44Subsystem m_crashout13 = new SpinMotor44Subsystem(); // CAN ID 44
-    private final SpinDexterSubsystem m_spinDexter = new SpinDexterSubsystem();
-    private final KickerSubsystem m_kicker = new KickerSubsystem(16);
+
+    private final SpindexterSubsystem spindexter = new SpindexterSubsystem();
+    private final KickerSubsystem kicker = new KickerSubsystem();
     
 
     private final HoodSubsystem hood = new HoodSubsystem();
-
-    private final RotateSubsystem turret = new RotateSubsystem();
-
+    private final RotateSubsystem turretRotate = new RotateSubsystem();
     private final ShooterSubsystem shooter = new ShooterSubsystem();
-    private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
 
-    private final NEO550ThroughTalonFXSSubsytem spinner = new NEO550ThroughTalonFXSSubsytem(44);
+    private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
 
     private final IntakePivotSubsystem pivot = new IntakePivotSubsystem();
     private final IntakeSpinSubsystem spin = new IntakeSpinSubsystem();
@@ -149,7 +140,7 @@ public class RobotContainer {
     }
 
     private void registerNamedCommands() {
-        NamedCommands.registerCommand("maxShoot", new TurretSubsystemCommandGroupMax(turret, hood, shooter));
+        NamedCommands.registerCommand("maxShoot", new TurretSubsystemCommandGroupMax(turretRotate, hood, shooter));
     }
 
     public void robotPeriodic() {
@@ -188,16 +179,16 @@ public class RobotContainer {
 
         joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", 60.0)), shooter).finallyDo(() -> shooter.stop()));
         joystick.b().onTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 0.5)), hood).finallyDo(() -> hood.holdPosition()));
-        joystick.x().whileTrue(Commands.run(() -> m_spinDexter.setVelocity(SmartDashboard.getNumber("Tuning/SpindexerSpeed", 50)), m_spinDexter).finallyDo(() -> m_spinDexter.stop()));
-        joystick.y().whileTrue(new KickerSpinCommand(m_kicker, 200));
+        joystick.x().whileTrue(Commands.run(() -> spindexter.setVelocity(SmartDashboard.getNumber("Tuning/SpindexerSpeed", 50)), spindexter).finallyDo(() -> spindexter.stop()));
+        joystick.y().whileTrue(new KickerSpinCommand(kicker, 200));
         // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 80));
         // joystick.x().onTrue(new HoodZeroCommand(hood));
         // joystick.y().whileTrue(new IntakeSpinCommand(spin, 60));
         joystick.povLeft().whileTrue(new ShooterVelocityCommand(shooter, 100));
         joystick.povRight().onTrue(new HoodZeroCommand(hood));
 
-        joystick.rightBumper().whileTrue(new KickerSpinCommand(m_kicker, 200));
-        joystick.leftBumper().whileTrue(new SpindexerCommand(m_spinDexter, 50));
+        joystick.rightBumper().whileTrue(new KickerSpinCommand(kicker, 200));
+        joystick.leftBumper().whileTrue(new SpindexerCommand(spindexter, 50));
 
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {

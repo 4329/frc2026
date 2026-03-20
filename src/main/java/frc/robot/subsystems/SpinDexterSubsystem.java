@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.model.IntakeLogAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 
-public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsystem {
-    private final TalonFX spinnerMotor;
+public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsystem {
+    private final TalonFX spindexMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
@@ -39,8 +39,8 @@ public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsyste
     private final StatusSignal<Current> torqueCurrentSignal;
     private final StatusSignal<Temperature> tempSignal;
 
-    public SpinDexterSubsystem() {
-        spinnerMotor = new TalonFX(15);
+    public SpindexterSubsystem() {
+        spindexMotor = new TalonFX(15);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
@@ -56,21 +56,21 @@ public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsyste
         feedbackConfigs.withSensorToMechanismRatio(1.0);
         feedbackConfigs.withRotorToSensorRatio(1.0);
         
-        spinnerMotor.getConfigurator().apply(motorOutputConfigs);
-        spinnerMotor.getConfigurator().apply(Slot0Configs);
-        spinnerMotor.getConfigurator().apply(feedbackConfigs);
+        spindexMotor.getConfigurator().apply(motorOutputConfigs);
+        spindexMotor.getConfigurator().apply(Slot0Configs);
+        spindexMotor.getConfigurator().apply(feedbackConfigs);
 
-        spinnerMotor.setPosition(0);
+        spindexMotor.setPosition(0);
 
         setDefaultCommand(Commands.run(() -> stop(), this));
 
         // ✅ Signals initialized here
-        positionSignal      = spinnerMotor.getPosition();
-        velocitySignal      = spinnerMotor.getVelocity();
-        appliedVoltsSignal  = spinnerMotor.getMotorVoltage();
-        supplyCurrentSignal = spinnerMotor.getSupplyCurrent();
-        torqueCurrentSignal = spinnerMotor.getTorqueCurrent();
-        tempSignal          = spinnerMotor.getDeviceTemp();
+        positionSignal      = spindexMotor.getPosition();
+        velocitySignal      = spindexMotor.getVelocity();
+        appliedVoltsSignal  = spindexMotor.getMotorVoltage();
+        supplyCurrentSignal = spindexMotor.getSupplyCurrent();
+        torqueCurrentSignal = spindexMotor.getTorqueCurrent();
+        tempSignal          = spindexMotor.getDeviceTemp();
         BaseStatusSignal.setUpdateFrequencyForAll(
             50.0, positionSignal, velocitySignal, appliedVoltsSignal,
             supplyCurrentSignal, torqueCurrentSignal, tempSignal
@@ -102,28 +102,28 @@ public class SpinDexterSubsystem extends SubsystemBase implements LoggedSubsyste
     }
 
     public void spinVoltage(double voltage) {
-        spinnerMotor.setControl(voltageRequest.withOutput(voltage));
+        spindexMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
     public void setPosition(double rotations) {
         targetPosition = rotations; // ✅ track for logging
-        spinnerMotor.setControl(positionRequest.withPosition(rotations));
+        spindexMotor.setControl(positionRequest.withPosition(rotations));
     }
 
     public void setVelocity(double rotationsPerSecond) {
-        spinnerMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond)); // ✅ fixed - was using voltageRequest
+        spindexMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond)); // ✅ fixed - was using voltageRequest
     }
 
     public double getPosition() {
-        return spinnerMotor.getPosition().getValueAsDouble();
+        return spindexMotor.getPosition().getValueAsDouble();
     }
 
     public double getVelocity() {
-        return spinnerMotor.getVelocity().getValueAsDouble(); // ✅ fixed - was throwing UnsupportedOperationException
+        return spindexMotor.getVelocity().getValueAsDouble(); // ✅ fixed - was throwing UnsupportedOperationException
     }
 
     public void stop() {
-        spinnerMotor.stopMotor();
+        spindexMotor.stopMotor();
     }
 
 }

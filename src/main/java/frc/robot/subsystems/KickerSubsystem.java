@@ -21,14 +21,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // not in use currently, keeping as backup
 
 public class KickerSubsystem extends SubsystemBase {
-    private final TalonFX spinnerMotor;
+    private final TalonFX kickerMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0); // ✅ fixed
 
     private static final double TOLERANCE = 0.5;
     private double targetPosition = 0.0;
-    private final int m_motorID;
 
     private final StatusSignal<Angle> positionSignal;
     private final StatusSignal<AngularVelocity> velocitySignal;
@@ -37,13 +36,12 @@ public class KickerSubsystem extends SubsystemBase {
     private final StatusSignal<Current> torqueCurrentSignal;
     private final StatusSignal<Temperature> tempSignal;
 
-    public KickerSubsystem(int motorID) {
-        m_motorID = motorID;
-        spinnerMotor = new TalonFX(motorID);
+    public KickerSubsystem() {
+        kickerMotor = new TalonFX(16);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
-        motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+        motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
         Slot0Configs.withKP(1.0);
@@ -55,20 +53,20 @@ public class KickerSubsystem extends SubsystemBase {
         feedbackConfigs.withSensorToMechanismRatio(1.0);
         feedbackConfigs.withRotorToSensorRatio(1.0);
         
-        spinnerMotor.getConfigurator().apply(motorOutputConfigs);
-        spinnerMotor.getConfigurator().apply(Slot0Configs);
-        spinnerMotor.getConfigurator().apply(feedbackConfigs);
+        kickerMotor.getConfigurator().apply(motorOutputConfigs);
+        kickerMotor.getConfigurator().apply(Slot0Configs);
+        kickerMotor.getConfigurator().apply(feedbackConfigs);
 
-        spinnerMotor.setPosition(0);
+        kickerMotor.setPosition(0);
 
         setDefaultCommand(Commands.run(() -> stop(), this));
 
-        positionSignal      = spinnerMotor.getPosition();
-        velocitySignal      = spinnerMotor.getVelocity();
-        appliedVoltsSignal  = spinnerMotor.getMotorVoltage();
-        supplyCurrentSignal = spinnerMotor.getSupplyCurrent();
-        torqueCurrentSignal = spinnerMotor.getTorqueCurrent();
-        tempSignal          = spinnerMotor.getDeviceTemp();
+        positionSignal      = kickerMotor.getPosition();
+        velocitySignal      = kickerMotor.getVelocity();
+        appliedVoltsSignal  = kickerMotor.getMotorVoltage();
+        supplyCurrentSignal = kickerMotor.getSupplyCurrent();
+        torqueCurrentSignal = kickerMotor.getTorqueCurrent();
+        tempSignal          = kickerMotor.getDeviceTemp();
         BaseStatusSignal.setUpdateFrequencyForAll(
             50.0, positionSignal, velocitySignal, appliedVoltsSignal,
             supplyCurrentSignal, torqueCurrentSignal, tempSignal
@@ -80,16 +78,16 @@ public class KickerSubsystem extends SubsystemBase {
     }
 
     public void spinVoltage(double voltage) {
-        spinnerMotor.setControl(voltageRequest.withOutput(voltage));
+        kickerMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
     public void setPosition(double rotations) {
         targetPosition = rotations; // ✅ track for logging
-        spinnerMotor.setControl(positionRequest.withPosition(rotations));
+        kickerMotor.setControl(positionRequest.withPosition(rotations));
     }
 
     public void setVelocity(double rotationsPerSecond) {
-        spinnerMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond)); // ✅ fixed
+        kickerMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond)); // ✅ fixed
     }
 
     public double getPosition() {
@@ -101,6 +99,6 @@ public class KickerSubsystem extends SubsystemBase {
     }
 
     public void stop() {
-        spinnerMotor.stopMotor();
+        kickerMotor.stopMotor();
     }
 }

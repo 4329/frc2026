@@ -9,13 +9,13 @@ import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
 
 public class TurretSubsystemCommandGroupMax extends ParallelCommandGroup {
-    public TurretSubsystemCommandGroupMax(RotateSubsystem turret, HoodSubsystem hood, ShooterSubsystem shooter) {
+    public TurretSubsystemCommandGroupMax(RotateSubsystem turretRotate, HoodSubsystem hood, ShooterSubsystem shooter) {
         addCommands(
-            new TurretPositionCommand(turret, 1),
+            new TurretPositionCommand(turretRotate, 1),
             new SetHoodPositionCommand(hood, 0.45),
             new ShooterVelocityCommand(shooter, 100)
         //  Commands.run(() -> 
-        //         System.out.println("Turret Rotation: " + turret.getPosition() + 
+        //         System.out.println("Turret Rotation: " + turretRotate.getPosition() + 
         //                          " | Hood Position: " + hood.getPosition() + 
         //                          " | Shooter RPS: " + shooter.getVelocity()))
         );

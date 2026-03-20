@@ -1,30 +1,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
-import frc.robot.subsystems.SpinDexterSubsystem;
+import frc.robot.subsystems.SpindexterSubsystem;
 
 public class SpindexerCommand extends Command {
-    private final SpinDexterSubsystem SpinDexer;
+    private final SpindexterSubsystem Spindexer;
     private final double rotationsPerSecond;
 
     
-    public SpindexerCommand(SpinDexterSubsystem SpinDexer, double rotationsPerSecond) {
-        this.SpinDexer = SpinDexer;
+    public SpindexerCommand(SpindexterSubsystem Spindexer, double rotationsPerSecond) {
+        this.Spindexer = Spindexer;
         this.rotationsPerSecond = rotationsPerSecond;
-        addRequirements(SpinDexer);
+        addRequirements(Spindexer);
     }
 
 
     @Override
     public void execute() {
-        SpinDexer.setVelocity(rotationsPerSecond);
+        Spindexer.setVelocity(rotationsPerSecond);
     }
 
     @Override
     public void end(boolean interrupted) {
-        SpinDexer.stop();
+        Spindexer.stop();
     }
     
 }

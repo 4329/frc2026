@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -23,7 +22,7 @@ import frc.robot.model.IntakeLogAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 
 public class IntakeSpinSubsystem extends SubsystemBase implements LoggedSubsystem{
-    private final TalonFX spinMotor;
+    private final TalonFX spinIntakeMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
@@ -41,7 +40,7 @@ public class IntakeSpinSubsystem extends SubsystemBase implements LoggedSubsyste
 
 
     public IntakeSpinSubsystem() {
-        spinMotor =  new TalonFX(14);
+        spinIntakeMotor =  new TalonFX(14);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Coast);
@@ -64,21 +63,21 @@ public class IntakeSpinSubsystem extends SubsystemBase implements LoggedSubsyste
         currentLimitConfigs.withSupplyCurrentLimit(40);
         currentLimitConfigs.withSupplyCurrentLimitEnable(true);
         
-        spinMotor.getConfigurator().apply(motorOutputConfigs);
-        spinMotor.getConfigurator().apply(Slot0Configs);
-        spinMotor.getConfigurator().apply(feedbackConfigs);
-        spinMotor.getConfigurator().apply(currentLimitConfigs);
+        spinIntakeMotor.getConfigurator().apply(motorOutputConfigs);
+        spinIntakeMotor.getConfigurator().apply(Slot0Configs);
+        spinIntakeMotor.getConfigurator().apply(feedbackConfigs);
+        spinIntakeMotor.getConfigurator().apply(currentLimitConfigs);
 
-        spinMotor.setPosition(0);
+        spinIntakeMotor.setPosition(0);
 
         setDefaultCommand(Commands.run(() -> stop(), this));
         
-        positionSignal      = spinMotor.getPosition();
-        velocitySignal      = spinMotor.getVelocity();
-        appliedVoltsSignal  = spinMotor.getMotorVoltage();
-        supplyCurrentSignal = spinMotor.getSupplyCurrent();
-        torqueCurrentSignal = spinMotor.getTorqueCurrent();
-        tempSignal          = spinMotor.getDeviceTemp();
+        positionSignal      = spinIntakeMotor.getPosition();
+        velocitySignal      = spinIntakeMotor.getVelocity();
+        appliedVoltsSignal  = spinIntakeMotor.getMotorVoltage();
+        supplyCurrentSignal = spinIntakeMotor.getSupplyCurrent();
+        torqueCurrentSignal = spinIntakeMotor.getTorqueCurrent();
+        tempSignal          = spinIntakeMotor.getDeviceTemp();
         BaseStatusSignal.setUpdateFrequencyForAll(
             50.0, positionSignal, velocitySignal, appliedVoltsSignal,
             supplyCurrentSignal, torqueCurrentSignal, tempSignal
@@ -105,26 +104,26 @@ public class IntakeSpinSubsystem extends SubsystemBase implements LoggedSubsyste
     }
 
     public void spinVoltage(double voltage) {
-        spinMotor.setControl(voltageRequest.withOutput(voltage));
+        spinIntakeMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
     public void setPosition(double rotations) {
-        spinMotor.setControl(positionRequest.withPosition(rotations));
+        spinIntakeMotor.setControl(positionRequest.withPosition(rotations));
     }
 
     public void setVelocity(double rotationsPerSecond) {
-        spinMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond));
+        spinIntakeMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond));
     }
 
     public double getPosition() {
-        return spinMotor.getPosition().getValueAsDouble();
+        return spinIntakeMotor.getPosition().getValueAsDouble();
     }
 
     public double getVelocity() {
-        return spinMotor.getVelocity().getValueAsDouble();
+        return spinIntakeMotor.getVelocity().getValueAsDouble();
     }
 
     public void stop() {
-        spinMotor.stopMotor();
+        spinIntakeMotor.stopMotor();
     }
 }
