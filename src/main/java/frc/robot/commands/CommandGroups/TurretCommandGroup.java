@@ -17,31 +17,34 @@ public class TurretCommandGroup extends SequentialCommandGroup {
 
     static {
         // distance (m) -> shooter velocity (rotations/sec)
-        SHOOTER_TABLE.put(1.9, 0.0);
-        SHOOTER_TABLE.put(2.2, 0.0);
-        SHOOTER_TABLE.put(2.5, 0.0);
-        SHOOTER_TABLE.put(2.8, 0.0);
-        SHOOTER_TABLE.put(3.1, 0.0);
-        SHOOTER_TABLE.put(3.4, 0.0);
+        SHOOTER_TABLE.put(1.6, 40.0);
+        SHOOTER_TABLE.put(1.9, 40.0);
+        SHOOTER_TABLE.put(2.2, 40.0);
+        SHOOTER_TABLE.put(2.5, 45.0);
+        SHOOTER_TABLE.put(2.8, 45.0);
+        SHOOTER_TABLE.put(3.1, 50.0);
+        SHOOTER_TABLE.put(3.4, 50.0);
         SHOOTER_TABLE.put(3.7, 55.0);
 
 
         // distance (m) -> hood position (rotations)
-        HOOD_TABLE.put(1.9, 0.0);
-        HOOD_TABLE.put(2.2, 0.0);
-        HOOD_TABLE.put(2.5, 0.0);
-        HOOD_TABLE.put(2.8, 0.0);
-        HOOD_TABLE.put(3.1, 0.0);
-        HOOD_TABLE.put(3.4, 0.0);
+        HOOD_TABLE.put(1.6, 2.1);
+        HOOD_TABLE.put(1.9, 2.8);
+        HOOD_TABLE.put(2.2, 3.0);
+        HOOD_TABLE.put(2.5, 3.3);
+        HOOD_TABLE.put(2.8, 3.6);
+        HOOD_TABLE.put(3.1, 3.8);
+        HOOD_TABLE.put(3.4, 4.2);
         HOOD_TABLE.put(3.7, 4.5);
 
         // distance (m) -> spindexer speed (rotations/sec)
-        SPINDEXER_TABLE.put(1.9, 0.0);
-        SPINDEXER_TABLE.put(2.2, 0.0);
-        SPINDEXER_TABLE.put(2.5, 0.0);
-        SPINDEXER_TABLE.put(2.8, 0.0);
-        SPINDEXER_TABLE.put(3.1, 0.0);
-        SPINDEXER_TABLE.put(3.4, 0.0);
+        SPINDEXER_TABLE.put(1.6, 85.0);
+        SPINDEXER_TABLE.put(1.9, 85.0);
+        SPINDEXER_TABLE.put(2.2, 85.0);
+        SPINDEXER_TABLE.put(2.5, 85.0);
+        SPINDEXER_TABLE.put(2.8, 85.0);
+        SPINDEXER_TABLE.put(3.1, 85.0);
+        SPINDEXER_TABLE.put(3.4, 85.0);
         SPINDEXER_TABLE.put(3.7, 85.0);
     }
 
