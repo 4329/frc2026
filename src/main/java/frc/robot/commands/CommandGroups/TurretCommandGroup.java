@@ -50,7 +50,7 @@ public class TurretCommandGroup extends SequentialCommandGroup {
 
     private static final double SHOOTER_TOLERANCE = 2.0;
     private static final double HOOD_TOLERANCE    = 0.1; 
-    private static final double DEFAULT_DISTANCE  = 1.9;
+    private static final double DEFAULT_DISTANCE  = 1.6;
 
     public TurretCommandGroup(
             HoodSubsystem hood,

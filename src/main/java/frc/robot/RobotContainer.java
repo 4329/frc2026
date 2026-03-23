@@ -33,10 +33,6 @@ import frc.robot.commands.KickerSpinCommand;
 import frc.robot.commands.SpindexerCommand;
 import frc.robot.subsystems.SpindexterSubsystem;
 import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
-import frc.robot.commands.CommandGroups.SDandKCommandGroup;
-import frc.robot.commands.CommandGroups.SpindexerAndKickerAndShooterCommandGroup;
-import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
-import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.commands.IntakeCommands.IntakeZeroCommand;
@@ -96,8 +92,6 @@ public class RobotContainer {
         drivetrain.seedFieldCentric(Rotation2d.fromDegrees(180));
         SmartDashboard.putData("Field", field);
 
-        registerNamedCommands();
-
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -138,10 +132,6 @@ public class RobotContainer {
                 builder.addDoubleProperty("Robot Angle", () -> drivetrain.getState().Pose.getRotation().getRadians(), null);
             }
         });
-    }
-
-    private void registerNamedCommands() {
-        NamedCommands.registerCommand("maxShoot", new TurretSubsystemCommandGroupMax(turretRotate, hood, shooter));
     }
 
     public void robotPeriodic() {
