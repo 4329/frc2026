@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 
 public class HoodZeroCommand extends Command{
-    private static final double CREEEP_DUTY_CYCLE = -0.3;
-    private static final double CURRENT_SPIKE_AMPS = 72.5;
+    private static final double CREEEP_DUTY_CYCLE = -0.4;
+    private static final double CURRENT_SPIKE_AMPS = 107.0;
 
     private final HoodSubsystem hood;
     private final DutyCycleOut creepRequest = new DutyCycleOut(CREEEP_DUTY_CYCLE).withEnableFOC(true);

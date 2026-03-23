@@ -179,7 +179,8 @@ public class RobotContainer {
 
 
         joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", 70.0)), shooter).finallyDo(() -> shooter.stop()));
-        joystick.b().onTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 2.0)), hood).finallyDo(() -> hood.holdPosition()));
+        // joystick.b().onTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 2.0)), hood).finallyDo(() -> hood.holdPosition()));
+        joystick.b().onTrue(new SetHoodPositionCommand(hood, () -> SmartDashboard.getNumber("Tuning/HoodAngle", 2.0)));
         joystick.x().whileTrue(Commands.run(() -> spindexter.setVelocity(SmartDashboard.getNumber("Tuning/SpindexerSpeed", 45)), spindexter).finallyDo(() -> spindexter.stop()));
         joystick.y().onTrue(new HoodZeroCommand(hood));
         // joystick.y().whileTrue(new KickerSpinCommand(kicker, 200));
@@ -187,7 +188,7 @@ public class RobotContainer {
         // joystick.a().onTrue(new IntakePivotCommand(pivot, 0));
         // joystick.x().onTrue(new IntakeZeroCommand(pivot));
         // joystick.y().whileTrue(new IntakeSpinCommand(spin, 60));
-        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 2.5));
+        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 0.0));
         joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4.5));
 
         joystick.rightBumper().whileTrue(new KickerSpinCommand(kicker, 200));

@@ -1,33 +1,33 @@
 package frc.robot.commands.TurretCommands.HoodCommands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 
 public class SetHoodPositionCommand extends Command {
     private final HoodSubsystem hood;
-    private final double targetPosition;
-    private static final double TOLERANCE = 0.2;
+    private final DoubleSupplier targetPositionSupplier;
+    private double targetPosition;
+    private static final double TOLERANCE = 0.1;
+
+    public SetHoodPositionCommand(HoodSubsystem hood, DoubleSupplier targetPositionSupplier) {
+        this.hood = hood;
+        this.targetPositionSupplier = targetPositionSupplier;
+        addRequirements(hood);
+    }
 
     public SetHoodPositionCommand(HoodSubsystem hood, double targetPosition) {
-        this.hood = hood;
-        this.targetPosition = targetPosition;
-        addRequirements(hood);
+        this(hood, () -> targetPosition);
     }
 
     @Override
     public void initialize() {
-        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-        System.out.println(targetPosition);
-        System.out.println(TOLERANCE);
+        targetPosition = targetPositionSupplier.getAsDouble();
         hood.setPosition(targetPosition);
     }
 
-    
 
-    @Override
-    public void execute() {
-        System.out.println(hood.getPosition());
-    }
 
     @Override
     public boolean isFinished() {
@@ -36,14 +36,6 @@ public class SetHoodPositionCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("YOUR SET HOOD POSITION COMMAND HAS ENDEDDDDDD AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("A");
-        System.out.println("A");
-        System.out.println("A");
-        System.out.println("A");
-        System.out.println("A");
-        System.out.println("A");
-        System.out.println("A");
-        // hood.holdPosition();
+        hood.holdPosition();
     }
 }

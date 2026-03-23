@@ -17,34 +17,37 @@ public class TurretCommandGroup extends SequentialCommandGroup {
 
     static {
         // distance (m) -> shooter velocity (rotations/sec)
-        SHOOTER_TABLE.put(0.0, 0.0);
-        SHOOTER_TABLE.put(0.0, 0.0);
-        SHOOTER_TABLE.put(0.0, 0.0);
-        SHOOTER_TABLE.put(0.0, 0.0);
-        SHOOTER_TABLE.put(3.3, 65.0);
-        SHOOTER_TABLE.put(3.7, 70.0);
+        SHOOTER_TABLE.put(1.9, 0.0);
+        SHOOTER_TABLE.put(2.2, 0.0);
+        SHOOTER_TABLE.put(2.5, 0.0);
+        SHOOTER_TABLE.put(2.8, 0.0);
+        SHOOTER_TABLE.put(3.1, 0.0);
+        SHOOTER_TABLE.put(3.4, 0.0);
+        SHOOTER_TABLE.put(3.7, 55.0);
 
 
         // distance (m) -> hood position (rotations)
-        HOOD_TABLE.put(0.0, 0.0);
-        HOOD_TABLE.put(0.0, 0.0);
-        HOOD_TABLE.put(0.0, 0.0);
-        HOOD_TABLE.put(0.0, 0.0);
-        HOOD_TABLE.put(3.3, 2.0);
-        HOOD_TABLE.put(3.7, 2.6);
+        HOOD_TABLE.put(1.9, 0.0);
+        HOOD_TABLE.put(2.2, 0.0);
+        HOOD_TABLE.put(2.5, 0.0);
+        HOOD_TABLE.put(2.8, 0.0);
+        HOOD_TABLE.put(3.1, 0.0);
+        HOOD_TABLE.put(3.4, 0.0);
+        HOOD_TABLE.put(3.7, 4.5);
 
         // distance (m) -> spindexer speed (rotations/sec)
-        SPINDEXER_TABLE.put(0.0, 0.0);
-        SPINDEXER_TABLE.put(0.0, 0.0);
-        SPINDEXER_TABLE.put(0.0, 0.0);
-        SPINDEXER_TABLE.put(0.0, 0.0);
-        SPINDEXER_TABLE.put(3.3, 60.0);
-        SPINDEXER_TABLE.put(3.7, 45.0);
+        SPINDEXER_TABLE.put(1.9, 0.0);
+        SPINDEXER_TABLE.put(2.2, 0.0);
+        SPINDEXER_TABLE.put(2.5, 0.0);
+        SPINDEXER_TABLE.put(2.8, 0.0);
+        SPINDEXER_TABLE.put(3.1, 0.0);
+        SPINDEXER_TABLE.put(3.4, 0.0);
+        SPINDEXER_TABLE.put(3.7, 85.0);
     }
 
     private static final double SHOOTER_TOLERANCE = 2.0;
-    private static final double HOOD_TOLERANCE    = 0.01; 
-    private static final double DEFAULT_DISTANCE  = 0.0;
+    private static final double HOOD_TOLERANCE    = 0.1; 
+    private static final double DEFAULT_DISTANCE  = 1.9;
 
     public TurretCommandGroup(
             HoodSubsystem hood,

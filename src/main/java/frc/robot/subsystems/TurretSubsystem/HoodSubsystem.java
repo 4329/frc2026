@@ -28,7 +28,7 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private static final double MIN_POSITION = 0.0;
     private static final double MAX_POSITION = 6.2;
-    private static final double TOLERANCE = 0.2;
+    private static final double TOLERANCE = 0.1;
 
     private double targetPosition = MIN_POSITION;
 
@@ -95,12 +95,13 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     }
 
     @Override
-    public LoggableInputs log() {
-        hoodLog.motorConnected = BaseStatusSignal.refreshAll(
-            positionSignal, velocitySignal, appliedVoltsSignal,
-            supplyCurrentSignal, torqueCurrentSignal, statorCurrentSignal, tempSignal
-        ).isOK();
+    public void periodic() {
+        BaseStatusSignal.refreshAll(positionSignal, velocitySignal, appliedVoltsSignal, supplyCurrentSignal, torqueCurrentSignal, statorCurrentSignal, tempSignal);
+    }
 
+    @Override
+    public LoggableInputs log() {
+        hoodLog.motorConnected = true;
         hoodLog.positionRotations       = positionSignal.getValueAsDouble();
         hoodLog.velocityRotationsPerSec = velocitySignal.getValueAsDouble();
         hoodLog.appliedVolts            = appliedVoltsSignal.getValueAsDouble();
