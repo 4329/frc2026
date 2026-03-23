@@ -6,7 +6,7 @@ import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 public class SetHoodPositionCommand extends Command {
     private final HoodSubsystem hood;
     private final double targetPosition;
-    private static final double TOLERANCE = 0.001;
+    private static final double TOLERANCE = 0.2;
 
     public SetHoodPositionCommand(HoodSubsystem hood, double targetPosition) {
         this.hood = hood;
@@ -16,13 +16,18 @@ public class SetHoodPositionCommand extends Command {
 
     @Override
     public void initialize() {
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println(targetPosition);
+        System.out.println(TOLERANCE);
         hood.setPosition(targetPosition);
     }
 
-    // @Override
-    // public void execute() {
-    //     hood.setPosition(targetPosition);
-    // }
+    
+
+    @Override
+    public void execute() {
+        System.out.println(hood.getPosition());
+    }
 
     @Override
     public boolean isFinished() {
@@ -31,6 +36,14 @@ public class SetHoodPositionCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        hood.holdPosition();
+        System.out.println("YOUR SET HOOD POSITION COMMAND HAS ENDEDDDDDD AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        System.out.println("A");
+        System.out.println("A");
+        System.out.println("A");
+        System.out.println("A");
+        System.out.println("A");
+        System.out.println("A");
+        System.out.println("A");
+        // hood.holdPosition();
     }
 }

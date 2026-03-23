@@ -1,6 +1,7 @@
 package frc.robot.subsystems.IntakeSubsystem;
 
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,10 +18,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakePivotSubsystem extends SubsystemBase {
     public final TalonFX pivotMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
-    private final PositionVoltage positionRequest = new PositionVoltage(0);
+    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(true);
 
     private static final double MIN_POSITION = 0;
-    private static final double MAX_POSITION = 6;
+    private static final double MAX_POSITION = 5.9;
     private double targetPosition = MIN_POSITION;
 
     private final StatusSignal<Current> supplyCurrentSignal;
@@ -30,16 +31,14 @@ public class IntakePivotSubsystem extends SubsystemBase {
         pivotMotor =  new TalonFX(13);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
-        motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
+        motorOutputConfigs.withNeutralMode(NeutralModeValue.Coast);
         motorOutputConfigs.withInverted(InvertedValue.CounterClockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(0.7);
+        Slot0Configs.withKP(0.0);
         Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.001);
-        Slot0Configs.withKV(0.12);
-        Slot0Configs.withKG(0.3);
-        Slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
+        Slot0Configs.withKD(0.0);
+        Slot0Configs.withKV(1);
         
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
@@ -47,9 +46,9 @@ public class IntakePivotSubsystem extends SubsystemBase {
         feedbackConfigs.withRotorToSensorRatio(1.0);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(0.0001);
-        motionMagicConfigs.withMotionMagicAcceleration(0.0001);
-        motionMagicConfigs.withMotionMagicJerk(0.0001);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(5.0);
+        motionMagicConfigs.withMotionMagicAcceleration(2.5);
+        motionMagicConfigs.withMotionMagicJerk(100.0);
 
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
         softLimitConfigs.withForwardSoftLimitThreshold(5.9);
@@ -69,12 +68,13 @@ public class IntakePivotSubsystem extends SubsystemBase {
         pivotMotor.getConfigurator().apply(motionMagicConfigs);
         pivotMotor.getConfigurator().apply(softLimitConfigs);
         pivotMotor.getConfigurator().apply(currentLimitConfigs);
-
         pivotMotor.setPosition(0);
 
         supplyCurrentSignal = pivotMotor.getSupplyCurrent();
 
-        setDefaultCommand(Commands.run(() -> holdCurrentPosition(), this));
+        // setDefaultCommand(Commands.run(() -> holdCurrentPosition(), this));
+        setDefaultCommand(Commands.run(() -> stop(), this));
+
     }
 
     public void spinVoltage(double voltage) {
@@ -93,6 +93,10 @@ public class IntakePivotSubsystem extends SubsystemBase {
     public double getSupplyCurrent() {
         supplyCurrentSignal.refresh();
         return supplyCurrentSignal.getValueAsDouble();
+    }
+
+    public boolean atPosition(double targetPosition, double tolerance) {
+        return Math.abs(getPosition() - targetPosition) < tolerance;
     }
 
     public void holdCurrentPosition() {

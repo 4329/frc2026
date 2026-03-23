@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 
 public class HoodZeroCommand extends Command{
-    private static final double CREEEP_DUTY_CYCLE = -0.5;
-    private static final double CURRENT_SPIKE_AMPS = 40.0;
+    private static final double CREEEP_DUTY_CYCLE = -0.3;
+    private static final double CURRENT_SPIKE_AMPS = 72.5;
 
     private final HoodSubsystem hood;
     private final DutyCycleOut creepRequest = new DutyCycleOut(CREEEP_DUTY_CYCLE).withEnableFOC(true);
@@ -30,8 +30,9 @@ public class HoodZeroCommand extends Command{
 
     @Override
     public void execute() {
-        System.out.println(hood.getSupplyCurrent());
-        if (hood.getSupplyCurrent() >= CURRENT_SPIKE_AMPS || hood.getSupplyCurrent() <= -0.01) {
+        System.out.println(hood.getStatorCurrent());
+        // if (hood.getStatorCurrent() >= CURRENT_SPIKE_AMPS || hood.getStatorCurrent() <= -0.01) {
+           if (hood.getStatorCurrent() >= CURRENT_SPIKE_AMPS) {
             spikeDetected = true;
         }
     }
@@ -44,7 +45,7 @@ public class HoodZeroCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         hood.hoodMotor.stopMotor();
-        hood.setPosition(0.5);
+        hood.hoodMotor.setPosition(0.0);
 
 
         if (!interrupted) {

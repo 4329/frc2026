@@ -153,13 +153,13 @@ public final class Constants {
 
 
         public static final Transform3d ROBOT_TO_SWERVE_CAMERA = new Transform3d(new Translation3d(0.358775, -0.206375, 0.26035), new Rotation3d(Math.toRadians(180), Math.toRadians(45), Math.toRadians(0)));
-        public static final Transform3d ROBOT_TO_TURRET_CAMERA = new Transform3d(new Translation3d(-0.009525, 0.1143, 0.5461), new Rotation3d(Math.toRadians(0), Math.toRadians(30), Math.toRadians(180)));
+        public static final Transform3d ROBOT_TO_TURRET_CAMERA = new Transform3d(new Translation3d(-0.295275, 0.1143, 0.5461), new Rotation3d(Math.toRadians(0), Math.toRadians(20), Math.toRadians(180)));
 
         public static final Vector<N3> SINGLE_TAG_STD_DEVS = VecBuilder.fill(1.0, 1.0, 2.0);
         public static final Vector<N3> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1.0); 
 
 
-        public static final int TARGET_TAG_ID = 4;
+        public static final int[] HUB_TAG_IDS = { 9, 10 };
         public static final double FOLLOW_DISTANCE_METERS = 1.5;
         public static final double FOLLOW_SPEED = 0.5;
 

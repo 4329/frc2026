@@ -26,9 +26,9 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(true);
     private final HoodLogAutoLogged hoodLog = new HoodLogAutoLogged();
 
-    private static final double MIN_POSITION = 0.1;
-    private static final double MAX_POSITION = 6.3;
-    private static final double TOLERANCE = 0.01;
+    private static final double MIN_POSITION = 0.0;
+    private static final double MAX_POSITION = 6.2;
+    private static final double TOLERANCE = 0.2;
 
     private double targetPosition = MIN_POSITION;
 
@@ -36,6 +36,7 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<AngularVelocity> velocitySignal;
     private final StatusSignal<Voltage> appliedVoltsSignal;
     private final StatusSignal<Current> supplyCurrentSignal;
+    private final StatusSignal<Current> statorCurrentSignal;
     private final StatusSignal<Current> torqueCurrentSignal;
     private final StatusSignal<Temperature> tempSignal;
 
@@ -47,15 +48,16 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(12.0);
+        Slot0Configs.withKP(30.0);
         Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.001);
+        Slot0Configs.withKD(0.01);
         Slot0Configs.withKV(1);
+        Slot0Configs.withKS(0.5);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(4.0);
-        motionMagicConfigs.withMotionMagicAcceleration(1.0);
-        motionMagicConfigs.withMotionMagicJerk(40.0);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(50.0);
+        motionMagicConfigs.withMotionMagicAcceleration(25.0);
+        motionMagicConfigs.withMotionMagicJerk(1000.0);
 
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
         softLimitConfigs.withForwardSoftLimitThreshold(6.2);
@@ -79,11 +81,12 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         appliedVoltsSignal  = hoodMotor.getMotorVoltage();
         supplyCurrentSignal = hoodMotor.getSupplyCurrent();
         torqueCurrentSignal = hoodMotor.getTorqueCurrent();
+        statorCurrentSignal = hoodMotor.getStatorCurrent();
         tempSignal          = hoodMotor.getDeviceTemp();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
             50.0, positionSignal, velocitySignal, appliedVoltsSignal,
-            supplyCurrentSignal, torqueCurrentSignal, tempSignal
+            supplyCurrentSignal, torqueCurrentSignal, statorCurrentSignal, tempSignal
         );
         hoodMotor.optimizeBusUtilization();
 
@@ -95,7 +98,7 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     public LoggableInputs log() {
         hoodLog.motorConnected = BaseStatusSignal.refreshAll(
             positionSignal, velocitySignal, appliedVoltsSignal,
-            supplyCurrentSignal, torqueCurrentSignal, tempSignal
+            supplyCurrentSignal, torqueCurrentSignal, statorCurrentSignal, tempSignal
         ).isOK();
 
         hoodLog.positionRotations       = positionSignal.getValueAsDouble();
@@ -103,6 +106,7 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         hoodLog.appliedVolts            = appliedVoltsSignal.getValueAsDouble();
         hoodLog.supplyCurrentAmps       = supplyCurrentSignal.getValueAsDouble();
         hoodLog.torqueCurrentAmps       = torqueCurrentSignal.getValueAsDouble();
+        hoodLog.statorCurrentAmps       = statorCurrentSignal.getValueAsDouble();
         hoodLog.tempCelsius             = tempSignal.getValueAsDouble();
         hoodLog.targetPosition          = targetPosition;
         hoodLog.positionError           = targetPosition - positionSignal.getValueAsDouble();
@@ -133,9 +137,9 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         return velocitySignal.getValueAsDouble();
     }
 
-    public double getSupplyCurrent() {
-        supplyCurrentSignal.refresh();
-        return supplyCurrentSignal.getValueAsDouble();
+    public double getStatorCurrent() {
+        statorCurrentSignal.refresh();
+        return statorCurrentSignal.getValueAsDouble();
     }
 
     public boolean atPosition(double targetPosition, double tolerance) {

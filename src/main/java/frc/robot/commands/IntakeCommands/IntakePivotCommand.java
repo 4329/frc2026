@@ -6,6 +6,8 @@ import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 public class IntakePivotCommand extends Command {
     private final IntakePivotSubsystem pivot;
     private final double targetPosition;
+    private static final double TOLERANCE = 0.5;
+
 
     public IntakePivotCommand(IntakePivotSubsystem pivot, double targetPosition) {
         this.pivot = pivot;
@@ -15,17 +17,17 @@ public class IntakePivotCommand extends Command {
 
 
     @Override
-    public void execute() {
+    public void initialize() {
         pivot.setPosition(targetPosition);
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return pivot.atPosition(targetPosition, TOLERANCE);
     }
 
     @Override
     public void end(boolean interrupted) {
-        pivot.setPosition(0);
+        System.out.println("BBBBBBBBBBBEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSS");
     }
 }

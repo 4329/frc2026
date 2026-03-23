@@ -58,7 +58,7 @@ public class IntakeSpinSubsystem extends SubsystemBase implements LoggedSubsyste
         feedbackConfigs.withRotorToSensorRatio(1.0);
 
         var currentLimitConfigs = new com.ctre.phoenix6.configs.CurrentLimitsConfigs();
-        currentLimitConfigs.withStatorCurrentLimit(40);
+        currentLimitConfigs.withStatorCurrentLimit(80);
         currentLimitConfigs.withStatorCurrentLimitEnable(true);
         currentLimitConfigs.withSupplyCurrentLimit(40);
         currentLimitConfigs.withSupplyCurrentLimitEnable(true);

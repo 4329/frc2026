@@ -39,6 +39,7 @@ import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMax;
 import frc.robot.commands.CommandGroups.TurretSubsystemCommandGroupMin;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
+import frc.robot.commands.IntakeCommands.IntakeZeroCommand;
 import frc.robot.commands.TurretCommands.HoodCommands.HoodZeroCommand;
 import frc.robot.commands.TurretCommands.HoodCommands.ManualHoodCommand;
 import frc.robot.commands.TurretCommands.HoodCommands.SetHoodPositionCommand;
@@ -102,9 +103,9 @@ public class RobotContainer {
 
         configureBindings();
 
-        SmartDashboard.putNumber("Tuning/ShooterSpeed", 60.0);
-        SmartDashboard.putNumber("Tuning/HoodAngle", 0.1);
-        SmartDashboard.putNumber("Tuning/SpindexerSpeed", 40.0);
+        SmartDashboard.putNumber("Tuning/ShooterSpeed", 70.0);
+        SmartDashboard.putNumber("Tuning/HoodAngle", 2.0);
+        SmartDashboard.putNumber("Tuning/SpindexerSpeed", 45.0);
 
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
         SmartDashboard.putData("PDH", pdh);
@@ -177,18 +178,20 @@ public class RobotContainer {
         );
 
 
-        joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", 60.0)), shooter).finallyDo(() -> shooter.stop()));
-        joystick.b().onTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 0.5)), hood).finallyDo(() -> hood.holdPosition()));
-        joystick.x().whileTrue(Commands.run(() -> spindexter.setVelocity(SmartDashboard.getNumber("Tuning/SpindexerSpeed", 50)), spindexter).finallyDo(() -> spindexter.stop()));
-        joystick.y().whileTrue(new KickerSpinCommand(kicker, 200));
-        // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 80));
-        // joystick.x().onTrue(new HoodZeroCommand(hood));
+        joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", 70.0)), shooter).finallyDo(() -> shooter.stop()));
+        joystick.b().onTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 2.0)), hood).finallyDo(() -> hood.holdPosition()));
+        joystick.x().whileTrue(Commands.run(() -> spindexter.setVelocity(SmartDashboard.getNumber("Tuning/SpindexerSpeed", 45)), spindexter).finallyDo(() -> spindexter.stop()));
+        joystick.y().onTrue(new HoodZeroCommand(hood));
+        // joystick.y().whileTrue(new KickerSpinCommand(kicker, 200));
+        // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 50));
+        // joystick.a().onTrue(new IntakePivotCommand(pivot, 0));
+        // joystick.x().onTrue(new IntakeZeroCommand(pivot));
         // joystick.y().whileTrue(new IntakeSpinCommand(spin, 60));
-        joystick.povLeft().whileTrue(new ShooterVelocityCommand(shooter, 100));
-        joystick.povRight().onTrue(new HoodZeroCommand(hood));
+        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 2.5));
+        joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4.5));
 
         joystick.rightBumper().whileTrue(new KickerSpinCommand(kicker, 200));
-        joystick.leftBumper().whileTrue(new SpindexerCommand(spindexter, 50));
+        joystick.leftBumper().whileTrue(new IntakeSpinCommand(spin, 60));
 
         // Temporary test - print when button pressed
         joystick.rightBumper().onTrue(Commands.runOnce(() -> {
