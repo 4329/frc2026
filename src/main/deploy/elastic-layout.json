@@ -269,18 +269,18 @@
             }
           },
           {
-            "title": "Distance Fresh",
+            "title": "Using Odometry",
             "x": 512.0,
             "y": 384.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Vision/Distance Fresh",
+              "topic": "/SmartDashboard/Vision/Using Pose Fallback",
               "period": 0.06,
               "data_type": "boolean",
-              "true_color": 4278222848,
-              "false_color": 4294967040,
+              "true_color": 4294967040,
+              "false_color": 4278222848,
               "true_icon": "None",
               "false_icon": "None"
             }

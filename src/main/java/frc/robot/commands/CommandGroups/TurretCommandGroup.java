@@ -16,41 +16,42 @@ public class TurretCommandGroup extends SequentialCommandGroup {
     private static final InterpolatingDoubleTreeMap SPINDEXER_TABLE = new InterpolatingDoubleTreeMap();
 
     static {
+        // ADDED 0.6m TO ALL MEASURMENTS, IF BROKEN JUST REVERT.
         // distance (m) -> shooter velocity (rotations/sec)
-        SHOOTER_TABLE.put(1.6, 40.0);
-        SHOOTER_TABLE.put(1.9, 40.0);
         SHOOTER_TABLE.put(2.2, 40.0);
-        SHOOTER_TABLE.put(2.5, 45.0);
-        SHOOTER_TABLE.put(2.8, 45.0);
-        SHOOTER_TABLE.put(3.1, 50.0);
-        SHOOTER_TABLE.put(3.4, 50.0);
-        SHOOTER_TABLE.put(3.7, 55.0);
+        SHOOTER_TABLE.put(2.5, 40.0);
+        SHOOTER_TABLE.put(2.8, 40.0);
+        SHOOTER_TABLE.put(3.1, 45.0);
+        SHOOTER_TABLE.put(3.4, 45.0);
+        SHOOTER_TABLE.put(3.7, 50.0);
+        SHOOTER_TABLE.put(4.0, 50.0);
+        SHOOTER_TABLE.put(4.3, 55.0);
 
 
         // distance (m) -> hood position (rotations)
-        HOOD_TABLE.put(1.6, 2.1);
-        HOOD_TABLE.put(1.9, 2.8);
-        HOOD_TABLE.put(2.2, 3.0);
-        HOOD_TABLE.put(2.5, 3.3);
-        HOOD_TABLE.put(2.8, 3.6);
-        HOOD_TABLE.put(3.1, 3.8);
-        HOOD_TABLE.put(3.4, 4.2);
-        HOOD_TABLE.put(3.7, 4.5);
+        HOOD_TABLE.put(2.2, 2.1);
+        HOOD_TABLE.put(2.5, 2.8);
+        HOOD_TABLE.put(2.8, 3.0);
+        HOOD_TABLE.put(3.1, 3.3);
+        HOOD_TABLE.put(3.4, 3.6);
+        HOOD_TABLE.put(3.7, 3.8);
+        HOOD_TABLE.put(4.0, 4.2);
+        HOOD_TABLE.put(4.3, 4.5);
 
         // distance (m) -> spindexer speed (rotations/sec)
-        SPINDEXER_TABLE.put(1.6, 85.0);
-        SPINDEXER_TABLE.put(1.9, 85.0);
         SPINDEXER_TABLE.put(2.2, 85.0);
         SPINDEXER_TABLE.put(2.5, 85.0);
         SPINDEXER_TABLE.put(2.8, 85.0);
         SPINDEXER_TABLE.put(3.1, 85.0);
         SPINDEXER_TABLE.put(3.4, 85.0);
         SPINDEXER_TABLE.put(3.7, 85.0);
+        SPINDEXER_TABLE.put(4.0, 85.0);
+        SPINDEXER_TABLE.put(4.3, 85.0);
     }
 
     private static final double SHOOTER_TOLERANCE = 2.0;
     private static final double HOOD_TOLERANCE    = 0.1; 
-    private static final double DEFAULT_DISTANCE  = 1.6;
+    private static final double DEFAULT_DISTANCE  = 2.2;
 
     public TurretCommandGroup(
             HoodSubsystem hood,

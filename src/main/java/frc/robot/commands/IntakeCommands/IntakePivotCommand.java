@@ -22,12 +22,16 @@ public class IntakePivotCommand extends Command {
     }
 
     @Override
+    public void execute() {
+        pivot.setPosition(targetPosition);
+    }
+
+    @Override
     public boolean isFinished() {
         return pivot.atPosition(targetPosition, TOLERANCE);
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("BBBBBBBBBBBEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNNNNNNSSSSSSSSSSSSSSSSS");
     }
 }

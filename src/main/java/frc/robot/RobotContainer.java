@@ -79,7 +79,7 @@ public class RobotContainer {
     private final RotateSubsystem turretRotate = new RotateSubsystem();
     private final ShooterSubsystem shooter = new ShooterSubsystem();
 
-    private final VisionSubsystem vision = new VisionSubsystem(drivetrain);
+    private final VisionSubsystem vision = new VisionSubsystem(drivetrain, turretRotate);
 
     private final IntakePivotSubsystem pivot = new IntakePivotSubsystem();
     private final IntakeSpinSubsystem spin = new IntakeSpinSubsystem();
