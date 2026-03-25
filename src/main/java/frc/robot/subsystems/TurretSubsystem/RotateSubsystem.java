@@ -30,9 +30,10 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private final TurretRotateLogAutoLogged rotateLog   = new TurretRotateLogAutoLogged();
 
-    private static final double MIN_POSITION = -1.2;
-    private static final double MAX_POSITION = 1.2;
-    private static final double TOLERANCE = 0.01;
+    private static final double GEAR_RATIO = 45.0;
+    private static final double MIN_POSITION = -33.75;
+    private static final double MAX_POSITION = 12.5;
+    private static final double TOLERANCE = 0.5;
 
     private double targetPosition = 0.0;
 
@@ -67,9 +68,9 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
         feedbackConfigs.withRotorToSensorRatio(1.0);
 
         var softLimitsConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
-        softLimitsConfigs.withForwardSoftLimitThreshold(1.2);
+        softLimitsConfigs.withForwardSoftLimitThreshold(MAX_POSITION);
         softLimitsConfigs.withForwardSoftLimitEnable(true);
-        softLimitsConfigs.withReverseSoftLimitThreshold(-1.2);
+        softLimitsConfigs.withReverseSoftLimitThreshold(MIN_POSITION);
         softLimitsConfigs.withReverseSoftLimitEnable(true);
 
         turretRotateMotor.getConfigurator().apply(motorOutputConfigs);

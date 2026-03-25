@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 
 public class IntakeZeroCommand extends Command{
-    private static final double CREEEP_DUTY_CYCLE = -0.15;
-    private static final double CURRENT_SPIKE_AMPS = 4.5;
+    private static final double CREEEP_DUTY_CYCLE = -0.10;
+    private static final double CURRENT_SPIKE_AMPS = 3.0;
 
     private final IntakePivotSubsystem pivot;
     private final DutyCycleOut creepRequest = new DutyCycleOut(CREEEP_DUTY_CYCLE).withEnableFOC(true);

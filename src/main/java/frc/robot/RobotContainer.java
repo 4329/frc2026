@@ -31,8 +31,11 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.commands.KickerSpinCommand;
 import frc.robot.commands.SpindexerCommand;
+import frc.robot.commands.CommandGroups.HoodToZeroCommandGroup;
+import frc.robot.commands.CommandGroups.IntakeInCommandGroup;
+import frc.robot.commands.CommandGroups.IntakeOutCommandGroup;
+import frc.robot.commands.CommandGroups.SpindexerAndKickerCommandGroup;
 import frc.robot.subsystems.SpindexterSubsystem;
-import frc.robot.commands.CommandGroups.IntakeSubsystemCommandGroup;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.commands.IntakeCommands.IntakeZeroCommand;
@@ -67,6 +70,7 @@ public class RobotContainer {
 
     // Controller
     private final CommandXboxController joystick = new CommandXboxController(Constants.OIConstants.kDriverControllerPort);
+    private final CommandXboxController operator = new CommandXboxController(Constants.OIConstants.kOperatorControllerPort);
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -169,42 +173,27 @@ public class RobotContainer {
 
 
         joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", 70.0)), shooter).finallyDo(() -> shooter.stop()));
-        // joystick.b().onTrue(Commands.run(() -> hood.setPosition(SmartDashboard.getNumber("Tuning/HoodAngle", 2.0)), hood).finallyDo(() -> hood.holdPosition()));
         joystick.b().onTrue(new SetHoodPositionCommand(hood, () -> SmartDashboard.getNumber("Tuning/HoodAngle", 2.0)));
         joystick.x().whileTrue(Commands.run(() -> spindexter.setVelocity(SmartDashboard.getNumber("Tuning/SpindexerSpeed", 45)), spindexter).finallyDo(() -> spindexter.stop()));
-        joystick.y().onTrue(new HoodZeroCommand(hood));
-        // joystick.y().whileTrue(new KickerSpinCommand(kicker, 200));
-        // joystick.x().whileTrue(new ShooterVelocityCommand(shooter, 50));
-        // joystick.a().onTrue(new IntakePivotCommand(pivot, 0));
-        // joystick.x().onTrue(new IntakeZeroCommand(pivot));
-        // joystick.y().whileTrue(new IntakeSpinCommand(spin, 60));
-        joystick.povLeft().onTrue(new SetHoodPositionCommand(hood, 0.0));
+        joystick.y().onTrue(new HoodToZeroCommandGroup(hood));
         joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4.5));
 
-        joystick.rightBumper().whileTrue(new KickerSpinCommand(kicker, 200));
-        joystick.leftBumper().whileTrue(new IntakeSpinCommand(spin, 60));
-
-        // Temporary test - print when button pressed
-        joystick.rightBumper().onTrue(Commands.runOnce(() -> {
-            System.out.println("=== VISION TEST ===");
-            System.out.println("Has target: " + vision.hasTarget());
-            System.out.println("TX: " + vision.getTargetTX());
-            System.out.println("TY: " + vision.getTargetTY());
-            System.out.println("Distance: " + vision.getTargetDistance());
-    
-            // Check raw Limelight data
-            System.out.println("LL TV: " + LimelightHelpers.getTV("limelight-swerve"));
-            System.out.println("LL TX: " + LimelightHelpers.getTX("limelight-swerve"));
-        }));
 
 
-        // --- UTILITY BINDINGS ---
+        joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker));
+
+        joystick.leftBumper().onTrue(new IntakeOutCommandGroup(pivot, spin));
+        joystick.leftBumper().onFalse(Commands.runOnce(() -> spin.stop(), spin));
+        joystick.leftBumper().onFalse(new IntakePivotCommand(pivot, 0.0));
+        
+        joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, -60));
+
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
 
-        // --- SYSID BINDINGS ---
-        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+
+        operator.leftTrigger().onTrue(new IntakeInCommandGroup(pivot, spin));
+
 
         drivetrain.registerTelemetry(logger::telemeterize);                        
     }

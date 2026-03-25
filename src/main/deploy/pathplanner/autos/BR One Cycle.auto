@@ -7,37 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Rotate and forward"
+            "pathName": "BR1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "rotate and backward"
+            "pathName": "BR2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Rotate and forward"
+            "pathName": "BR3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "rotate and backward"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Rotate and forward"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "rotate and backward"
+            "pathName": "BR4"
           }
         }
       ]

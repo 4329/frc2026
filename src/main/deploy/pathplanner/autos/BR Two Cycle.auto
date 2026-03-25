@@ -7,37 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3M Forward"
+            "pathName": "BR1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3M Backward"
+            "pathName": "BR2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3M Forward"
+            "pathName": "BR3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3M Backward"
+            "pathName": "BR4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3M Forward"
+            "pathName": "BR2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3M Backward"
+            "pathName": "BR3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR4"
           }
         }
       ]

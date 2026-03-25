@@ -21,7 +21,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(true);
 
     private static final double MIN_POSITION = 0;
-    private static final double MAX_POSITION = 5.9;
+    private static final double MAX_POSITION = 6.45;
     private double targetPosition = MIN_POSITION;
 
     private final StatusSignal<Current> supplyCurrentSignal;
@@ -31,7 +31,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
         pivotMotor =  new TalonFX(13);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
-        motorOutputConfigs.withNeutralMode(NeutralModeValue.Coast);
+        motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
         motorOutputConfigs.withInverted(InvertedValue.CounterClockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
@@ -51,9 +51,9 @@ public class IntakePivotSubsystem extends SubsystemBase {
         motionMagicConfigs.withMotionMagicJerk(100.0);
 
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
-        softLimitConfigs.withForwardSoftLimitThreshold(5.9);
+        softLimitConfigs.withForwardSoftLimitThreshold(MAX_POSITION);
         softLimitConfigs.withForwardSoftLimitEnable(true);
-        softLimitConfigs.withReverseSoftLimitThreshold(0);
+        softLimitConfigs.withReverseSoftLimitThreshold(MIN_POSITION);
         softLimitConfigs.withReverseSoftLimitEnable(true);
 
         var currentLimitConfigs = new com.ctre.phoenix6.configs.CurrentLimitsConfigs();
@@ -72,9 +72,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
         supplyCurrentSignal = pivotMotor.getSupplyCurrent();
 
-        // setDefaultCommand(Commands.run(() -> holdCurrentPosition(), this));
-        setDefaultCommand(Commands.run(() -> stop(), this));
-
+        setDefaultCommand(Commands.run(() -> holdCurrentPosition(), this));
     }
 
     public void spinVoltage(double voltage) {
