@@ -7,43 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BR1"
+            "pathName": "Trench Right 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BR2"
+            "pathName": "Trench Right 2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BR3"
+            "pathName": "Trench Right 3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BR4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BR2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BR3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BR4"
+            "pathName": "Trench Right 4"
           }
         }
       ]

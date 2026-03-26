@@ -15,13 +15,13 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 public class AimAtHubCommand extends Command {
 
-    private static final double MAX_TRANSLATION_SPEED = 3.0; // m/s
-    private static final double AIM_TOLERANCE_DEG     = 3.0;
+    private static final double MAX_TRANSLATION_SPEED = 1.0; // m/s
+    private static final double AIM_TOLERANCE_DEG     = 1.0;
 
     // PID for rotation — tune kP to taste
-    private static final double kP = 0.05;
+    private static final double kP = 5.0;
     private static final double kI = 0.0;
-    private static final double kD = 0.005;
+    private static final double kD = 0.0;
 
     private final CommandSwerveDrivetrain drivetrain;
     private final DoubleSupplier          xSupplier;

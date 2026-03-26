@@ -241,7 +241,9 @@ public class VisionSubsystem extends SubsystemBase {
         // setOperatorPerspectiveForward in CommandSwerveDrivetrain rotates the pose
         // estimator into red-origin on red alliance, so we need to flip the pose
         // to match whichever coordinate system the drivetrain is currently using.
-        Pose2d pose = isRed ? flipToRedOrigin(estimate.pose) : estimate.pose;
+
+        // Pose2d pose = isRed ? flipToRedOrigin(estimate.pose) : estimate.pose;
+        Pose2d pose = estimate.pose;
 
         if (estimate.tagCount >= 2) {
             drivetrain.addVisionMeasurement(

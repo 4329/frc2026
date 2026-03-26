@@ -103,6 +103,18 @@ public class RobotContainer {
     public RobotContainer() {
         SmartDashboard.putData("Field", field);
 
+        NamedCommands.registerCommand("intakeOut", new IntakeOutCommandGroup(pivot, spin));
+        NamedCommands.registerCommand("intakeIn", new IntakeInCommandGroup(pivot, spin));
+        NamedCommands.registerCommand("hoodZero", new HoodToZeroCommandGroup(hood));
+
+        NamedCommands.registerCommand("aimAndShoot",
+    Commands.sequence(
+        Commands.parallel(
+            new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0)
+        ).withTimeout(2.0),
+        new SpindexerAndKickerCommandGroup(spindexter, kicker, spin).withTimeout(1.0)
+        ));
+
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -146,21 +158,21 @@ public class RobotContainer {
     }
 
     public void robotPeriodic() {
-        boolean isRed = DriverStation.getAlliance()
-            .map(a -> a == DriverStation.Alliance.Red)
-            .orElse(false);
+        // boolean isRed = DriverStation.getAlliance()
+        //     .map(a -> a == DriverStation.Alliance.Red)
+        //     .orElse(false);
 
-        var pose = drivetrain.getState().Pose;
+        // var pose = drivetrain.getState().Pose;
 
-        if (isRed) {
-            field.setRobotPose(new Pose2d(
-                16.5412 - pose.getX(),
-                8.0137  - pose.getY(),
-                pose.getRotation().plus(Rotation2d.fromDegrees(180))
-            ));
-        } else {
-            field.setRobotPose(pose);
-        }
+        // if (isRed) {
+        //     field.setRobotPose(new Pose2d(
+        //         16.5412 - pose.getX(),
+        //         8.0137  - pose.getY(),
+        //         pose.getRotation().plus(Rotation2d.fromDegrees(180))
+        //     ));
+        // } else {
+        //     field.setRobotPose(pose);
+        // }
 
         Logger.recordOutput("Controller/Driver/LeftX", joystick.getLeftX());
         field.setRobotPose(drivetrain.getState().Pose);
@@ -203,8 +215,10 @@ public class RobotContainer {
 
 
 
-        joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker));
-        joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(spin, hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
+        joystick.a().whileTrue(new AimAtHubCommand(drivetrain, joystick::getLeftX, joystick::getLeftY));
+
+        joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, spin));
+        joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
 
         joystick.leftBumper().onTrue(new IntakeOutCommandGroup(pivot, spin));
@@ -222,6 +236,10 @@ public class RobotContainer {
 
         operator.leftTrigger().onTrue(new IntakeInCommandGroup(pivot, spin));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
+        
+        operator.a().whileTrue(new SetHoodPositionCommand(hood, 2.0));
+        operator.a().whileTrue(new ShooterVelocityCommand(shooter, 50));
+        operator.a().onFalse(new HoodToZeroCommandGroup(hood));
 
 
         functional.a().onTrue(new DoAFunctionalCommand(drivetrain, functional.getHID(), pivot, spin, spindexter, kicker, hood, shooter));

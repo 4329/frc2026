@@ -43,7 +43,6 @@ public class FullTurretCommandGroup extends ParallelCommandGroup {
     private static final double DEFAULT_DISTANCE = 2.2 - 0.6;
 
     public FullTurretCommandGroup(
-            IntakeSpinSubsystem intakeSpin,
             HoodSubsystem hood,
             ShooterSubsystem shooter,
             VisionSubsystem vision,
@@ -55,7 +54,6 @@ public class FullTurretCommandGroup extends ParallelCommandGroup {
 
         addCommands(
             new AimAtHubCommand(drivetrain, xSupplier, ySupplier),
-            new IntakeSpinCommand(intakeSpin, 60),
 
             Commands.run(() -> {
                 if (vision.hasTarget()) {

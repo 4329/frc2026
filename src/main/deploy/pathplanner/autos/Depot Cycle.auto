@@ -7,25 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BR1"
+            "pathName": "Depot 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BR2"
+            "pathName": "Depot 2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BR3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BR4"
+            "pathName": "Depot 3"
           }
         }
       ]
