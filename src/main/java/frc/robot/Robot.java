@@ -13,6 +13,9 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.Mode;
@@ -21,6 +24,7 @@ import frc.robot.subsystems.LoggingSubsystem;
 import com.ctre.phoenix6.SignalLogger;
 // import frc.robot.utilities.HoorayConfig;
 import java.io.File;
+import java.sql.Driver;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -179,13 +183,14 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    boolean isRed = DriverStation.getAlliance()
+      .map(a -> a == DriverStation.Alliance.Red)
+      .orElse(false);
+
+      m_robotContainer.getDrivetrain().getPigeon2().setYaw(isRed ? 0 : 180);
+      m_robotContainer.getDrivetrain().seedFieldCentric(
+        isRed ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0)
+      );
   }
 
   /** This function is called periodically during operator control. */

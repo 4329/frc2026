@@ -156,7 +156,7 @@ public final class Constants {
         public static final String LIMELIGHT_TURRET_NAME = "limelight-turret";
 
 
-        public static final Transform3d ROBOT_TO_SWERVE_CAMERA = new Transform3d(new Translation3d(-0.358775, 0.206375, 0.26035), new Rotation3d(Math.toRadians(180), Math.toRadians(45), Math.toRadians(180)));
+        public static final Transform3d ROBOT_TO_SWERVE_CAMERA = new Transform3d(new Translation3d(-0.3478923, 0.2105523, 0.204579), new Rotation3d(Math.toRadians(180), Math.toRadians(20), Math.toRadians(180)));
         public static final Transform3d ROBOT_TO_TURRET_CAMERA = new Transform3d(new Translation3d(-0.295275, -0.1143, 0.5461), new Rotation3d(Math.toRadians(0), Math.toRadians(-20), Math.toRadians(180)));   
 
         public static final double TURRET_CAMERA_RADIUS = 0.147066;
@@ -168,8 +168,8 @@ public final class Constants {
         public static final Vector<N3> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1.0); 
 
 
-        public static final int[] BLUE_HUB_TAG_IDS = { 2, 3, 4, 5, 8, 9, 10, 11 };
-        public static final int[] RED_HUB_TAG_IDS = { 18, 19, 20, 21, 24, 25, 26, 27 };
+        public static final int[] RED_HUB_TAG_IDS = { 2, 3, 4, 5, 8, 9, 10, 11 };
+        public static final int[] BLUE_HUB_TAG_IDS = { 18, 19, 20, 21, 24, 25, 26, 27 };
 
         public static final AprilTagFieldLayout FIELD_LAYOUT;
 
