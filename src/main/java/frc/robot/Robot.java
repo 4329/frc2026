@@ -167,6 +167,13 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
+    boolean isRed = DriverStation.getAlliance()
+      .map(a -> a == DriverStation.Alliance.Red)
+      .orElse(false);
+
+      m_robotContainer.getDrivetrain().getPigeon2().setYaw(isRed ? 0 : 180);
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     Logger.recordOutput("Auto/Selected", m_autonomousCommand != null ? m_autonomousCommand.getName() : "None");
     if (m_autonomousCommand != null) {
