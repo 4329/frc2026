@@ -66,13 +66,11 @@ public class VisionSubsystem extends SubsystemBase {
     public void periodic() {
         var pigeon = drivetrain.getPigeon2();
 
-        // Use raw pigeon yaw for SetRobotOrientation to avoid feedback loop.
-        // Pigeon is zeroed in teleopInit so that 0° = facing red wall,
-        // which matches Limelight's convention directly (no negation needed).
-        double pigeonYaw = pigeon.getYaw().getValueAsDouble();
+        // double pigeonYaw = pigeon.getYaw().getValueAsDouble();
+        double headingDeg = drivetrain.getState().Pose.getRotation().getDegrees();
 
-        LimelightHelpers.SetRobotOrientation(swerveLimelight, pigeonYaw, 0, 0, 0, 0, 0);
-        LimelightHelpers.SetRobotOrientation(turretLimelight, pigeonYaw, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(swerveLimelight, headingDeg, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(turretLimelight, headingDeg, 0, 0, 0, 0, 0);
 
         // Update turret limelight pose every loop based on current turret angle
         updateTurretCameraPose();
@@ -128,7 +126,7 @@ public class VisionSubsystem extends SubsystemBase {
         SmartDashboard.putString("Vision/Alliance",               isRed ? "RED" : "BLUE");
 
         // --- Debug ---
-        SmartDashboard.putNumber("Debug/PigeonRawYaw",   pigeonYaw);
+        SmartDashboard.putNumber("Debug/PigeonRawYaw",   headingDeg);
         SmartDashboard.putNumber("Debug/RobotPoseX",     drivetrain.getState().Pose.getTranslation().getX());
         SmartDashboard.putNumber("Debug/RobotPoseY",     drivetrain.getState().Pose.getTranslation().getY());
         SmartDashboard.putNumber("Debug/BlueHubCenterX", VisionConstants.BLUE_HUB_CENTER.getX());
@@ -243,6 +241,12 @@ public class VisionSubsystem extends SubsystemBase {
         // to match whichever coordinate system the drivetrain is currently using.
 
         // Pose2d pose = isRed ? flipToRedOrigin(estimate.pose) : estimate.pose;
+        Pose2d currentPose = drivetrain.getState().Pose;
+        double poseError = currentPose.getTranslation()
+            .getDistance(estimate.pose.getTranslation());
+        if (poseError > 1.0) return;
+
+
         Pose2d pose = estimate.pose;
 
         if (estimate.tagCount >= 2) {

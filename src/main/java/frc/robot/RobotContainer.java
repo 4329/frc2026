@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -40,6 +41,7 @@ import frc.robot.commands.CommandGroups.FullTurretCommandGroup;
 import frc.robot.commands.CommandGroups.HoodToZeroCommandGroup;
 import frc.robot.commands.CommandGroups.IntakeInCommandGroup;
 import frc.robot.commands.CommandGroups.IntakeOutCommandGroup;
+import frc.robot.commands.CommandGroups.RobotCentricFullTurretCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerAndKickerCommandGroup;
 import frc.robot.commands.CommandGroups.TurretCommandGroup;
 import frc.robot.subsystems.SpindexterSubsystem;
@@ -106,6 +108,23 @@ public class RobotContainer {
         NamedCommands.registerCommand("intakeOut", new IntakeOutCommandGroup(pivot, spin));
         NamedCommands.registerCommand("intakeIn", new IntakeInCommandGroup(pivot, spin));
         NamedCommands.registerCommand("hoodZero", new HoodToZeroCommandGroup(hood));
+        NamedCommands.registerCommand(
+            "MSBShoot",
+            Commands.sequence(
+                Commands.parallel(
+                    new ShooterVelocityCommand(shooter, 40),
+                    new SetHoodPositionCommand(hood, 2.9),
+                    new KickerSpinCommand(kicker, 200)
+                ).withTimeout(0.3),
+                Commands.parallel(
+                    new ShooterVelocityCommand(shooter, 40),
+                    new SetHoodPositionCommand(hood, 2.9),
+                    new KickerSpinCommand(kicker, 200),
+                    new SpindexerCommand(spindexter, 85)
+                ).withTimeout(2),
+                new HoodToZeroCommandGroup(hood)
+            )
+        );          
 
         NamedCommands.registerCommand("aimAndShoot",
     Commands.sequence(
@@ -158,21 +177,21 @@ public class RobotContainer {
     }
 
     public void robotPeriodic() {
-        boolean isRed = DriverStation.getAlliance()
-            .map(a -> a == DriverStation.Alliance.Red)
-            .orElse(false);
+        // boolean isRed = DriverStation.getAlliance()
+        //     .map(a -> a == DriverStation.Alliance.Red)
+        //     .orElse(false);
 
-        var pose = drivetrain.getState().Pose;
+        // var pose = drivetrain.getState().Pose;
 
-        if (isRed) {
-            field.setRobotPose(new Pose2d(
-                16.5412 - pose.getX(),
-                8.0137  - pose.getY(),
-                pose.getRotation().plus(Rotation2d.fromDegrees(180))
-            ));
-        } else {
-            field.setRobotPose(pose);
-        }
+        // if (isRed) {
+        //     field.setRobotPose(new Pose2d(
+        //         16.5412 - pose.getX(),
+        //         8.0137  - pose.getY(),
+        //         pose.getRotation().plus(Rotation2d.fromDegrees(180))
+        //     ));
+        // } else {
+        //     field.setRobotPose(pose);
+        // }
 
         Logger.recordOutput("Controller/Driver/LeftX", joystick.getLeftX());
         field.setRobotPose(drivetrain.getState().Pose);
@@ -214,7 +233,8 @@ public class RobotContainer {
         // joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4.5));
 
 
-
+        joystick.a().whileTrue(new RobotCentricFullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
+        joystick.a().onFalse(new HoodToZeroCommandGroup(hood));
         joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
         // joystick.a().onTrue(new HoodToZeroCommandGroup(hood));
         // joystick.b().onTrue(new SetHoodPositionCommand(hood, 2));
