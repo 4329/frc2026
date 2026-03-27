@@ -158,21 +158,21 @@ public class RobotContainer {
     }
 
     public void robotPeriodic() {
-        // boolean isRed = DriverStation.getAlliance()
-        //     .map(a -> a == DriverStation.Alliance.Red)
-        //     .orElse(false);
+        boolean isRed = DriverStation.getAlliance()
+            .map(a -> a == DriverStation.Alliance.Red)
+            .orElse(false);
 
-        // var pose = drivetrain.getState().Pose;
+        var pose = drivetrain.getState().Pose;
 
-        // if (isRed) {
-        //     field.setRobotPose(new Pose2d(
-        //         16.5412 - pose.getX(),
-        //         8.0137  - pose.getY(),
-        //         pose.getRotation().plus(Rotation2d.fromDegrees(180))
-        //     ));
-        // } else {
-        //     field.setRobotPose(pose);
-        // }
+        if (isRed) {
+            field.setRobotPose(new Pose2d(
+                16.5412 - pose.getX(),
+                8.0137  - pose.getY(),
+                pose.getRotation().plus(Rotation2d.fromDegrees(180))
+            ));
+        } else {
+            field.setRobotPose(pose);
+        }
 
         Logger.recordOutput("Controller/Driver/LeftX", joystick.getLeftX());
         field.setRobotPose(drivetrain.getState().Pose);
@@ -215,9 +215,14 @@ public class RobotContainer {
 
 
 
-        joystick.a().whileTrue(new AimAtHubCommand(drivetrain, joystick::getLeftX, joystick::getLeftY));
+        joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
+        // joystick.a().onTrue(new HoodToZeroCommandGroup(hood));
+        // joystick.b().onTrue(new SetHoodPositionCommand(hood, 2));
+        // joystick.x().onTrue(new SetHoodPositionCommand(hood, 4));
+        // joystick.y().onTrue(new SetHoodPositionCommand(hood, 6));
 
         joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, spin));
+
         joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
 
@@ -225,10 +230,10 @@ public class RobotContainer {
         joystick.leftBumper().onFalse(Commands.runOnce(() -> spin.stop(), spin));
         joystick.leftBumper().onFalse(new IntakePivotCommand(pivot, 0.0));
         
-        joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, -60));
+        joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
 
-        joystick.povLeft().whileTrue(new TurretCommandGroup(hood, shooter, spindexter, vision));
-        joystick.povRight().whileTrue(new AimAtHubCommand(drivetrain, joystick::getLeftX, joystick::getLeftY));
+        // joystick.povLeft().whileTrue(new TurretCommandGroup(hood, shooter, spindexter, vision));
+        // joystick.povRight().whileTrue(new uubCommand(drivetrain, joystick::getLeftX, joystick::getLeftY));
         
         joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
@@ -237,8 +242,12 @@ public class RobotContainer {
         operator.leftTrigger().onTrue(new IntakeInCommandGroup(pivot, spin));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
         
-        operator.a().whileTrue(new SetHoodPositionCommand(hood, 2.0));
-        operator.a().whileTrue(new ShooterVelocityCommand(shooter, 50));
+        operator.a().whileTrue(new SetHoodPositionCommand(hood, 5.0));
+        operator.a().whileTrue(new ShooterVelocityCommand(shooter, 80));
+        operator.a().whileTrue(new KickerSpinCommand(kicker, 200));
+        operator.a().whileTrue(new SpindexerCommand(spindexter, 50));
+        operator.a().whileTrue(new IntakeSpinCommand(spin, 30));
+        operator.a().onTrue(new IntakePivotCommand(pivot, 0.0));
         operator.a().onFalse(new HoodToZeroCommandGroup(hood));
 
 

@@ -103,7 +103,7 @@ public class VisionSubsystem extends SubsystemBase {
             ? VisionConstants.RED_HUB_CENTER
             : VisionConstants.BLUE_HUB_CENTER;
 
-        updateTurretTargeting(hubCenter, hubTagIds);
+        // updateTurretTargeting(hubCenter, hubTagIds);
 
         // --- AdvantageKit logging ---
         Logger.recordOutput("Vision/HasLimelightTarget", hasLimelightTarget);
@@ -163,72 +163,72 @@ public class VisionSubsystem extends SubsystemBase {
         );
     }
 
-    private void updateTurretTargeting(Translation2d hubCenter, int[] hubTagIds) {
-        // Compute turret camera's current field position dynamically
-        var robotPose = drivetrain.getState().Pose;
-        double turretAngleRad = turret.getPosition() * 2.0 * Math.PI;
+    // private void updateTurretTargeting(Translation2d hubCenter, int[] hubTagIds) {
+    //     // Compute turret camera's current field position dynamically
+    //     var robotPose = drivetrain.getState().Pose;
+    //     double turretAngleRad = turret.getPosition() * 2.0 * Math.PI;
 
-        double camX = VisionConstants.TURRET_AXIS_X
-            + VisionConstants.TURRET_CAMERA_RADIUS * Math.cos(turretAngleRad);
-        double camY = VisionConstants.TURRET_AXIS_Y
-            + VisionConstants.TURRET_CAMERA_RADIUS * Math.sin(turretAngleRad);
+    //     double camX = VisionConstants.TURRET_AXIS_X
+    //         + VisionConstants.TURRET_CAMERA_RADIUS * Math.cos(turretAngleRad);
+    //     double camY = VisionConstants.TURRET_AXIS_Y
+    //         + VisionConstants.TURRET_CAMERA_RADIUS * Math.sin(turretAngleRad);
 
-        Translation2d turretCameraField = robotPose.transformBy(
-            new Transform2d(
-                new Translation2d(camX, camY),
-                new Rotation2d(turretAngleRad)
-            )
-        ).getTranslation();
+    //     Translation2d turretCameraField = robotPose.transformBy(
+    //         new Transform2d(
+    //             new Translation2d(camX, camY),
+    //             new Rotation2d(turretAngleRad)
+    //         )
+    //     ).getTranslation();
 
-        // Pose-based distance from turret camera to hub center (both in blue-origin)
-        poseDistance = turretCameraField.getDistance(hubCenter);
+    //     // Pose-based distance from turret camera to hub center (both in blue-origin)
+    //     poseDistance = turretCameraField.getDistance(hubCenter);
 
-        // Try limelight-based distance from visible hub tags
-        RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(turretLimelight);
+    //     // Try limelight-based distance from visible hub tags
+    //     RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(turretLimelight);
 
-        double distSum = 0.0;
-        double txSum   = 0.0;
-        double tySum   = 0.0;
-        double areaSum = 0.0;
-        int    found   = 0;
+    //     double distSum = 0.0;
+    //     double txSum   = 0.0;
+    //     double tySum   = 0.0;
+    //     double areaSum = 0.0;
+    //     int    found   = 0;
 
-        for (RawFiducial f : fiducials) {
-            if (isHubTag(f.id, hubTagIds)) {
-                distSum += f.distToRobot;
-                txSum   += f.txnc;
-                tySum   += f.tync;
-                areaSum += f.ta;
-                found++;
-            }
-        }
+    //     for (RawFiducial f : fiducials) {
+    //         if (isHubTag(f.id, hubTagIds)) {
+    //             distSum += f.distToRobot;
+    //             txSum   += f.txnc;
+    //             tySum   += f.tync;
+    //             areaSum += f.ta;
+    //             found++;
+    //         }
+    //     }
 
-        visibleHubTags = found;
+    //     visibleHubTags = found;
 
-        if (found > 0) {
-            limelightDistance  = (distSum / found) + 0.6;
-            targetTX           = txSum   / found;
-            targetTY           = tySum   / found;
-            targetArea         = areaSum / found;
-            targetDistance     = limelightDistance;
-            hasLimelightTarget = true;
-            usingPoseFallback  = false;
-        } else {
-            limelightDistance  = 0.0;
-            targetTX           = 0.0;
-            targetTY           = 0.0;
-            targetArea         = 0.0;
-            targetDistance     = poseDistance;
-            hasLimelightTarget = false;
-            usingPoseFallback  = true;
-        }
-    }
+    //     if (found > 0) {
+    //         limelightDistance  = (distSum / found) + 0.6;
+    //         targetTX           = txSum   / found;
+    //         targetTY           = tySum   / found;
+    //         targetArea         = areaSum / found;
+    //         targetDistance     = limelightDistance;
+    //         hasLimelightTarget = true;
+    //         usingPoseFallback  = false;
+    //     } else {
+    //         limelightDistance  = 0.0;
+    //         targetTX           = 0.0;
+    //         targetTY           = 0.0;
+    //         targetArea         = 0.0;
+    //         targetDistance     = poseDistance;
+    //         hasLimelightTarget = false;
+    //         usingPoseFallback  = true;
+    //     }
+    // }
 
-    private boolean isHubTag(int id, int[] hubTagIds) {
-        for (int hubId : hubTagIds) {
-            if (id == hubId) return true;
-        }
-        return false;
-    }
+    // private boolean isHubTag(int id, int[] hubTagIds) {
+    //     for (int hubId : hubTagIds) {
+    //         if (id == hubId) return true;
+    //     }
+    //     return false;
+    // }
 
     private void processPoseEstimate(PoseEstimate estimate, String cameraName) {
         if (estimate == null || estimate.tagCount == 0) return;

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -60,10 +61,20 @@ public class DoAFunctionalCommand extends SequentialCommandGroup {
                 .until(controller::getAButtonPressed),
 
             Commands.runOnce(() -> drivetrain.setControl(
-                new com.ctre.phoenix6.swerve.SwerveRequest.Idle()), drivetrain),
+                new com.ctre.phoenix6.swerve.SwerveRequest.Idle()), drivetrain)
+                .until(controller::getAButtonPressed),
 
             Commands.runOnce(() -> drivetrain.setControl(
                 new com.ctre.phoenix6.swerve.SwerveRequest.Idle()), drivetrain)
+                .until(controller::getAButtonPressed),
+
+            Commands.runOnce(() -> intakePivot.setPosition(6.4)).until(controller::getAButtonPressed),
+
+            Commands.runOnce(() -> intakeSpin.setVelocity(60)).until(controller::getAButtonPressed),
+
+            Commands.runOnce(() -> intakeSpin.stop()).until(controller::getAButtonPressed),
+
+            Commands.runOnce(() -> intakePivot.setPosition(0.0)).until(controller::getAButtonPressed)
         );
     }
 }

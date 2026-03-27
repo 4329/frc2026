@@ -18,8 +18,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.LoggingSubsystem;
+import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 
 import com.ctre.phoenix6.SignalLogger;
 // import frc.robot.utilities.HoorayConfig;
@@ -172,7 +174,8 @@ public class Robot extends LoggedRobot {
       .map(a -> a == DriverStation.Alliance.Red)
       .orElse(false);
 
-      m_robotContainer.getDrivetrain().getPigeon2().setYaw(isRed ? 0 : 180);
+      // m_robotContainer.getDrivetrain().getPigeon2().setYaw(isRed ? 0 : 180);
+        m_robotContainer.getDrivetrain().seedFieldCentric();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     Logger.recordOutput("Auto/Selected", m_autonomousCommand != null ? m_autonomousCommand.getName() : "None");
