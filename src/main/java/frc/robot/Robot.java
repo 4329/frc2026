@@ -175,7 +175,7 @@ public class Robot extends LoggedRobot {
       .orElse(false);
 
       // m_robotContainer.getDrivetrain().getPigeon2().setYaw(isRed ? 0 : 180);
-        m_robotContainer.getDrivetrain().seedFieldCentric();
+        // m_robotContainer.getDrivetrain().seedFieldCentric();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     Logger.recordOutput("Auto/Selected", m_autonomousCommand != null ? m_autonomousCommand.getName() : "None");
