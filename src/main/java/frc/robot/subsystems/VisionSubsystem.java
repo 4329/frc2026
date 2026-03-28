@@ -37,6 +37,9 @@ public class VisionSubsystem extends SubsystemBase {
     private double  targetDistance     = 0.0;
     private int     visibleHubTags     = 0;
 
+    private boolean hasInitializedPose = false;
+
+
     public VisionSubsystem(CommandSwerveDrivetrain drivetrain, RotateSubsystem turret) {
         this.drivetrain      = drivetrain;
         this.turret          = turret;
@@ -228,12 +231,20 @@ public class VisionSubsystem extends SubsystemBase {
     //     return false;
     // }
 
+
     private void processPoseEstimate(PoseEstimate estimate, String cameraName) {
         if (estimate == null || estimate.tagCount == 0) return;
 
-        boolean isRed = DriverStation.getAlliance()
-            .map(a -> a == Alliance.Red)
-            .orElse(false);
+        if (!hasInitializedPose && estimate.tagCount >= 2) {
+            drivetrain.resetPose(estimate.pose);
+            hasInitializedPose = true;
+            Logger.recordOutput("Vision/PoseInitialized", true);
+            return;
+        }
+
+        // boolean isRed = DriverStation.getAlliance()
+        //     .map(a -> a == Alliance.Red)
+        //     .orElse(false);
 
         // MT2 always outputs blue-origin poses.
         // setOperatorPerspectiveForward in CommandSwerveDrivetrain rotates the pose
@@ -260,6 +271,10 @@ public class VisionSubsystem extends SubsystemBase {
         Logger.recordOutput("Vision/" + cameraName + "/RobotPose",  estimate.pose);
         Logger.recordOutput("Vision/" + cameraName + "/TagCount",   estimate.tagCount);
         Logger.recordOutput("Vision/" + cameraName + "/AvgTagDist", estimate.avgTagDist);
+    }
+
+    public void resetPoseInitialization() {
+        hasInitializedPose = false;
     }
 
     // Converts a blue-origin pose to red-origin by mirroring across the field center

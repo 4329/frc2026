@@ -233,13 +233,9 @@ public class RobotContainer {
         // joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4.5));
 
 
-        joystick.a().whileTrue(new RobotCentricFullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
-        joystick.a().onFalse(new HoodToZeroCommandGroup(hood));
+        // joystick.a().whileTrue(new RobotCentricFullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
+        // joystick.a().onFalse(new HoodToZeroCommandGroup(hood));
         joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
-        // joystick.a().onTrue(new HoodToZeroCommandGroup(hood));
-        // joystick.b().onTrue(new SetHoodPositionCommand(hood, 2));
-        // joystick.x().onTrue(new SetHoodPositionCommand(hood, 4));
-        // joystick.y().onTrue(new SetHoodPositionCommand(hood, 6));
 
         joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, spin));
 
@@ -255,7 +251,7 @@ public class RobotContainer {
         // joystick.povLeft().whileTrue(new TurretCommandGroup(hood, shooter, spindexter, vision));
         // joystick.povRight().whileTrue(new uubCommand(drivetrain, joystick::getLeftX, joystick::getLeftY));
         
-        joystick.povUp().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.povUp().onTrue(Commands.runOnce(() -> vision.resetPoseInitialization()));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
 
 
