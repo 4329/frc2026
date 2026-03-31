@@ -11,9 +11,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Depot 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeIn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
           }
         },
         {

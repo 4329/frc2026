@@ -105,8 +105,9 @@ public class RobotContainer {
     public RobotContainer() {
         SmartDashboard.putData("Field", field);
 
-        NamedCommands.registerCommand("intakeOut", new IntakeOutCommandGroup(pivot, spin));
-        NamedCommands.registerCommand("intakeIn", new IntakeInCommandGroup(pivot, spin));
+        NamedCommands.registerCommand("intakeOut", new IntakePivotCommand(pivot, 1).withTimeout(0.2));
+        NamedCommands.registerCommand("spinIntake", new IntakeSpinCommand(spin, 60));
+        NamedCommands.registerCommand("intakeIn", new IntakePivotCommand(pivot, -1).withTimeout(0.2));
         NamedCommands.registerCommand("hoodZero", new HoodToZeroCommandGroup(hood));
         NamedCommands.registerCommand(
             "MSBShoot",
@@ -127,11 +128,12 @@ public class RobotContainer {
         );          
 
         NamedCommands.registerCommand("aimAndShoot",
-    Commands.sequence(
-        Commands.parallel(
-            new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0)
-        ).withTimeout(2.0),
-        new SpindexerAndKickerCommandGroup(spindexter, kicker, spin).withTimeout(1.0)
+        Commands.sequence(
+            new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0).withTimeout(1.0),
+            Commands.parallel(
+                new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0),
+                new SpindexerAndKickerCommandGroup(spindexter, kicker, spin)).withTimeout(3.0),
+                new HoodToZeroCommandGroup(hood)
         ));
 
         autoChooser = AutoBuilder.buildAutoChooser();
@@ -177,22 +179,6 @@ public class RobotContainer {
     }
 
     public void robotPeriodic() {
-        // boolean isRed = DriverStation.getAlliance()
-        //     .map(a -> a == DriverStation.Alliance.Red)
-        //     .orElse(false);
-
-        // var pose = drivetrain.getState().Pose;
-
-        // if (isRed) {
-        //     field.setRobotPose(new Pose2d(
-        //         16.5412 - pose.getX(),
-        //         8.0137  - pose.getY(),
-        //         pose.getRotation().plus(Rotation2d.fromDegrees(180))
-        //     ));
-        // } else {
-        //     field.setRobotPose(pose);
-        // }
-
         Logger.recordOutput("Controller/Driver/LeftX", joystick.getLeftX());
         field.setRobotPose(drivetrain.getState().Pose);
         Logger.recordOutput("Drivetrain/Pose", drivetrain.getState().Pose);
@@ -209,7 +195,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // --- SWERVE DRIVE COMMAND ---
         drivetrain.setDefaultCommand(new DriveCommand(
             drivetrain, 
             joystick::getLeftX, 
@@ -242,20 +227,17 @@ public class RobotContainer {
         joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
 
-        joystick.leftBumper().onTrue(new IntakeOutCommandGroup(pivot, spin));
-        joystick.leftBumper().onFalse(Commands.runOnce(() -> spin.stop(), spin));
-        joystick.leftBumper().onFalse(new IntakePivotCommand(pivot, 0.0));
+        // joystick.leftBumper().onTrue(new IntakeOutCommandGroup(pivot, spin));
+        // joystick.leftBumper().onFalse(Commands.runOnce(() -> spin.stop(), spin));
+        // joystick.leftBumper().onFalse(new IntakePivotCommand(pivot, 0.0));
         
         joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
-
-        // joystick.povLeft().whileTrue(new TurretCommandGroup(hood, shooter, spindexter, vision));
-        // joystick.povRight().whileTrue(new uubCommand(drivetrain, joystick::getLeftX, joystick::getLeftY));
         
         joystick.povUp().onTrue(Commands.runOnce(() -> vision.resetPoseInitialization()));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
 
 
-        operator.leftTrigger().onTrue(new IntakeInCommandGroup(pivot, spin));
+        // operator.leftTrigger().onTrue(new IntakeInCommandGroup(pivot, spin));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
         
         operator.a().whileTrue(new SetHoodPositionCommand(hood, 5.0));
@@ -263,8 +245,10 @@ public class RobotContainer {
         operator.a().whileTrue(new KickerSpinCommand(kicker, 200));
         operator.a().whileTrue(new SpindexerCommand(spindexter, 50));
         operator.a().whileTrue(new IntakeSpinCommand(spin, 30));
-        operator.a().onTrue(new IntakePivotCommand(pivot, 0.0));
         operator.a().onFalse(new HoodToZeroCommandGroup(hood));
+
+
+        operator.povUp().whileTrue(new IntakeSpinCommand(spin, 60));
 
 
         functional.a().onTrue(new DoAFunctionalCommand(drivetrain, functional.getHID(), pivot, spin, spindexter, kicker, hood, shooter));

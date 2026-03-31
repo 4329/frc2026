@@ -21,7 +21,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(true);
 
     private static final double MIN_POSITION = 0;
-    private static final double MAX_POSITION = 6.45;
+    private static final double MAX_POSITION = 6.2;
     private double targetPosition = MIN_POSITION;
 
     private final StatusSignal<Current> supplyCurrentSignal;
@@ -35,10 +35,12 @@ public class IntakePivotSubsystem extends SubsystemBase {
         motorOutputConfigs.withInverted(InvertedValue.CounterClockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(0.0);
+        Slot0Configs.withKP(1.0);
         Slot0Configs.withKI(0.0);
         Slot0Configs.withKD(0.0);
-        Slot0Configs.withKV(1);
+        Slot0Configs.withKV(0);
+        Slot0Configs.withKS(0);
+        // Slot0Configs.withGravityType(GravityTypeValue.Arm_Cosine);
         
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
@@ -52,9 +54,9 @@ public class IntakePivotSubsystem extends SubsystemBase {
 
         var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
         softLimitConfigs.withForwardSoftLimitThreshold(MAX_POSITION);
-        softLimitConfigs.withForwardSoftLimitEnable(true);
+        softLimitConfigs.withForwardSoftLimitEnable(false);
         softLimitConfigs.withReverseSoftLimitThreshold(MIN_POSITION);
-        softLimitConfigs.withReverseSoftLimitEnable(true);
+        softLimitConfigs.withReverseSoftLimitEnable(false);
 
         var currentLimitConfigs = new com.ctre.phoenix6.configs.CurrentLimitsConfigs();
         currentLimitConfigs.withStatorCurrentLimit(40);
@@ -80,12 +82,16 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     public void setPosition(double rotations) {
-        targetPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, rotations));
+        // targetPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, rotations));
         pivotMotor.setControl(positionRequest.withPosition(targetPosition));
     }
 
     public double getPosition() {
         return pivotMotor.getPosition().getValueAsDouble();
+    }
+
+    public double getError() {
+        return targetPosition - getPosition();
     }
 
     public double getSupplyCurrent() {
@@ -98,7 +104,7 @@ public class IntakePivotSubsystem extends SubsystemBase {
     }
 
     public void holdCurrentPosition() {
-        pivotMotor.setControl(positionRequest.withPosition(targetPosition));
+        pivotMotor.setControl(positionRequest.withPosition(getPosition()));
     }
 
     public void stop() {

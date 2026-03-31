@@ -75,26 +75,20 @@
   "eventMarkers": [
     {
       "name": "intakeOut",
-      "waypointRelativePos": 1.0730277185501111,
-      "endWaypointRelativePos": 1.7382729211087429,
-      "command": null
-    },
-    {
-      "name": "intakeIn",
-      "waypointRelativePos": 2.2500000000000058,
+      "waypointRelativePos": 0.6324649298597181,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "aimAndShoot",
-      "waypointRelativePos": 2.972814498933884,
-      "endWaypointRelativePos": null,
+      "name": "spinIntake",
+      "waypointRelativePos": 0.723847695390779,
+      "endWaypointRelativePos": 1.74,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 180.0,
     "nominalVoltage": 12.0,

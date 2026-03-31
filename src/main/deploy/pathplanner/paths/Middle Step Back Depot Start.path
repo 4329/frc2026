@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8802359550561794,
-        "y": 5.156011235955057
+        "x": 2.0,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.027576365641796,
-        "y": 5.357978568483023
+        "x": 2.3694044943820223,
+        "y": 4.412067415730338
       },
       "isLocked": false,
-      "linkedName": "Depot"
+      "linkedName": "End of MSB"
     },
     {
       "anchor": {
-        "x": 1.7069887640449437,
-        "y": 2.0987078651685396
+        "x": 0.6878876404494376,
+        "y": 7.082112359550563
       },
       "prevControl": {
-        "x": 1.819612793573274,
-        "y": 2.3219024618164017
-      },
-      "nextControl": {
-        "x": 1.3881442998292624,
-        "y": 1.4668323952349998
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.5859775280898873,
-        "y": 0.6312022471910108
-      },
-      "prevControl": {
-        "x": 0.704244945898249,
-        "y": 0.8514585022325928
+        "x": 1.931191011235955,
+        "y": 7.387842696629216
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "End of MSB Depot Start"
     }
   ],
   "rotationTargets": [],
@@ -58,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Depot Outpost",
+  "folder": "Simple Move and Shoot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 160.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

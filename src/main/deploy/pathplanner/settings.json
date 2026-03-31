@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.9,
-  "robotLength": 0.9,
+  "robotWidth": 0.8255,
+  "robotLength": 0.9017,
   "holonomicMode": true,
   "pathFolders": [
     "Depot Outpost",
@@ -10,11 +10,11 @@
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxAccel": 2.0,
   "defaultMaxAngVel": 360.0,
   "defaultMaxAngAccel": 180.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 74.088,
+  "robotMass": 45.8,
   "robotMOI": 6.883,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.048,

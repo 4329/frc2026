@@ -3,51 +3,63 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8802359550561794,
-        "y": 5.156011235955057
+        "x": 0.6878876404494376,
+        "y": 7.082112359550563
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.027576365641796,
-        "y": 5.357978568483023
+        "x": 0.7074990051500922,
+        "y": 6.818075752125728
       },
       "isLocked": false,
-      "linkedName": "Depot"
+      "linkedName": "End of MSB Depot Start"
     },
     {
       "anchor": {
-        "x": 1.7069887640449437,
-        "y": 2.0987078651685396
+        "x": 0.6878876404494376,
+        "y": 5.084674157303371
       },
       "prevControl": {
-        "x": 1.819612793573274,
-        "y": 2.3219024618164017
+        "x": 0.5724234084844548,
+        "y": 5.321477410941774
       },
       "nextControl": {
-        "x": 1.3881442998292624,
-        "y": 1.4668323952349998
+        "x": 0.9610222600493656,
+        "y": 4.524507900603496
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.5859775280898873,
-        "y": 0.6312022471910108
+        "x": 2.726089887640449,
+        "y": 5.359831460674159
       },
       "prevControl": {
-        "x": 0.704244945898249,
-        "y": 0.8514585022325928
+        "x": 2.32603228427605,
+        "y": 5.465401486192844
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.984083044982702,
+      "rotationDegrees": -90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "intakeOut",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 0.5947895791583312,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 2.0,
@@ -58,13 +70,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 135.0
   },
   "reversed": false,
-  "folder": "Depot Outpost",
+  "folder": "Simple Move and Shoot",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 160.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

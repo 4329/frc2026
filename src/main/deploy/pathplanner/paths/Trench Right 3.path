@@ -82,14 +82,14 @@
   "eventMarkers": [
     {
       "name": "intakeOut",
-      "waypointRelativePos": 0.058635394456285045,
-      "endWaypointRelativePos": 1.018123667377405,
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.2040080160320588,
       "command": null
     },
     {
-      "name": "intakeIn",
-      "waypointRelativePos": 1.3933901918976785,
-      "endWaypointRelativePos": null,
+      "name": "spinIntake",
+      "waypointRelativePos": 0.03366733466933767,
+      "endWaypointRelativePos": 1.2008016032064095,
       "command": null
     }
   ],

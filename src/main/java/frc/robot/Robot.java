@@ -174,8 +174,6 @@ public class Robot extends LoggedRobot {
       .map(a -> a == DriverStation.Alliance.Red)
       .orElse(false);
 
-      // m_robotContainer.getDrivetrain().getPigeon2().setYaw(isRed ? 0 : 180);
-        m_robotContainer.getDrivetrain().seedFieldCentric();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     Logger.recordOutput("Auto/Selected", m_autonomousCommand != null ? m_autonomousCommand.getName() : "None");
@@ -196,11 +194,6 @@ public class Robot extends LoggedRobot {
     boolean isRed = DriverStation.getAlliance()
       .map(a -> a == DriverStation.Alliance.Red)
       .orElse(false);
-
-      // m_robotContainer.getDrivetrain().getPigeon2().setYaw(isRed ? 0 : 180);
-      // m_robotContainer.getDrivetrain().seedFieldCentric(
-      //   isRed ? Rotation2d.fromDegrees(180) : Rotation2d.fromDegrees(0)
-      // );
   }
 
   /** This function is called periodically during operator control. */

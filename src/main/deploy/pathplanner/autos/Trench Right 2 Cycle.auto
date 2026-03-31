@@ -11,21 +11,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Trench Right 2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Trench Right 3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Trench Right 4"
+            "name": "aimAndShoot"
           }
         },
         {
@@ -41,9 +29,51 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "intakeIn"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Trench Right 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Trench Right 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Trench Right 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Trench Right 4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
           }
         }
       ]

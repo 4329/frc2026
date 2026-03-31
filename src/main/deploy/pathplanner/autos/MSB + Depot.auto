@@ -19,7 +19,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Alt Escape"
+            "pathName": "Middle Step Back Depot Start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle Step Back Depot End"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
           }
         }
       ]

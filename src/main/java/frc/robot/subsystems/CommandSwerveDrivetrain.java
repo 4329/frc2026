@@ -243,10 +243,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     new PIDConstants(5.0, 0, 0)         // Rotation PID - tune as needed
                 ),
                 config,
-                // () -> DriverStation.getAlliance()        // Flip paths for red alliance
-                //         .filter(a -> a == Alliance.Red)
-                //         .isPresent()
-                () -> true,
+                () -> DriverStation.getAlliance()        // Flip paths for red alliance
+                        .filter(a -> a == Alliance.Red)
+                        .isPresent(),
+                // () -> true,
                 this
             );
         } catch (Exception e) {
