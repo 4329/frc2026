@@ -3,10 +3,9 @@
   "robotLength": 0.9017,
   "holonomicMode": true,
   "pathFolders": [
-    "Depot Outpost",
-    "Simple Move and Shoot",
-    "Trench Left Cycle",
-    "Trench Right Cycle"
+    "Left Paths",
+    "Middle Paths",
+    "Right Paths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,

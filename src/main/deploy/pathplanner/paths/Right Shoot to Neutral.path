@@ -3,63 +3,60 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.6878876404494376,
-        "y": 7.082112359550563
+        "x": 2.5511126961483592,
+        "y": 2.4
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.7074990051500922,
-        "y": 6.818075752125728
+        "x": 2.4346647646219686,
+        "y": 1.6090014265335242
       },
       "isLocked": false,
-      "linkedName": "End of MSB Depot Start"
+      "linkedName": "Right Neutral to Shoot"
     },
     {
       "anchor": {
-        "x": 0.6878876404494376,
-        "y": 5.084674157303371
+        "x": 3.5862054208273886,
+        "y": 0.7421112696148362
       },
       "prevControl": {
-        "x": 0.5724234084844548,
-        "y": 5.321477410941774
+        "x": 2.965149786019971,
+        "y": 1.0138231098430803
       },
       "nextControl": {
-        "x": 0.9610222600493656,
-        "y": 4.524507900603496
+        "x": 4.181381893087452,
+        "y": 0.4817215630010594
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.726089887640449,
-        "y": 5.359831460674159
+        "x": 7.1960912981455065,
+        "y": 1.0526390870185458
       },
       "prevControl": {
-        "x": 2.32603228427605,
-        "y": 5.465401486192844
+        "x": 6.678544935805992,
+        "y": 0.4315834522111278
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Neutral Start"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.984083044982702,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 1.214442976662257,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.6125055041831808,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "intakeOut",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 0.5947895791583312,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 2.0,
@@ -69,14 +66,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 135.0
+    "velocity": 2.0,
+    "rotation": 73.07248693585296
   },
   "reversed": false,
-  "folder": "Simple Move and Shoot",
+  "folder": "Right Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -151.04555083891725
   },
   "useDefaultConstraints": true
 }

@@ -66,4 +66,5 @@ public class LoggingSubsystem extends SubsystemBase {
             return getClass().getSimpleName();
         }
     }
-}
+
+    }

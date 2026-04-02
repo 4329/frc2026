@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.inputs.LoggableInputs;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -17,14 +19,16 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.model.KickerLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 
-// not in use currently, keeping as backup
-
-public class KickerSubsystem extends SubsystemBase {
+public class KickerSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final TalonFX kickerMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
-    private final VelocityVoltage velocityRequest = new VelocityVoltage(0); // ✅ fixed
+    private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
+    private final KickerLogAutoLogged kickerLog = new KickerLogAutoLogged(); 
+
 
     private static final double TOLERANCE = 0.5;
     private double targetPosition = 0.0;
@@ -73,6 +77,23 @@ public class KickerSubsystem extends SubsystemBase {
         );
     }
 
+    @Override
+    public LoggableInputs log() {
+    kickerLog.motorConnected = BaseStatusSignal.refreshAll(
+            positionSignal, velocitySignal, appliedVoltsSignal,
+            supplyCurrentSignal, torqueCurrentSignal, tempSignal
+        ).isOK();
+
+        kickerLog.positionRotations       = positionSignal.getValueAsDouble();
+        kickerLog.velocityRotationsPerSec = velocitySignal.getValueAsDouble();
+        kickerLog.appliedVolts            = appliedVoltsSignal.getValueAsDouble();
+        kickerLog.supplyCurrentAmps       = supplyCurrentSignal.getValueAsDouble();
+        kickerLog.torqueCurrentAmps       = torqueCurrentSignal.getValueAsDouble();
+        kickerLog.tempCelsius             = tempSignal.getValueAsDouble();
+        
+        return kickerLog;
+    }
+
     public boolean atPosition(double target, double tolerance) {
         return Math.abs(positionSignal.getValueAsDouble() - target) <= tolerance;
     }
@@ -82,12 +103,12 @@ public class KickerSubsystem extends SubsystemBase {
     }
 
     public void setPosition(double rotations) {
-        targetPosition = rotations; // ✅ track for logging
+        targetPosition = rotations;
         kickerMotor.setControl(positionRequest.withPosition(rotations));
     }
 
     public void setVelocity(double rotationsPerSecond) {
-        kickerMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond)); // ✅ fixed
+        kickerMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond));
     }
 
     public double getPosition() {

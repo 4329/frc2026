@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Middle Step Back"
+            "pathName": "Middle Back Up"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "aimAndShoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Alt Escape"
           }
         }
       ]

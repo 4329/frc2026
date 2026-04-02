@@ -19,15 +19,16 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.model.IntakeLogAutoLogged;
+import frc.robot.model.SpindexerLogAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
+import frc.robot.model.SpindexerLog;
 
 public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final TalonFX spindexMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
-    private final IntakeLogAutoLogged rotateLog = new IntakeLogAutoLogged();
+    private final SpindexerLogAutoLogged spindexerLog = new SpindexerLogAutoLogged();
 
     private static final double TOLERANCE = 0.5;
     private double targetPosition = 0.0;
@@ -64,7 +65,6 @@ public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsyste
 
         setDefaultCommand(Commands.run(() -> stop(), this));
 
-        // ✅ Signals initialized here
         positionSignal      = spindexMotor.getPosition();
         velocitySignal      = spindexMotor.getVelocity();
         appliedVoltsSignal  = spindexMotor.getMotorVoltage();
@@ -79,22 +79,22 @@ public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsyste
     
     @Override
     public LoggableInputs log() {
-        rotateLog.motorConnected = BaseStatusSignal.refreshAll(
+        spindexerLog.motorConnected = BaseStatusSignal.refreshAll(
             positionSignal, velocitySignal, appliedVoltsSignal,
             supplyCurrentSignal, torqueCurrentSignal, tempSignal
         ).isOK();
 
-        rotateLog.positionRotations       = positionSignal.getValueAsDouble();
-        rotateLog.velocityRotationsPerSec = velocitySignal.getValueAsDouble();
-        rotateLog.appliedVolts            = appliedVoltsSignal.getValueAsDouble();
-        rotateLog.supplyCurrentAmps       = supplyCurrentSignal.getValueAsDouble();
-        rotateLog.torqueCurrentAmps       = torqueCurrentSignal.getValueAsDouble();
-        rotateLog.tempCelsius             = tempSignal.getValueAsDouble();
-        rotateLog.targetPosition          = targetPosition;
-        rotateLog.positionError           = targetPosition - positionSignal.getValueAsDouble();
-        rotateLog.atTarget                = atPosition(targetPosition, TOLERANCE);
+        spindexerLog.positionRotations       = positionSignal.getValueAsDouble();
+        spindexerLog.velocityRotationsPerSec = velocitySignal.getValueAsDouble();
+        spindexerLog.appliedVolts            = appliedVoltsSignal.getValueAsDouble();
+        spindexerLog.supplyCurrentAmps       = supplyCurrentSignal.getValueAsDouble();
+        spindexerLog.torqueCurrentAmps       = torqueCurrentSignal.getValueAsDouble();
+        spindexerLog.tempCelsius             = tempSignal.getValueAsDouble();
+        spindexerLog.targetPosition          = targetPosition;
+        spindexerLog.positionError           = targetPosition - positionSignal.getValueAsDouble();
+        spindexerLog.atTarget                = atPosition(targetPosition, TOLERANCE);
 
-        return rotateLog;
+        return spindexerLog;
     }
 
     public boolean atPosition(double target, double tolerance) {
@@ -106,12 +106,12 @@ public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsyste
     }
 
     public void setPosition(double rotations) {
-        targetPosition = rotations; // ✅ track for logging
+        targetPosition = rotations; 
         spindexMotor.setControl(positionRequest.withPosition(rotations));
     }
 
     public void setVelocity(double rotationsPerSecond) {
-        spindexMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond)); // ✅ fixed - was using voltageRequest
+        spindexMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond)); 
     }
 
     public double getPosition() {
@@ -119,7 +119,7 @@ public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsyste
     }
 
     public double getVelocity() {
-        return spindexMotor.getVelocity().getValueAsDouble(); // ✅ fixed - was throwing UnsupportedOperationException
+        return spindexMotor.getVelocity().getValueAsDouble(); 
     }
 
     public void stop() {

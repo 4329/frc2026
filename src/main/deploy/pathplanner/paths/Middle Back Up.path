@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
+        "x": 3.5,
         "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3694044943820223,
-        "y": 4.412067415730338
+        "x": 3.699727672235416,
+        "y": 3.829518119069787
       },
       "isLocked": false,
-      "linkedName": "End of MSB"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.6878876404494376,
-        "y": 7.082112359550563
+        "x": 2.0,
+        "y": 4.5
       },
       "prevControl": {
-        "x": 1.931191011235955,
-        "y": 7.387842696629216
+        "x": 1.7671392608969476,
+        "y": 4.616908599300568
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "End of MSB Depot Start"
+      "linkedName": "Middle Back Up"
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 160.0
   },
   "reversed": false,
-  "folder": "Simple Move and Shoot",
+  "folder": "Middle Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

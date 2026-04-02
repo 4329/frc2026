@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trench Right 1"
+            "pathName": "Middle Back Up"
           }
         },
         {
@@ -19,25 +19,32 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trench Right 2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Trench Right 3"
+            "pathName": "Middle Depot Start"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intakeIn"
+            "name": "intakeOut"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Trench Right 4"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeSpin"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Middle Depot"
+                }
+              }
+            ]
           }
         },
         {

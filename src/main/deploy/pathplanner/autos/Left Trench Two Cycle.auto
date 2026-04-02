@@ -1,0 +1,139 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Neutral Start"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeOut"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Neutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeSpin"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Neutral to Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeIn"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Shoot to Neutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeOut"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Neutral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeSpin"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Neutral to Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeIn"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "aimAndShoot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

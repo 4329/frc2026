@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,13 +15,19 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
+import frc.robot.model.VisionLogAutoLogged;
+import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
 import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
 
-public class VisionSubsystem extends SubsystemBase {
+public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     // Field dimensions for blue-origin coordinate conversion
     private static final double FIELD_LENGTH = 16.5412; // meters
     private static final double FIELD_WIDTH  = 8.0137;  // meters
+
+
+    private final VisionLogAutoLogged visionLog = new VisionLogAutoLogged();
+
 
     private final CommandSwerveDrivetrain drivetrain;
     private final RotateSubsystem turret;
@@ -64,7 +71,25 @@ public class VisionSubsystem extends SubsystemBase {
         LimelightHelpers.setLEDMode_PipelineControl(swerveLimelight);
         LimelightHelpers.setLEDMode_PipelineControl(turretLimelight);
     }
+@Override
+public LoggableInputs log() {
+    visionLog.hasLimelightTarget = hasLimelightTarget;
+    visionLog.usingPoseFallback  = usingPoseFallback;
+    visionLog.hasInitializedPose = hasInitializedPose;
+    visionLog.targetTX           = targetTX;
+    visionLog.targetTY           = targetTY;
+    visionLog.targetArea         = targetArea;
+    visionLog.limelightDistance  = limelightDistance;
+    visionLog.poseDistance       = poseDistance;
+    visionLog.targetDistance     = targetDistance;
+    visionLog.visibleHubTags     = visibleHubTags;
+    return visionLog;
+}
 
+@Override
+public String getNameLog() {
+    return "Vision";
+}
     @Override
     public void periodic() {
         var pigeon = drivetrain.getPigeon2();
@@ -137,7 +162,7 @@ public class VisionSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Debug/RedHubCenterX",  VisionConstants.RED_HUB_CENTER.getX());
         SmartDashboard.putNumber("Debug/RedHubCenterY",  VisionConstants.RED_HUB_CENTER.getY());
     }
-
+    
     private void updateTurretCameraPose() {
         double turretAngleRad = turret.getPosition() * 2.0 * Math.PI;
 
@@ -292,4 +317,5 @@ public class VisionSubsystem extends SubsystemBase {
         LimelightHelpers.setLEDMode_ForceOn(swerveLimelight);
         LimelightHelpers.setLEDMode_ForceOn(turretLimelight);
     }
+    
 }

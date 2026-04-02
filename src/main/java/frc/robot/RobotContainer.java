@@ -33,6 +33,7 @@ import frc.robot.commands.AimAtHubCommand;
 import frc.robot.commands.DoAFunctionalCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.KickerSubsystem;
+import frc.robot.subsystems.LoggingSubsystem;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.commands.KickerSpinCommand;
@@ -84,7 +85,6 @@ public class RobotContainer {
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
     private final SpindexterSubsystem spindexter = new SpindexterSubsystem();
     private final KickerSubsystem kicker = new KickerSubsystem();
     
@@ -101,6 +101,11 @@ public class RobotContainer {
     private final Field2d field = new Field2d();
 
     private final SendableChooser<Command> autoChooser;
+
+
+private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
+    drivetrain, hood, turretRotate, shooter, vision
+);
 
     public RobotContainer() {
         SmartDashboard.putData("Field", field);
