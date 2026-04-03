@@ -8,7 +8,7 @@ import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 
 public class IntakeZeroCommand extends Command{
     private static final double CREEEP_DUTY_CYCLE = -0.10;
-    private static final double CURRENT_SPIKE_AMPS = 3.0;
+    private static final double CURRENT_SPIKE_AMPS = 4.0;
 
     private final IntakePivotSubsystem pivot;
     private final DutyCycleOut creepRequest = new DutyCycleOut(CREEEP_DUTY_CYCLE).withEnableFOC(true);
@@ -30,8 +30,8 @@ public class IntakeZeroCommand extends Command{
 
     @Override
     public void execute() {
-        System.out.println(pivot.getSupplyCurrent());
-        if (pivot.getSupplyCurrent() >= CURRENT_SPIKE_AMPS || pivot.getSupplyCurrent() <= -0.01) {
+        System.out.println(pivot.getStatorCurrent());
+        if (pivot.getStatorCurrent() >= CURRENT_SPIKE_AMPS || pivot.getStatorCurrent() <= -0.01) {
             spikeDetected = true;
         }
     }
@@ -48,6 +48,7 @@ public class IntakeZeroCommand extends Command{
 
         if (!interrupted) {
             pivot.pivotMotor.setPosition(0.0);
+            pivot.setPosition(0.0);
             enableReverseSoftLimit();
         } else {
             enableReverseSoftLimit();

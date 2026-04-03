@@ -42,6 +42,7 @@ import frc.robot.commands.CommandGroups.FullTurretCommandGroup;
 import frc.robot.commands.CommandGroups.HoodToZeroCommandGroup;
 import frc.robot.commands.CommandGroups.IntakeInCommandGroup;
 import frc.robot.commands.CommandGroups.IntakeOutCommandGroup;
+import frc.robot.commands.CommandGroups.IntakePivotToZeroCommandGroup;
 import frc.robot.commands.CommandGroups.RobotCentricFullTurretCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerAndKickerCommandGroup;
 import frc.robot.commands.CommandGroups.TurretCommandGroup;
@@ -239,7 +240,12 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
         
         joystick.povUp().onTrue(Commands.runOnce(() -> vision.resetPoseInitialization()));
-        joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
+        // joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
+
+        joystick.povLeft().onTrue(new IntakePivotToZeroCommandGroup(pivot));
+        joystick.povRight().onTrue(new IntakePivotCommand(pivot, 6.3));
+        joystick.povDown().onTrue(new IntakePivotCommand(pivot, 3.0));
+
 
 
         // operator.leftTrigger().onTrue(new IntakeInCommandGroup(pivot, spin));

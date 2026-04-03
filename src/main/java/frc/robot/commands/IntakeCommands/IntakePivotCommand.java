@@ -5,35 +5,31 @@ import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 
 public class IntakePivotCommand extends Command {
     private final IntakePivotSubsystem pivot;
-    // private final double targetPosition;
-    private final double targetVoltage;
+    private final double targetPosition;
     private static final double TOLERANCE = 0.3;
 
 
-    public IntakePivotCommand(IntakePivotSubsystem pivot, double targetVoltage) {
+    public IntakePivotCommand(IntakePivotSubsystem pivot, double targetPosition) {
         this.pivot = pivot;
-        this.targetVoltage = targetVoltage;
+        this.targetPosition = targetPosition;
         addRequirements(pivot);
     }
 
 
     @Override
     public void initialize() {
-        // pivot.setPosition(targetPosition);
-        pivot.spinVoltage(targetVoltage);
+        pivot.setPosition(targetPosition);
     }
 
     @Override
     public void execute() {
-        // System.out.println(pivot.getError());
-        // pivot.setPosition(targetPosition);
-        pivot.spinVoltage(targetVoltage);
+        pivot.setPosition(targetPosition);
+        pivot.holdCurrentPosition();
     }
 
     @Override
     public boolean isFinished() {
-        // return pivot.atPosition(targetPosition, TOLERANCE);
-        return false;
+        return pivot.atPosition(targetPosition, TOLERANCE);
     }
 
     @Override
