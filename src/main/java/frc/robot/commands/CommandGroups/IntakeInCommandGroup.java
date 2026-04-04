@@ -11,17 +11,11 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 
 public class IntakeInCommandGroup extends SequentialCommandGroup {
 
-    private static final double STOW_POS = 0.0;
+    private static final double MID_POS = 3.0;
 
-    public IntakeInCommandGroup(IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
+    public IntakeInCommandGroup(IntakePivotSubsystem pivot) {
         addCommands(
-
-        Commands.parallel(
-            Commands.runOnce(() -> spin.stop(), spin),
-            new IntakePivotCommand(pivot, STOW_POS)
-        ),
-
-        new IntakeZeroCommand(pivot)
+            new IntakePivotCommand(pivot, MID_POS)
         );
     }
     

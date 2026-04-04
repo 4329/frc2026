@@ -41,9 +41,9 @@ public class TurretTrackHubCommand extends Command {
 
         double turretAngleDeg = normalizeAngle(hubRobotAngleDeg - TURRET_ZERO_ANGLE_DEGREES);
 
-        double turrteMotorRot = (-turretAngleDeg / 360.0) * GEAR_RATIO;
+        double turretMotorRot = (-turretAngleDeg / 360.0) * GEAR_RATIO;
 
-        double commandedMotorRot = clampWithSnap(turrteMotorRot);
+        double commandedMotorRot = clampWithSnap(turretMotorRot);
 
         turret.setPositionWithVelocity(commandedMotorRot);
     }

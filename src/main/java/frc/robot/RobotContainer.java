@@ -224,8 +224,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         // joystick.povRight().onTrue(new SetHoodPositionCommand(hood, 4.5));
 
 
-        // joystick.a().whileTrue(new RobotCentricFullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
-        // joystick.a().onFalse(new HoodToZeroCommandGroup(hood));
+
         joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
 
         joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, spin));
@@ -233,22 +232,17 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
 
-        // joystick.leftBumper().onTrue(new IntakeOutCommandGroup(pivot, spin));
-        // joystick.leftBumper().onFalse(Commands.runOnce(() -> spin.stop(), spin));
-        // joystick.leftBumper().onFalse(new IntakePivotCommand(pivot, 0.0));
+        joystick.leftBumper().whileTrue(new IntakeOutCommandGroup(pivot, spin));
+        joystick.leftBumper().onFalse(new IntakeInCommandGroup(pivot));
         
         joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
         
         joystick.povUp().onTrue(Commands.runOnce(() -> vision.resetPoseInitialization()));
-        // joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
-
-        joystick.povLeft().onTrue(new IntakePivotToZeroCommandGroup(pivot));
-        joystick.povRight().onTrue(new IntakePivotCommand(pivot, 6.3));
-        joystick.povDown().onTrue(new IntakePivotCommand(pivot, 3.0));
+        joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
 
 
 
-        // operator.leftTrigger().onTrue(new IntakeInCommandGroup(pivot, spin));
+        operator.leftTrigger().onTrue(new IntakePivotCommand(pivot, 0.0));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
         
         operator.a().whileTrue(new SetHoodPositionCommand(hood, 5.0));
