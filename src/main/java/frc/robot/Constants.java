@@ -1,5 +1,9 @@
 package frc.robot;
 
+import javax.management.RuntimeErrorException;
+
+import org.opencv.core.Mat;
+
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -10,6 +14,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.numbers.N3;
@@ -30,9 +36,7 @@ public final class Constants {
 
     /** Static method containing all Drivetrain constants */
     public static final class DriveConstants {
-
-        public static final double kVoltCompensation =
-                12.0; // Sets a voltage compensation value ideally 12.0V
+        public static final double kVoltCompensation = 12.0;
         public static final double kLoopTime = 20.0;
 
         public static double kMaxSpeedMultiplier = 1.0;
@@ -40,74 +44,9 @@ public final class Constants {
 
         public static final double kFieldCentricSeedAngleDegrees = 180;
 
-        // public static final int kFrontLeftDriveMotorPort =
-        //         (HoorayConfig.gimmeConfig().getFrontLeftDriveMotorPort()); // CANID of the
-        // // Translation
-        // // SparkMAX
-        // public static final int kFrontRightDriveMotorPort =
-        //         (HoorayConfig.gimmeConfig().getFrontRightDriveMotorPort()); // CANID of the
-        // // Translation
-        // // SparkMAX
-        // public static final int kBackLeftDriveMotorPort =
-        //         (HoorayConfig.gimmeConfig().getBackLeftDriveMotorPort()); // CANID of the
-        // // Translation
-        // // SparkMAX
-        // public static final int kBackRightDriveMotorPort =
-        //         (HoorayConfig.gimmeConfig().getBackRightDriveMotorPort()); // CANID of the
-        // // Translation
-        // // SparkMAX
-        // public static final int kFrontLeftTurningMotorPort =
-        //         (HoorayConfig.gimmeConfig().getFrontLeftTurningMotorPort()); // CANID of
-        // // the
-        // // Rotation
-        // // SparkMAX
-        // public static final int kFrontRightTurningMotorPort =
-        //         (HoorayConfig.gimmeConfig().getFrontRightTurningMotorPort()); // CANID of
-        // // the
-        // // Rotation
-        // // SparkMAX
-        // public static final int kBackLeftTurningMotorPort =
-        //         (HoorayConfig.gimmeConfig().getBackLeftTurningMotorPort()); // CANID of the
-        // // Rotation
-        // // SparkMAX
-        // public static final int kBackRightTurningMotorPort =
-        //         (HoorayConfig.gimmeConfig().getBackRightTurningMotorPort()); // CANID of
-        // // the
-        // // Rotation
-        // // SparkMAX
-
-        // public static final int kFrontLeftTurningEncoderPort =
-        //         (HoorayConfig.gimmeConfig().getFrontLeftTurningEncoderPort());
-        // public static final int kFrontRightTurningEncoderPort =
-        //         (HoorayConfig.gimmeConfig().getFrontRightTurningEncoderPort());
-        // public static final int kBackLeftTurningEncoderPort =
-        //         (HoorayConfig.gimmeConfig().getBackLeftTurningEncoderPort());
-        // public static final int kBackRightTurningEncoderPort =
-        //         (HoorayConfig.gimmeConfig().getBackRightTurningEncoderPort());
-
-        // public static final double kFrontLeftOffset =
-        //         HoorayConfig.gimmeConfig().getFrontLeftOffset(); // Encoder Offset in Radians
-        // public static final double kFrontRightOffset =
-        //         HoorayConfig.gimmeConfig().getFrontRightOffset(); // Encoder Offset in Radians
-        // public static final double kBackLeftOffset =
-        //         HoorayConfig.gimmeConfig().getBackLeftOffset(); // Encoder Offset in Radians
-        // public static final double kBackRightOffset =
-        //         HoorayConfig.gimmeConfig().getBackRightOffset(); // Encoder Offset in Radians
-
-        public static final double[] kFrontLeftTuningVals = {0.0150, 0.2850, 0.25, 0};
-        public static final double[] kFrontRightTuningVals = {0.0150, 0.2850, 0.25, 1};
-        public static final double[] kBackLeftTuningVals = {0.0150, 0.2850, 0.25, 2};
-        public static final double[] kBackRightTuningVals = {0.0150, 0.2850, 0.25, 3};
-
-        // NOTE: 2910 Swerve the wheels are not directly under the center of rotation
-        // (Take into consideration when measuring)
-        // Center distance in meters between left and right wheels on robot
         public static final double kWheelBaseWidth = 0.629;
-        // Center distance in meters between front and back wheels on robot
         public static final double kWheelBaseLength = 0.616;
 
-        // Because the swerve modules position does not change, define a constant
-        // SwerveDriveKinematics for use throughout the code
         public static final SwerveDriveKinematics kDriveKinematics =
                 new SwerveDriveKinematics(
                         new Translation2d(kWheelBaseLength / 2, kWheelBaseWidth / 2),
@@ -115,77 +54,72 @@ public final class Constants {
                         new Translation2d(-kWheelBaseLength / 2, kWheelBaseWidth / 2),
                         new Translation2d(-kWheelBaseLength / 2, -kWheelBaseWidth / 2));
 
-        // public static final double kMaxAcceleration = 3.0;
         public static final double kMaxSpeedMetersPerSecond = 4.0;
         public static final double kMaxAngularSpeed = Math.PI;
         public static final double kMaxAngularAccel = Math.PI;
 
-        // public static final double kLowerBound = 0.02;
         public static final double kInnerDeadband = 0.1;
         public static final double kOuterDeadband = 0.98;
-
-        // Minimum allowable rotation command (in radians/s) assuming user input is
-        // squared using quadraticTransform, this value is always positive and should be
-        // compared against the absolute value of the drive command
-        public static final double kMinRotationCommand =
-                DriveConstants.kMaxAngularSpeed * Math.pow(DriveConstants.kInnerDeadband, 2);
-        // Minimum allowable translation command (in m/s) assuming user input is squared
-        // using quadraticTransform, this value is always positive and should be
-        // compared against the absolute value of the drive command
-        public static final double kMinTranslationCommand =
-                DriveConstants.kMaxSpeedMetersPerSecond * Math.pow(DriveConstants.kInnerDeadband, 2);
 
         public static final double[] kKeepAnglePID = {0.550, 0, 0};
     }
 
     /** Static method containing all Swerve Module constants */
     public static final class ModuleConstants {
-        // Units of %power/s, ie 4.0 means it takes 0.25s to reach 100% power from 0%
         public static final double kTranslationRampRate = 4.0;
         public static final double kTranslationGearRatio = 6.75;
-
         public static final double kTurningGearRatio = 21.428571428571428571428571428571;
 
         public static final double kTurningPositionFactor = 1.0 / kTurningGearRatio * 2.0 * Math.PI;
-        public static final double kTurningVelocityFactor =
-                1.0 / kTurningGearRatio / 60 * 2.0 * Math.PI;
+        public static final double kTurningVelocityFactor = 1.0 / kTurningGearRatio / 60 * 2.0 * Math.PI;
 
-        private static final double kWheelDiameter = 0.09845; // Wheel Diameter in meters
+        private static final double kWheelDiameter = 0.09845;
 
-        public static final double kVelocityFactor =
-                (1.0 / kTranslationGearRatio / 60.0) * kWheelDiameter * Math.PI;
+        public static final double kVelocityFactor = (1.0 / kTranslationGearRatio / 60.0) * kWheelDiameter * Math.PI;
+        public static final double kPositionFactor = 1.0 / kTranslationGearRatio * (kWheelDiameter * Math.PI);
 
-        public static final double kPositionFactor =
-                1.0 / kTranslationGearRatio * (kWheelDiameter * Math.PI);
-
-        // NOTE: You shoulds ALWAYS define a reasonable current limit when using
-        // brushless motors due to the extremely high stall current available
         public static final int kDriveCurrentLimit = 60;
         public static final int kTurnCurrentLimit = 60;
 
-        public static final double[] kTurnPID = {
-            0.65, 0, 0
-        }; // should show some minor oscillation when no weight is
-        // loaded on the modules
+        public static final double[] kTurnPID = { 0.65, 0, 0 };
+    }
+
+    /** * NEW: Advanced Intake Tuning Constants 
+     * These are used by the IntakeSubsystem for smart movement.
+     */
+    public static final class IntakeConstants {
+        // Position Setpoints (Rotations)
+        public static final double kRetractedPos = 0.1; 
+        public static final double kExtendedPos = 24.5;
+
+        // MAXMotion Profile Constraints (2026 Season Tuning)
+        public static final double kMaxVel = 55.0; // rps
+        public static final double kMaxAcc = 110.0; // rps^2
+        
+        // Gains
+        public static final double kP = 0.15;
+        public static final double kG = 0.06; // Volts needed to fight gravity
+
+        // Piece Detection & Speed
+        public static final double kIntakeSpeed = 0.85;
+        public static final double kPieceCurrentThreshold = 38.0; // Amps on Kraken
+        public static final double kHomingCurrent = 15.0; // Amps for stall homing
+        public static double kHomingSpeed;
+        public static double kRollerCurrentLimit;
+        public static int kPivotCurrentLimit;
+        public static double kI;
+        public static double kD;
     }
 
     /** Static method containing all User O/I constants */
     public static final class OIConstants {
-
-        public static final int kDriverControllerPort =
-                0; // When making use of multiple controllers for drivers each
-        // controller will be on a different port
-        public static final int kOperatorControllerPort =
-                1; // When making use of multiple controllers for drivers each
-        // controller will be on a different port
-        public static final int kManualControllerPort =
-                2; //  When making blah blah blah make the ports different!
+        public static final int kDriverControllerPort = 0;
+        public static final int kOperatorControllerPort = 1;
+        public static final int kManualControllerPort = 2;
         public static final int kFunctionalControllerPort = 5;
     }
 
-    /*
-     * Static method containing all Autonomous constants
-     */
+    /** Static method containing all Autonomous constants */
     public static final class AutoConstants {
         public static PIDConstants translationPID = new PIDConstants(2, 0, 0.00005);
         public static PIDConstants rotationPID = new PIDConstants(1.25, 0, 0);
@@ -196,6 +130,7 @@ public final class Constants {
         public static RobotConfig config;
     }
 
+    /** Static method containing all CAN IDs */
     public static final class SparkIDs {
         public static final int differential1 = 13;
         public static final int differential2 = 14;
@@ -206,32 +141,75 @@ public final class Constants {
         public static final int elevator1 = 9;
         public static final int elevator2 = 10;
 
+        // These IDs are shared by both your old Spinner and new Intake subsystems
         public static final int intakePivot = 15;
         public static final int intakeWheel = 16;
 
         public static final int pigeon = 29;
-
         public static final int climber = 17;
     }
 
+
     public static final class VisionConstants {
 
-        public static final String LIMELIGHT_NAME = "limelight-swerve";
+        public static final String LIMELIGHT_SWERVE_NAME = "limelight-swerve";
+        public static final String LIMELIGHT_TURRET_NAME = "limelight-turret";
 
 
-        public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(new Translation3d(0.3683, -0.1016, 0.0889), new Rotation3d(Math.toRadians(180), Math.toRadians(45), 0));
+        public static final Transform3d ROBOT_TO_SWERVE_CAMERA = new Transform3d(new Translation3d(-0.3478923, 0.2105523, 0.204579), new Rotation3d(Math.toRadians(180), Math.toRadians(20), Math.toRadians(180)));
+        public static final Transform3d ROBOT_TO_TURRET_CAMERA = new Transform3d(new Translation3d(-0.295275, -0.1143, 0.5461), new Rotation3d(Math.toRadians(0), Math.toRadians(-20), Math.toRadians(180)));   
+
+        public static final double TURRET_CAMERA_RADIUS = 0.147066;
+
+        public static final double TURRET_AXIS_X = -0.157988;
+        public static final double TURRET_AXIS_Y = -0.108458;
 
         public static final Vector<N3> SINGLE_TAG_STD_DEVS = VecBuilder.fill(1.0, 1.0, 2.0);
         public static final Vector<N3> MULTI_TAG_STD_DEVS = VecBuilder.fill(0.5, 0.5, 1.0); 
 
 
-        public static final int TARGET_TAG_ID = 4;
+        public static final int[] RED_HUB_TAG_IDS = { 2, 3, 4, 5, 8, 9, 10, 11 };
+        public static final int[] BLUE_HUB_TAG_IDS = { 18, 19, 20, 21, 24, 25, 26, 27 };
+
+        public static final AprilTagFieldLayout FIELD_LAYOUT;
+
+        public static final Translation2d BLUE_HUB_CENTER;
+        public static final Translation2d RED_HUB_CENTER;
+
+        static {
+            AprilTagFieldLayout layout;
+            try{
+                layout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to load 2026 Apriltag Field Layout", e);
+            }
+            FIELD_LAYOUT = layout;
+
+            BLUE_HUB_CENTER = computeHubCenter(layout, BLUE_HUB_TAG_IDS);
+            RED_HUB_CENTER = computeHubCenter(layout, RED_HUB_TAG_IDS);
+        }
+
+        private static Translation2d computeHubCenter (AprilTagFieldLayout layout, int[] tagIds) {
+            double xSum = 0;
+            double ySum = 0;
+            int count = 0;
+            for (int id : tagIds) {
+                var pose = layout.getTagPose(id);
+                if (pose.isPresent()) {
+                    xSum += pose.get().getX();
+                    ySum += pose.get().getY();
+                    count++;
+                }
+            }
+            if (count == 0) throw new RuntimeException("No Hub tags found in field layout!");
+            return new Translation2d(xSum / count, ySum / count);
+        }
+
+
         public static final double FOLLOW_DISTANCE_METERS = 1.5;
         public static final double FOLLOW_SPEED = 0.5;
-
         public static final double FOLLOW_KP_TRANSLATION = 0.2;
         public static final double FOLLOW_KP_ROTATION = 0.02;
-
         public static final double DISTANCE_TOLERANCE = 0.1;
         public static final double ANGLE_TOLERANCE = 2.0;
     }

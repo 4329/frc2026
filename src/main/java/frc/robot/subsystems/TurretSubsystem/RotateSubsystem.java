@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -23,15 +24,16 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
 
-    private final TalonFX turretMotor;
+    private final TalonFX turretRotateMotor;
     private final VoltageOut voltageRequest             = new VoltageOut(0);
     private final VelocityVoltage velocityRequest       = new VelocityVoltage(0);
     private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
     private final TurretRotateLogAutoLogged rotateLog   = new TurretRotateLogAutoLogged();
 
-    private static final double MIN_POSITION = -1.2;
-    private static final double MAX_POSITION = 1.2;
-    private static final double TOLERANCE = 0.01;
+    private static final double GEAR_RATIO = 45.0;
+    private static final double MIN_POSITION = -33.75;
+    private static final double MAX_POSITION = 12.5;
+    private static final double TOLERANCE = 0.5;
 
     private double targetPosition = 0.0;
 
@@ -43,10 +45,11 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<Temperature> tempSignal;
 
     public RotateSubsystem() {
-        turretMotor = new TalonFX(41);
+        turretRotateMotor = new TalonFX(41);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
+        motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
         Slot0Configs.withKP(1);
@@ -65,30 +68,30 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
         feedbackConfigs.withRotorToSensorRatio(1.0);
 
         var softLimitsConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
-        softLimitsConfigs.withForwardSoftLimitThreshold(1.2);
+        softLimitsConfigs.withForwardSoftLimitThreshold(MAX_POSITION);
         softLimitsConfigs.withForwardSoftLimitEnable(true);
-        softLimitsConfigs.withReverseSoftLimitThreshold(-1.2);
+        softLimitsConfigs.withReverseSoftLimitThreshold(MIN_POSITION);
         softLimitsConfigs.withReverseSoftLimitEnable(true);
 
-        turretMotor.getConfigurator().apply(motorOutputConfigs);
-        turretMotor.getConfigurator().apply(Slot0Configs);
-        turretMotor.getConfigurator().apply(motionMagicConfigs);
-        turretMotor.getConfigurator().apply(feedbackConfigs);
-        turretMotor.getConfigurator().apply(softLimitsConfigs);
-        turretMotor.setPosition(0);
+        turretRotateMotor.getConfigurator().apply(motorOutputConfigs);
+        turretRotateMotor.getConfigurator().apply(Slot0Configs);
+        turretRotateMotor.getConfigurator().apply(motionMagicConfigs);
+        turretRotateMotor.getConfigurator().apply(feedbackConfigs);
+        turretRotateMotor.getConfigurator().apply(softLimitsConfigs);
+        turretRotateMotor.setPosition(0);
 
-        positionSignal      = turretMotor.getPosition();
-        velocitySignal      = turretMotor.getVelocity();
-        appliedVoltsSignal  = turretMotor.getMotorVoltage();
-        supplyCurrentSignal = turretMotor.getSupplyCurrent();
-        torqueCurrentSignal = turretMotor.getTorqueCurrent();
-        tempSignal          = turretMotor.getDeviceTemp();
+        positionSignal      = turretRotateMotor.getPosition();
+        velocitySignal      = turretRotateMotor.getVelocity();
+        appliedVoltsSignal  = turretRotateMotor.getMotorVoltage();
+        supplyCurrentSignal = turretRotateMotor.getSupplyCurrent();
+        torqueCurrentSignal = turretRotateMotor.getTorqueCurrent();
+        tempSignal          = turretRotateMotor.getDeviceTemp();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
             50.0, positionSignal, velocitySignal, appliedVoltsSignal,
             supplyCurrentSignal, torqueCurrentSignal, tempSignal
         );
-        turretMotor.optimizeBusUtilization();
+        turretRotateMotor.optimizeBusUtilization();
 
         setDefaultCommand(Commands.run(() -> stop(), this));
     }
@@ -119,16 +122,16 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
     }
 
     public void spinVoltage(double voltage) {
-        turretMotor.setControl(voltageRequest.withOutput(voltage));
+        turretRotateMotor.setControl(voltageRequest.withOutput(voltage));
     }
 
     public void setVelocity(double rotationsPerSecond) {
-        turretMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond));
+        turretRotateMotor.setControl(velocityRequest.withVelocity(rotationsPerSecond));
     }
 
     public void setPositionWithVelocity(double rotations) {
         targetPosition = Math.max(MIN_POSITION, Math.min(MAX_POSITION, rotations));
-        turretMotor.setControl(motionMagicRequest.withPosition(targetPosition));
+        turretRotateMotor.setControl(motionMagicRequest.withPosition(targetPosition));
     }
 
     public double getPosition() {
@@ -144,6 +147,6 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
     }
 
     public void stop() {
-        turretMotor.stopMotor();
+        turretRotateMotor.stopMotor();
     }
 }

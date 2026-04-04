@@ -13,14 +13,20 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.Mode;
 import frc.robot.subsystems.LoggingSubsystem;
+import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 
 import com.ctre.phoenix6.SignalLogger;
 // import frc.robot.utilities.HoorayConfig;
 import java.io.File;
+import java.sql.Driver;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -57,12 +63,31 @@ public class Robot extends LoggedRobot {
       // If no flash drive found, logs to the robot's internal storage
       File homeDir = new File("/home/lvuser/logs");
       if (homeDir.exists() || homeDir.mkdir()) {
+        clearLogs(homeDir);
           Logger.recordMetadata("Logging On:", "Robot");
           return homeDir;
       } else {
           Logger.recordMetadata("Logging On:", "Nothing");
           return null;
       }
+  }
+
+  private void clearLogs(File logDir) {
+    File[] files = logDir.listFiles();
+    if (files == null || files.length == 0) return;
+
+    File newest = files[0];
+    for (File f : files) {
+      if (f.lastModified() > newest.lastModified()) {
+        newest = f;
+      }
+    }
+
+    for (File f : files) {
+      if (!f.equals(newest)) {
+        f.delete();
+      }
+    }
   }
 
   /**
@@ -144,6 +169,12 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+
+    boolean isRed = DriverStation.getAlliance()
+      .map(a -> a == DriverStation.Alliance.Red)
+      .orElse(false);
+
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     Logger.recordOutput("Auto/Selected", m_autonomousCommand != null ? m_autonomousCommand.getName() : "None");
     if (m_autonomousCommand != null) {
@@ -160,13 +191,9 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    boolean isRed = DriverStation.getAlliance()
+      .map(a -> a == DriverStation.Alliance.Red)
+      .orElse(false);
   }
 
   /** This function is called periodically during operator control. */

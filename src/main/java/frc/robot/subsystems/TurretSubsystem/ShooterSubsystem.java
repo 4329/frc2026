@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
@@ -25,7 +26,7 @@ public class ShooterSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     private final TalonFX shooterMotor;
     private final VoltageOut voltageRequest       = new VoltageOut(0);
-    private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
+    private final VelocityVoltage velocityRequest = new VelocityVoltage(0).withEnableFOC(true);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final ShooterLogAutoLogged shooterLog = new ShooterLogAutoLogged();
 
@@ -39,21 +40,27 @@ public class ShooterSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<Current> torqueCurrentSignal;
     private final StatusSignal<Temperature> tempSignal;
 
+
     public ShooterSubsystem() {
-        shooterMotor = new TalonFX(44);
+        shooterMotor = new TalonFX(19);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
-        motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
+        motorOutputConfigs.withNeutralMode(NeutralModeValue.Coast);
+        motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
+
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(1.0);
-        Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.0);
+        Slot0Configs.withKP(0.55);
+        Slot0Configs.withKI(0.002);
+        Slot0Configs.withKD(0.005);
+        Slot0Configs.withKV(0.118);
+        Slot0Configs.withKS(0.5);
 
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
         feedbackConfigs.withSensorToMechanismRatio(1.0);
         feedbackConfigs.withRotorToSensorRatio(1.0);
+
 
         shooterMotor.getConfigurator().apply(motorOutputConfigs);
         shooterMotor.getConfigurator().apply(Slot0Configs);

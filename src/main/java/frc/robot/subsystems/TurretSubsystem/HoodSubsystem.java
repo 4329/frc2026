@@ -2,7 +2,7 @@ package frc.robot.subsystems.TurretSubsystem;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -23,12 +23,12 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public final TalonFX hoodMotor;
-    private final PositionVoltage positionRequest = new PositionVoltage(0).withEnableFOC(true);
+    private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0).withEnableFOC(true);
     private final HoodLogAutoLogged hoodLog = new HoodLogAutoLogged();
 
-    private static final double MIN_POSITION = 0.05;
-    private static final double MAX_POSITION = 0.5;
-    private static final double TOLERANCE = 0.01;
+    private static final double MIN_POSITION = 0.0;
+    private static final double MAX_POSITION = 6.2;
+    private static final double TOLERANCE = 0.1;
 
     private double targetPosition = MIN_POSITION;
 
@@ -36,26 +36,34 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<AngularVelocity> velocitySignal;
     private final StatusSignal<Voltage> appliedVoltsSignal;
     private final StatusSignal<Current> supplyCurrentSignal;
+    private final StatusSignal<Current> statorCurrentSignal;
     private final StatusSignal<Current> torqueCurrentSignal;
     private final StatusSignal<Temperature> tempSignal;
 
     public HoodSubsystem() {
-        hoodMotor = new TalonFX(42);
+        hoodMotor = new TalonFX(18);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);
         motorOutputConfigs.withInverted(InvertedValue.Clockwise_Positive);
 
         var Slot0Configs = new com.ctre.phoenix6.configs.Slot0Configs();
-        Slot0Configs.withKP(25);
+        Slot0Configs.withKP(30.0);
         Slot0Configs.withKI(0.0);
-        Slot0Configs.withKD(0.05);
-        Slot0Configs.withKV(0.12);
+        Slot0Configs.withKD(0.01);
+        Slot0Configs.withKV(1);
+        Slot0Configs.withKS(0.5);
 
         var motionMagicConfigs = new com.ctre.phoenix6.configs.MotionMagicConfigs();
-        motionMagicConfigs.withMotionMagicCruiseVelocity(3);
-        motionMagicConfigs.withMotionMagicAcceleration(8);
-        motionMagicConfigs.withMotionMagicJerk(80);
+        motionMagicConfigs.withMotionMagicCruiseVelocity(50.0);
+        motionMagicConfigs.withMotionMagicAcceleration(25.0);
+        motionMagicConfigs.withMotionMagicJerk(1000.0);
+
+        var softLimitConfigs = new com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs();
+        softLimitConfigs.withForwardSoftLimitThreshold(6.2);
+        softLimitConfigs.withForwardSoftLimitEnable(true);
+        softLimitConfigs.withReverseSoftLimitThreshold(0.0);
+        softLimitConfigs.withReverseSoftLimitEnable(true);
 
         var feedbackConfigs = new com.ctre.phoenix6.configs.FeedbackConfigs();
         feedbackConfigs.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
@@ -73,29 +81,33 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
         appliedVoltsSignal  = hoodMotor.getMotorVoltage();
         supplyCurrentSignal = hoodMotor.getSupplyCurrent();
         torqueCurrentSignal = hoodMotor.getTorqueCurrent();
+        statorCurrentSignal = hoodMotor.getStatorCurrent();
         tempSignal          = hoodMotor.getDeviceTemp();
 
         BaseStatusSignal.setUpdateFrequencyForAll(
             50.0, positionSignal, velocitySignal, appliedVoltsSignal,
-            supplyCurrentSignal, torqueCurrentSignal, tempSignal
+            supplyCurrentSignal, torqueCurrentSignal, statorCurrentSignal, tempSignal
         );
         hoodMotor.optimizeBusUtilization();
 
-        setDefaultCommand(Commands.run(() -> holdPosition(), this));
+        setDefaultCommand(Commands.run(() -> stop(), this));
+
+    }
+
+    @Override
+    public void periodic() {
+        BaseStatusSignal.refreshAll(positionSignal, velocitySignal, appliedVoltsSignal, supplyCurrentSignal, torqueCurrentSignal, statorCurrentSignal, tempSignal);
     }
 
     @Override
     public LoggableInputs log() {
-        hoodLog.motorConnected = BaseStatusSignal.refreshAll(
-            positionSignal, velocitySignal, appliedVoltsSignal,
-            supplyCurrentSignal, torqueCurrentSignal, tempSignal
-        ).isOK();
-
+        hoodLog.motorConnected = true;
         hoodLog.positionRotations       = positionSignal.getValueAsDouble();
         hoodLog.velocityRotationsPerSec = velocitySignal.getValueAsDouble();
         hoodLog.appliedVolts            = appliedVoltsSignal.getValueAsDouble();
         hoodLog.supplyCurrentAmps       = supplyCurrentSignal.getValueAsDouble();
         hoodLog.torqueCurrentAmps       = torqueCurrentSignal.getValueAsDouble();
+        hoodLog.statorCurrentAmps       = statorCurrentSignal.getValueAsDouble();
         hoodLog.tempCelsius             = tempSignal.getValueAsDouble();
         hoodLog.targetPosition          = targetPosition;
         hoodLog.positionError           = targetPosition - positionSignal.getValueAsDouble();
@@ -124,6 +136,11 @@ public class HoodSubsystem extends SubsystemBase implements LoggedSubsystem {
 
     public double getVelocity() {
         return velocitySignal.getValueAsDouble();
+    }
+
+    public double getStatorCurrent() {
+        statorCurrentSignal.refresh();
+        return statorCurrentSignal.getValueAsDouble();
     }
 
     public boolean atPosition(double targetPosition, double tolerance) {

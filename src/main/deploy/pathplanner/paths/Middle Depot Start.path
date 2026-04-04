@@ -1,0 +1,70 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.0,
+        "y": 4.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9705546782618863,
+        "y": 4.18706571107277
+      },
+      "isLocked": false,
+      "linkedName": "Middle Back Up"
+    },
+    {
+      "anchor": {
+        "x": 1.8783024251069897,
+        "y": 6.512753209700428
+      },
+      "prevControl": {
+        "x": 2.104710780577336,
+        "y": 5.805227098855598
+      },
+      "nextControl": {
+        "x": 1.6712838801711833,
+        "y": 7.15968616262482
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.6620684736091293,
+        "y": 7.2890727532097
+      },
+      "prevControl": {
+        "x": 1.5337124973953742,
+        "y": 7.896433762361956
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Middle Depot Start"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 180.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Middle Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 160.0
+  },
+  "useDefaultConstraints": true
+}
