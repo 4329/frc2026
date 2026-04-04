@@ -237,7 +237,11 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         
         joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
         
-        joystick.povUp().onTrue(Commands.runOnce(() -> vision.resetPoseInitialization()));
+        // joystick.povUp().onTrue(Commands.runOnce(() -> vision.resetPoseInitialization()));
+        joystick.povUp().onTrue(Commands.runOnce(() -> {
+            Logger.recordOutput("Vision/ResetTriggered", true);
+            vision.resetPoseInitialization();
+        }));
         joystick.povDown().onTrue(Commands.runOnce(() -> isFieldCentric = !isFieldCentric));
 
 

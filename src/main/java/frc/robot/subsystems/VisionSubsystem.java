@@ -95,7 +95,10 @@ public String getNameLog() {
         var pigeon = drivetrain.getPigeon2();
 
         // double pigeonYaw = pigeon.getYaw().getValueAsDouble();
+
+
         double headingDeg = drivetrain.getState().Pose.getRotation().getDegrees();
+        
 
         LimelightHelpers.SetRobotOrientation(swerveLimelight, headingDeg, 0, 0, 0, 0, 0);
         LimelightHelpers.SetRobotOrientation(turretLimelight, headingDeg, 0, 0, 0, 0, 0);
@@ -161,6 +164,12 @@ public String getNameLog() {
         SmartDashboard.putNumber("Debug/BlueHubCenterY", VisionConstants.BLUE_HUB_CENTER.getY());
         SmartDashboard.putNumber("Debug/RedHubCenterX",  VisionConstants.RED_HUB_CENTER.getX());
         SmartDashboard.putNumber("Debug/RedHubCenterY",  VisionConstants.RED_HUB_CENTER.getY());
+
+
+
+        var swervePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(swerveLimelight);
+        Logger.recordOutput("Vision/Swerve/RawTagCount", swervePose != null ? swervePose.tagCount : -1);
+        Logger.recordOutput("Vision/Swerve/RawPose", swervePose != null ? swervePose.pose : new Pose2d());
     }
     
     private void updateTurretCameraPose() {
@@ -261,7 +270,8 @@ public String getNameLog() {
         if (estimate == null || estimate.tagCount == 0) return;
 
         if (!hasInitializedPose && estimate.tagCount >= 2) {
-            drivetrain.resetPose(estimate.pose);
+            PoseEstimate visionOnly = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+            drivetrain.resetPose(visionOnly.pose);
             hasInitializedPose = true;
             Logger.recordOutput("Vision/PoseInitialized", true);
             return;
