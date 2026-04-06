@@ -225,17 +225,17 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
 
 
 
-        joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
+        // joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
 
         joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, spin));
 
         joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
 
-        joystick.leftBumper().whileTrue(new IntakeOutCommandGroup(pivot, spin));
-        joystick.leftBumper().onFalse(new IntakeInCommandGroup(pivot));
+        // joystick.leftBumper().whileTrue(new IntakeOutCommandGroup(pivot, spin));
+        // joystick.leftBumper().onFalse(new IntakeInCommandGroup(pivot));
         
-        joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
+        // joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
         
         // joystick.povUp().onTrue(Commands.runOnce(() -> vision.resetPoseInitialization()));
         joystick.povUp().onTrue(Commands.runOnce(() -> {
@@ -247,17 +247,19 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
 
 
         operator.leftTrigger().onTrue(new IntakePivotCommand(pivot, 0.0));
+        operator.leftBumper().whileTrue(new IntakeOutCommandGroup(pivot, spin));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
+        operator.x().onTrue(new IntakeInCommandGroup(pivot));
         
-        operator.a().whileTrue(new SetHoodPositionCommand(hood, 5.0));
-        operator.a().whileTrue(new ShooterVelocityCommand(shooter, 80));
-        operator.a().whileTrue(new KickerSpinCommand(kicker, 200));
-        operator.a().whileTrue(new SpindexerCommand(spindexter, 50));
-        operator.a().whileTrue(new IntakeSpinCommand(spin, 30));
-        operator.a().onFalse(new HoodToZeroCommandGroup(hood));
+        // operator.a().whileTrue(new SetHoodPositionCommand(hood, 5.0));
+        // operator.a().whileTrue(new ShooterVelocityCommand(shooter, 80));
+        // operator.a().whileTrue(new KickerSpinCommand(kicker, 200));
+        // operator.a().whileTrue(new SpindexerCommand(spindexter, 50));
+        // operator.a().whileTrue(new IntakeSpinCommand(spin, 30));
+        // operator.a().onFalse(new HoodToZeroCommandGroup(hood));
 
 
-        operator.povUp().whileTrue(new IntakeSpinCommand(spin, 60));
+        // operator.povUp().whileTrue(new IntakeSpinCommand(spin, 60));
 
 
         functional.a().onTrue(new DoAFunctionalCommand(drivetrain, functional.getHID(), pivot, spin, spindexter, kicker, hood, shooter));
