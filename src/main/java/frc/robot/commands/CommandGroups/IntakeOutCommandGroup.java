@@ -10,7 +10,7 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 public class IntakeOutCommandGroup extends SequentialCommandGroup {
 
     private static final double DEPLOY_POS = 6.3;
-    private static final double SPIN_SPEED = 60.0;
+    private static final double SPIN_SPEED = 40.0;
 
     public IntakeOutCommandGroup(IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
         addCommands(

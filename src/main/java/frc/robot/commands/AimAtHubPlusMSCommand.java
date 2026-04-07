@@ -18,14 +18,14 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 public class AimAtHubPlusMSCommand extends Command {
 
-    private static final double MAX_TRANSLATION_SPEED = 1.0;
+    private static final double MAX_TRANSLATION_SPEED = 1.5;
     private static final double AIM_TOLERANCE_DEG     = 1.0;
 
     /**
      * Approximate fuel speed leaving the shooter in m/s.
      * Tune empirically — same constant as TurretTrackHubCommand.
      */
-    private static final double FUEL_SPEED_MS = 15.0;
+    private static final double FUEL_SPEED_MS = 25.0;
 
     /** Number of iterative refinement passes for the compensation vector. */
     private static final int COMPENSATION_ITERATIONS = 3;

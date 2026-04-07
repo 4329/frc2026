@@ -45,7 +45,9 @@ import frc.robot.commands.CommandGroups.IntakeOutCommandGroup;
 import frc.robot.commands.CommandGroups.IntakePivotToZeroCommandGroup;
 import frc.robot.commands.CommandGroups.RobotCentricFullTurretCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerAndKickerCommandGroup;
+import frc.robot.commands.CommandGroups.SpindexerKickerJamCommandGroup;
 import frc.robot.commands.CommandGroups.TurretCommandGroup;
+import frc.robot.commands.CommandGroups.rightDriverBumperCommandGroup;
 import frc.robot.subsystems.SpindexterSubsystem;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
@@ -74,7 +76,7 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-    private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
+    // private final PowerDistribution pdh = new PowerDistribution(1, ModuleType.kRev);
 
     private boolean isFieldCentric = true;
     private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -111,9 +113,9 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
     public RobotContainer() {
         SmartDashboard.putData("Field", field);
 
-        NamedCommands.registerCommand("intakeOut", new IntakePivotCommand(pivot, 1).withTimeout(0.2));
-        NamedCommands.registerCommand("spinIntake", new IntakeSpinCommand(spin, 60));
-        NamedCommands.registerCommand("intakeIn", new IntakePivotCommand(pivot, -1).withTimeout(0.2));
+        NamedCommands.registerCommand("intakeOut", new IntakePivotCommand(pivot, 6.3));
+        NamedCommands.registerCommand("spinIntake", new IntakeSpinCommand(spin, 40));
+        NamedCommands.registerCommand("intakeIn", new IntakePivotCommand(pivot, 0));
         NamedCommands.registerCommand("hoodZero", new HoodToZeroCommandGroup(hood));
         NamedCommands.registerCommand(
             "MSBShoot",
@@ -138,7 +140,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
             new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0).withTimeout(1.0),
             Commands.parallel(
                 new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0),
-                new SpindexerAndKickerCommandGroup(spindexter, kicker, spin)).withTimeout(3.0),
+                new SpindexerAndKickerCommandGroup(spindexter, kicker, pivot)).withTimeout(3.0),
                 new HoodToZeroCommandGroup(hood)
         ));
 
@@ -152,7 +154,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         SmartDashboard.putNumber("Tuning/SpindexerSpeed", 45.0);
 
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
-        SmartDashboard.putData("PDH", pdh);
+        // SmartDashboard.putData("PDH", pdh);
         SmartDashboard.putData("Swerve Drive", new Sendable() {
             @Override
             public void initSendable(SendableBuilder builder) {
@@ -225,15 +227,18 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
 
 
 
-        // joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
+        joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
 
-        joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, spin));
+        joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, pivot));
 
         joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
 
-        // joystick.leftBumper().whileTrue(new IntakeOutCommandGroup(pivot, spin));
-        // joystick.leftBumper().onFalse(new IntakeInCommandGroup(pivot));
+        joystick.leftBumper().whileTrue(new IntakeOutCommandGroup(pivot, spin));
+        joystick.leftBumper().onFalse(new IntakeInCommandGroup(pivot));
+
+        joystick.rightBumper().whileTrue(new rightDriverBumperCommandGroup(spindexter, kicker, pivot, spin));
+        joystick.rightBumper().onFalse(new IntakePivotCommand(pivot, 3.0));
         
         // joystick.rightBumper().whileTrue(new IntakeSpinCommand(spin, 60));
         
@@ -247,9 +252,8 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
 
 
         operator.leftTrigger().onTrue(new IntakePivotCommand(pivot, 0.0));
-        operator.leftBumper().whileTrue(new IntakeOutCommandGroup(pivot, spin));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
-        operator.x().onTrue(new IntakeInCommandGroup(pivot));
+        operator.a().whileTrue(new SpindexerKickerJamCommandGroup(spindexter, kicker));
         
         // operator.a().whileTrue(new SetHoodPositionCommand(hood, 5.0));
         // operator.a().whileTrue(new ShooterVelocityCommand(shooter, 80));

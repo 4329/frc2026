@@ -32,12 +32,6 @@
                 "data": {
                   "pathName": "Left Neutral"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeSpin"
-                }
               }
             ]
           }
@@ -76,14 +70,14 @@
                 "data": {
                   "pathName": "Left Shoot to Neutral"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeOut"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeOut"
           }
         },
         {

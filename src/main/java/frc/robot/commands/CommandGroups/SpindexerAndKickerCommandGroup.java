@@ -4,10 +4,13 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.KickerSpinCommand;
 import frc.robot.commands.SpindexerCommand;
+import frc.robot.commands.IntakeCommands.IntakePivotOscillateCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
+import yams.mechanisms.positional.Pivot;
 
 public class SpindexerAndKickerCommandGroup extends ParallelCommandGroup {
 
@@ -26,11 +29,11 @@ public class SpindexerAndKickerCommandGroup extends ParallelCommandGroup {
         
     }
 
-    public SpindexerAndKickerCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker, IntakeSpinSubsystem spin) {
+    public SpindexerAndKickerCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker, IntakePivotSubsystem pivot) {
         addCommands(
             new SpindexerCommand(spindexer, 85),
             new KickerSpinCommand(kicker, 200),
-            new IntakeSpinCommand(spin, 40)
+            new IntakePivotOscillateCommand(pivot)
         );
     }
 }
