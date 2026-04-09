@@ -43,22 +43,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Neutral to Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeIn"
-                }
-              }
-            ]
+            "name": "intakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Neutral to Shoot"
           }
         },
         {
@@ -68,22 +61,21 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Shoot to Neutral"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeOut"
-                }
-              }
-            ]
+            "name": "intakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Shoot to Neutral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeOut"
           }
         },
         {
@@ -106,28 +98,27 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Neutral to Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeIn"
-                }
-              }
-            ]
+            "name": "intakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Neutral to Shoot"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "aimAndShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeIn"
           }
         }
       ]

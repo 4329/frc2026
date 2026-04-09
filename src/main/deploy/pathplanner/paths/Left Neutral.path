@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.0,
-        "y": 7.125
+        "x": 7.057269662921348,
+        "y": 7.082112359550561
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.5971897289586305,
-        "y": 6.577446504992867
+        "x": 7.654459391879978,
+        "y": 6.5345588645434285
       },
       "isLocked": false,
       "linkedName": "Left Neutral Start"
@@ -66,14 +66,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "intakeSpin",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.2688413948256188,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 2.0,

@@ -14,6 +14,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 import org.littletonrobotics.urcl.URCL;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -194,6 +195,17 @@ public class Robot extends LoggedRobot {
     boolean isRed = DriverStation.getAlliance()
       .map(a -> a == DriverStation.Alliance.Red)
       .orElse(false);
+
+      // if (!isRed) {
+      //   var pigeon = m_robotContainer.drivetrain.getPigeon2();
+      //   double currentYaw = pigeon.getYaw().getValueAsDouble();
+      //   pigeon.setYaw(currentYaw + 180.0);
+
+      //   Pose2d currentPose = m_robotContainer.drivetrain.getState().Pose;
+      //   m_robotContainer.drivetrain.resetPose(
+      //     new Pose2d(currentPose.getTranslation(), Rotation2d.fromDegrees(currentYaw + 180.0))
+      //   );
+      // }
   }
 
   /** This function is called periodically during operator control. */

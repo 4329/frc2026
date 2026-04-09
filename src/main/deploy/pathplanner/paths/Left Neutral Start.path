@@ -16,19 +16,24 @@
     },
     {
       "anchor": {
-        "x": 7.0,
-        "y": 7.125
+        "x": 7.057269662921348,
+        "y": 7.082112359550561
       },
       "prevControl": {
-        "x": 6.445649072753208,
-        "y": 7.53490727532097
+        "x": 6.792303370786516,
+        "y": 7.448988764044944
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Left Neutral Start"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.38823529411764907,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],

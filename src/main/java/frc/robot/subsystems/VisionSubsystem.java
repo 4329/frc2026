@@ -21,13 +21,7 @@ import frc.robot.subsystems.TurretSubsystem.RotateSubsystem;
 
 public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
 
-    // Field dimensions for blue-origin coordinate conversion
-    private static final double FIELD_LENGTH = 16.5412; // meters
-    private static final double FIELD_WIDTH  = 8.0137;  // meters
-
-
     private final VisionLogAutoLogged visionLog = new VisionLogAutoLogged();
-
 
     private final CommandSwerveDrivetrain drivetrain;
     private final RotateSubsystem turret;
@@ -44,7 +38,8 @@ public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
     private double  targetDistance     = 0.0;
     private int     visibleHubTags     = 0;
 
-    private boolean hasInitializedPose = false;
+    private boolean hasInitializedPose    = true;
+    private boolean poseEstimationEnabled = true;
 
 
     public VisionSubsystem(CommandSwerveDrivetrain drivetrain, RotateSubsystem turret) {
@@ -53,7 +48,6 @@ public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
         this.swerveLimelight = VisionConstants.LIMELIGHT_SWERVE_NAME;
         this.turretLimelight = VisionConstants.LIMELIGHT_TURRET_NAME;
 
-        // Swerve limelight is stationary — set once at startup
         LimelightHelpers.setCameraPose_RobotSpace(
             swerveLimelight,
             VisionConstants.ROBOT_TO_SWERVE_CAMERA.getTranslation().getX(),
@@ -64,77 +58,63 @@ public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
             180.0
         );
 
-        // Turret limelight pose is updated every loop in periodic()
         LimelightHelpers.setPipelineIndex(swerveLimelight, 0);
         LimelightHelpers.setPipelineIndex(turretLimelight, 0);
 
         LimelightHelpers.setLEDMode_PipelineControl(swerveLimelight);
         LimelightHelpers.setLEDMode_PipelineControl(turretLimelight);
     }
-@Override
-public LoggableInputs log() {
-    visionLog.hasLimelightTarget = hasLimelightTarget;
-    visionLog.usingPoseFallback  = usingPoseFallback;
-    visionLog.hasInitializedPose = hasInitializedPose;
-    visionLog.targetTX           = targetTX;
-    visionLog.targetTY           = targetTY;
-    visionLog.targetArea         = targetArea;
-    visionLog.limelightDistance  = limelightDistance;
-    visionLog.poseDistance       = poseDistance;
-    visionLog.targetDistance     = targetDistance;
-    visionLog.visibleHubTags     = visibleHubTags;
-    return visionLog;
-}
 
-@Override
-public String getNameLog() {
-    return "Vision";
-}
+    @Override
+    public LoggableInputs log() {
+        visionLog.hasLimelightTarget = hasLimelightTarget;
+        visionLog.usingPoseFallback  = usingPoseFallback;
+        visionLog.hasInitializedPose = hasInitializedPose;
+        visionLog.targetTX           = targetTX;
+        visionLog.targetTY           = targetTY;
+        visionLog.targetArea         = targetArea;
+        visionLog.limelightDistance  = limelightDistance;
+        visionLog.poseDistance       = poseDistance;
+        visionLog.targetDistance     = targetDistance;
+        visionLog.visibleHubTags     = visibleHubTags;
+        return visionLog;
+    }
+
+    @Override
+    public String getNameLog() {
+        return "Vision";
+    }
+
     @Override
     public void periodic() {
-        var pigeon = drivetrain.getPigeon2();
-
-        // double pigeonYaw = pigeon.getYaw().getValueAsDouble();
-
-
         double headingDeg = drivetrain.getState().Pose.getRotation().getDegrees();
-        
+        boolean isRed = DriverStation.getAlliance().map(a -> a == Alliance.Red).orElse(false);
 
         LimelightHelpers.SetRobotOrientation(swerveLimelight, headingDeg, 0, 0, 0, 0, 0);
         LimelightHelpers.SetRobotOrientation(turretLimelight, headingDeg, 0, 0, 0, 0, 0);
 
-        // Update turret limelight pose every loop based on current turret angle
         updateTurretCameraPose();
 
-        // Always use wpiBlue — MT2 always outputs blue-origin coordinates
         processPoseEstimate(
             LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(swerveLimelight),
-            "Swerve"
+            swerveLimelight
         );
         processPoseEstimate(
             LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(turretLimelight),
-            "Turret"
+            turretLimelight
         );
 
-        boolean isRed = DriverStation.getAlliance()
-            .map(a -> a == Alliance.Red)
-            .orElse(false);
-
-        // Hub tag IDs based on alliance — these are the tags we actually look for
         int[] hubTagIds = isRed
             ? VisionConstants.RED_HUB_TAG_IDS
             : VisionConstants.BLUE_HUB_TAG_IDS;
 
-        // Hub center in the same coordinate system as the drivetrain pose estimator.
-        // On red, drivetrain is in red-origin so use RED_HUB_CENTER directly.
-        // On blue, drivetrain is in blue-origin so use BLUE_HUB_CENTER directly.
         Translation2d hubCenter = isRed
             ? VisionConstants.RED_HUB_CENTER
             : VisionConstants.BLUE_HUB_CENTER;
 
         updateTurretTargeting(hubCenter, hubTagIds);
 
-        // --- AdvantageKit logging ---
+        // AdvantageKit
         Logger.recordOutput("Vision/HasLimelightTarget", hasLimelightTarget);
         Logger.recordOutput("Vision/UsingPoseFallback",  usingPoseFallback);
         Logger.recordOutput("Vision/LimelightDistance",  limelightDistance);
@@ -145,7 +125,7 @@ public String getNameLog() {
         Logger.recordOutput("Vision/TargetTY",           targetTY);
         Logger.recordOutput("Vision/HubCenter",          hubCenter);
 
-        // --- Elastic / SmartDashboard ---
+        // SmartDashboard
         SmartDashboard.putBoolean("Vision/Hub Target Locked",     hasLimelightTarget);
         SmartDashboard.putBoolean("Vision/Using Pose Fallback",   usingPoseFallback);
         SmartDashboard.putNumber("Vision/Hub Distance (m)",       targetDistance);
@@ -155,23 +135,8 @@ public String getNameLog() {
         SmartDashboard.putNumber("Vision/Target TX",              targetTX);
         SmartDashboard.putNumber("Vision/Target TY",              targetTY);
         SmartDashboard.putString("Vision/Alliance",               isRed ? "RED" : "BLUE");
-
-        // --- Debug ---
-        SmartDashboard.putNumber("Debug/PigeonRawYaw",   headingDeg);
-        SmartDashboard.putNumber("Debug/RobotPoseX",     drivetrain.getState().Pose.getTranslation().getX());
-        SmartDashboard.putNumber("Debug/RobotPoseY",     drivetrain.getState().Pose.getTranslation().getY());
-        SmartDashboard.putNumber("Debug/BlueHubCenterX", VisionConstants.BLUE_HUB_CENTER.getX());
-        SmartDashboard.putNumber("Debug/BlueHubCenterY", VisionConstants.BLUE_HUB_CENTER.getY());
-        SmartDashboard.putNumber("Debug/RedHubCenterX",  VisionConstants.RED_HUB_CENTER.getX());
-        SmartDashboard.putNumber("Debug/RedHubCenterY",  VisionConstants.RED_HUB_CENTER.getY());
-
-
-
-        var swervePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(swerveLimelight);
-        Logger.recordOutput("Vision/Swerve/RawTagCount", swervePose != null ? swervePose.tagCount : -1);
-        Logger.recordOutput("Vision/Swerve/RawPose", swervePose != null ? swervePose.pose : new Pose2d());
     }
-    
+
     private void updateTurretCameraPose() {
         double turretAngleRad = turret.getPosition() * 2.0 * Math.PI;
 
@@ -183,9 +148,7 @@ public String getNameLog() {
         double camZ     = VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getZ();
         double camPitch = Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getY());
         double camRoll  = Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getX());
-
-        // Yaw rotates with turret — add 180° since camera faces backward at position 0
-        double camYaw = Math.toDegrees(turretAngleRad) + 180.0;
+        double camYaw   = Math.toDegrees(turretAngleRad) + 180.0;
 
         LimelightHelpers.setCameraPose_RobotSpace(
             turretLimelight,
@@ -199,7 +162,6 @@ public String getNameLog() {
     }
 
     private void updateTurretTargeting(Translation2d hubCenter, int[] hubTagIds) {
-        // Compute turret camera's current field position dynamically
         var robotPose = drivetrain.getState().Pose;
         double turretAngleRad = turret.getPosition() * 2.0 * Math.PI;
 
@@ -215,10 +177,8 @@ public String getNameLog() {
             )
         ).getTranslation();
 
-        // Pose-based distance from turret camera to hub center (both in blue-origin)
         poseDistance = turretCameraField.getDistance(hubCenter);
 
-        // Try limelight-based distance from visible hub tags
         RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(turretLimelight);
 
         double distSum = 0.0;
@@ -265,58 +225,120 @@ public String getNameLog() {
         return false;
     }
 
-
     private void processPoseEstimate(PoseEstimate estimate, String cameraName) {
+        if (!poseEstimationEnabled) return;
         if (estimate == null || estimate.tagCount == 0) return;
 
         if (!hasInitializedPose && estimate.tagCount >= 2) {
-            PoseEstimate visionOnly = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
-            drivetrain.resetPose(visionOnly.pose);
+            final int SAMPLE_COUNT = 10;
+            double[] headingSamples = new double[SAMPLE_COUNT];
+            double[] txSamples     = new double[SAMPLE_COUNT];
+            double[] tySamples     = new double[SAMPLE_COUNT];
+            int validSamples = 0;
+
+            for (int i = 0; i < SAMPLE_COUNT; i++) {
+                PoseEstimate s = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+                if (s != null && s.tagCount >= 2) {
+                    headingSamples[validSamples] = s.pose.getRotation().getDegrees();
+                    txSamples[validSamples]      = s.pose.getX();
+                    tySamples[validSamples]      = s.pose.getY();
+                    validSamples++;
+                }
+            }
+
+            if (validSamples < 6) return;
+
+            // Find the largest heading cluster to resolve MT1 ambiguity
+            int bestIdx   = 0;
+            int bestCount = 0;
+            for (int i = 0; i < validSamples; i++) {
+                int count = 0;
+                for (int j = 0; j < validSamples; j++) {
+                    if (i == j) continue;
+                    double diff = Math.abs(headingSamples[i] - headingSamples[j]);
+                    if (diff > 180.0) diff = 360.0 - diff;
+                    if (diff < 20.0) count++;
+                }
+                if (count > bestCount) {
+                    bestCount = count;
+                    bestIdx   = i;
+                }
+            }
+
+            // Abort if samples are too scattered — robot may still be moving
+            if (bestCount < 3) return;
+
+            // Average the clustered samples
+            double headingSum = 0;
+            double txSum      = 0;
+            double tySum      = 0;
+            int    clusterN   = 0;
+            for (int i = 0; i < validSamples; i++) {
+                double diff = Math.abs(headingSamples[i] - headingSamples[bestIdx]);
+                if (diff > 180.0) diff = 360.0 - diff;
+                if (diff < 20.0) {
+                    headingSum += headingSamples[i];
+                    txSum      += txSamples[i];
+                    tySum      += tySamples[i];
+                    clusterN++;
+                }
+            }
+
+            double recoveredHeading = headingSum / clusterN;
+            double recoveredX       = txSum      / clusterN;
+            double recoveredY       = tySum      / clusterN;
+
+            Pose2d resetPose = new Pose2d(recoveredX, recoveredY, Rotation2d.fromDegrees(recoveredHeading));
+
+            LimelightHelpers.SetRobotOrientation(swerveLimelight, recoveredHeading, 0, 0, 0, 0, 0);
+            LimelightHelpers.SetRobotOrientation(turretLimelight, recoveredHeading, 0, 0, 0, 0, 0);
+            drivetrain.resetPose(resetPose);
+            drivetrain.getPigeon2().setYaw(recoveredHeading);
+
+            PoseEstimate seededMT2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
+            if (seededMT2 != null && seededMT2.tagCount >= 2) {
+                drivetrain.addVisionMeasurement(
+                    seededMT2.pose, seededMT2.timestampSeconds, VisionConstants.MULTI_TAG_STD_DEVS);
+            }
+
             hasInitializedPose = true;
             Logger.recordOutput("Vision/PoseInitialized", true);
             return;
         }
 
-
-        Pose2d pose = estimate.pose;
-
         if (estimate.tagCount >= 2) {
             drivetrain.addVisionMeasurement(
-                pose, estimate.timestampSeconds, VisionConstants.MULTI_TAG_STD_DEVS);
+                estimate.pose, estimate.timestampSeconds, VisionConstants.MULTI_TAG_STD_DEVS);
         } else if (estimate.tagCount == 1 && estimate.avgTagDist < 4.0) {
             drivetrain.addVisionMeasurement(
-                pose, estimate.timestampSeconds, VisionConstants.SINGLE_TAG_STD_DEVS);
+                estimate.pose, estimate.timestampSeconds, VisionConstants.SINGLE_TAG_STD_DEVS);
         }
-
-        Logger.recordOutput("Vision/" + cameraName + "/RobotPose",  estimate.pose);
-        Logger.recordOutput("Vision/" + cameraName + "/TagCount",   estimate.tagCount);
-        Logger.recordOutput("Vision/" + cameraName + "/AvgTagDist", estimate.avgTagDist);
     }
 
     public void resetPoseInitialization() {
         hasInitializedPose = false;
     }
 
-    // Converts a blue-origin pose to red-origin by mirroring across the field center
-    private Pose2d flipToRedOrigin(Pose2d pose) {
-        return new Pose2d(
-            FIELD_LENGTH - pose.getX(),
-            FIELD_WIDTH  - pose.getY(),
-            pose.getRotation().plus(Rotation2d.fromDegrees(180))
-        );
+    public void enablePoseEstimation() {
+        poseEstimationEnabled = true;
+    }
+
+    public void disablePoseEstimation() {
+        poseEstimationEnabled = false;
     }
 
     // --- Public getters ---
-    public boolean hasTarget()            { return hasLimelightTarget || usingPoseFallback; }
-    public boolean hasLimelightTarget()   { return hasLimelightTarget; }
-    public boolean isUsingPoseFallback()  { return usingPoseFallback; }
-    public double  getTargetTX()          { return targetTX; }
-    public double  getTargetTY()          { return targetTY; }
-    public double  getTargetArea()        { return targetArea; }
-    public double  getTargetDistance()    { return targetDistance; }
-    public double  getLimelightDistance() { return limelightDistance; }
-    public double  getPoseDistance()      { return poseDistance; }
-    public int     getVisibleHubTags()    { return visibleHubTags; }
+    public boolean hasTarget()               { return hasLimelightTarget || usingPoseFallback; }
+    public boolean hasLimelightTarget()      { return hasLimelightTarget; }
+    public boolean isUsingPoseFallback()     { return usingPoseFallback; }
+    public boolean isPoseEstimationEnabled() { return poseEstimationEnabled; }
+    public double  getTargetTX()             { return targetTX; }
+    public double  getTargetTY()             { return targetTY; }
+    public double  getTargetArea()           { return targetArea; }
+    public double  getTargetDistance()       { return targetDistance; }
+    public double  getLimelightDistance()    { return limelightDistance; }
+    public double  getPoseDistance()         { return poseDistance; }
+    public int     getVisibleHubTags()       { return visibleHubTags; }
 
     public void setLEDsOff() {
         LimelightHelpers.setLEDMode_ForceOff(swerveLimelight);
@@ -327,5 +349,4 @@ public String getNameLog() {
         LimelightHelpers.setLEDMode_ForceOn(swerveLimelight);
         LimelightHelpers.setLEDMode_ForceOn(turretLimelight);
     }
-    
 }

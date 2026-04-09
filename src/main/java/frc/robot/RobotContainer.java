@@ -114,7 +114,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         SmartDashboard.putData("Field", field);
 
         NamedCommands.registerCommand("intakeOut", new IntakePivotCommand(pivot, 6.3));
-        NamedCommands.registerCommand("spinIntake", new IntakeSpinCommand(spin, 40));
+        NamedCommands.registerCommand("intakeSpin", new IntakeSpinCommand(spin, 40).withTimeout(1.7));
         NamedCommands.registerCommand("intakeIn", new IntakePivotCommand(pivot, 0));
         NamedCommands.registerCommand("hoodZero", new HoodToZeroCommandGroup(hood));
         NamedCommands.registerCommand(
@@ -217,6 +217,10 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         RobotModeTriggers.disabled().whileTrue(
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
+
+
+        RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> vision.disablePoseEstimation()));
+        RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> vision.enablePoseEstimation()));
 
 
         // joystick.a().whileTrue(Commands.run(() -> shooter.setVelocity(SmartDashboard.getNumber("Tuning/ShooterSpeed", 70.0)), shooter).finallyDo(() -> shooter.stop()));

@@ -33,15 +33,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "intakeSpin"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "Middle Depot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakeSpin"
                 }
               }
             ]
@@ -50,7 +50,25 @@
         {
           "type": "named",
           "data": {
+            "name": "intakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Middle Depot to Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "aimAndShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakeIn"
           }
         }
       ]

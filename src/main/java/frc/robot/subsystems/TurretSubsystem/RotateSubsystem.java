@@ -45,7 +45,7 @@ public class RotateSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final StatusSignal<Temperature> tempSignal;
 
     public RotateSubsystem() {
-        turretRotateMotor = new TalonFX(41);
+        turretRotateMotor = new TalonFX(17);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
         motorOutputConfigs.withNeutralMode(NeutralModeValue.Brake);

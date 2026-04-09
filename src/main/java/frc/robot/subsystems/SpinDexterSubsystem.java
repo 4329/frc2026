@@ -19,16 +19,15 @@ import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.model.SpindexerLogAutoLogged;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
-import frc.robot.model.SpindexerLog;
+import frc.robot.model.SpinDexerLogAutoLogged;
 
 public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final TalonFX spindexMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
-    private final SpindexerLogAutoLogged spindexerLog = new SpindexerLogAutoLogged();
+    private final SpinDexerLogAutoLogged spindexerLog = new SpinDexerLogAutoLogged();
 
     private static final double TOLERANCE = 0.5;
     private double targetPosition = 0.0;
