@@ -29,10 +29,11 @@ public class SpindexerAndKickerCommandGroup extends ParallelCommandGroup {
         
     }
 
-    public SpindexerAndKickerCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker, IntakePivotSubsystem pivot) {
+    public SpindexerAndKickerCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker, IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
         addCommands(
             new SpindexerCommand(spindexer, 85),
             new KickerSpinCommand(kicker, 200),
+            new IntakeSpinCommand(spin, 40),
             new IntakePivotOscillateCommand(pivot)
         );
     }

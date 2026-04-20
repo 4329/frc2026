@@ -176,6 +176,18 @@ public final class Constants {
         public static final Translation2d BLUE_HUB_CENTER;
         public static final Translation2d RED_HUB_CENTER;
 
+        public static final double PASS_TARGET_X_BLUE = 2.5;
+        public static final double PASS_TARGET_X_RED = 14.04;
+
+        public static final double PASS_TARGET_Y_LEFT = 7.0;
+        public static final double PASS_TARGET_Y_RIGHT = 1.0;
+
+        public static final Translation2d BLUE_PASS_LEFT = new Translation2d(PASS_TARGET_X_BLUE, PASS_TARGET_Y_LEFT);
+        public static final Translation2d BLUE_PASS_RIGHT = new Translation2d(PASS_TARGET_X_BLUE, PASS_TARGET_Y_RIGHT);
+
+        public static final Translation2d RED_PASS_LEFT = new Translation2d(PASS_TARGET_X_RED, PASS_TARGET_Y_LEFT);
+        public static final Translation2d RED_PASS_RIGHT = new Translation2d(PASS_TARGET_X_RED, PASS_TARGET_Y_RIGHT);
+
         static {
             AprilTagFieldLayout layout;
             try{

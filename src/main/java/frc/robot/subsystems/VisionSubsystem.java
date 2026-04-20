@@ -58,6 +58,16 @@ public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
             180.0
         );
 
+        LimelightHelpers.setCameraPose_RobotSpace(
+            turretLimelight,
+            VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getX(),
+            -VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getY(),
+            VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getZ(),
+            0,
+            -20,
+            180
+        );
+
         LimelightHelpers.setPipelineIndex(swerveLimelight, 0);
         LimelightHelpers.setPipelineIndex(turretLimelight, 0);
 
@@ -93,7 +103,7 @@ public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
         LimelightHelpers.SetRobotOrientation(swerveLimelight, headingDeg, 0, 0, 0, 0, 0);
         LimelightHelpers.SetRobotOrientation(turretLimelight, headingDeg, 0, 0, 0, 0, 0);
 
-        updateTurretCameraPose();
+        // updateTurretCameraPose();
 
         processPoseEstimate(
             LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(swerveLimelight),
@@ -137,29 +147,29 @@ public class VisionSubsystem extends SubsystemBase implements LoggedSubsystem {
         SmartDashboard.putString("Vision/Alliance",               isRed ? "RED" : "BLUE");
     }
 
-    private void updateTurretCameraPose() {
-        double turretAngleRad = turret.getPosition() * 2.0 * Math.PI;
+    // private void updateTurretCameraPose() {
+    //     double turretAngleRad = turret.getPosition() * 2.0 * Math.PI;
 
-        double camOffsetX = VisionConstants.TURRET_AXIS_X
-            + VisionConstants.TURRET_CAMERA_RADIUS * Math.cos(turretAngleRad);
-        double camOffsetY = VisionConstants.TURRET_AXIS_Y
-            + VisionConstants.TURRET_CAMERA_RADIUS * Math.sin(turretAngleRad);
+    //     double camOffsetX = VisionConstants.TURRET_AXIS_X
+    //         + VisionConstants.TURRET_CAMERA_RADIUS * Math.cos(turretAngleRad);
+    //     double camOffsetY = VisionConstants.TURRET_AXIS_Y
+    //         + VisionConstants.TURRET_CAMERA_RADIUS * Math.sin(turretAngleRad);
 
-        double camZ     = VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getZ();
-        double camPitch = Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getY());
-        double camRoll  = Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getX());
-        double camYaw   = Math.toDegrees(turretAngleRad) + 180.0;
+    //     double camZ     = VisionConstants.ROBOT_TO_TURRET_CAMERA.getTranslation().getZ();
+    //     double camPitch = Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getY());
+    //     double camRoll  = Math.toDegrees(VisionConstants.ROBOT_TO_TURRET_CAMERA.getRotation().getX());
+    //     double camYaw   = Math.toDegrees(turretAngleRad) + 180.0;
 
-        LimelightHelpers.setCameraPose_RobotSpace(
-            turretLimelight,
-            camOffsetX,
-            -camOffsetY,
-            camZ,
-            camRoll,
-            camPitch,
-            camYaw
-        );
-    }
+    //     LimelightHelpers.setCameraPose_RobotSpace(
+    //         turretLimelight,
+    //         camOffsetX,
+    //         -camOffsetY,
+    //         camZ,
+    //         camRoll,
+    //         camPitch,
+    //         camYaw
+    //     );
+    // }
 
     private void updateTurretTargeting(Translation2d hubCenter, int[] hubTagIds) {
         var robotPose = drivetrain.getState().Pose;

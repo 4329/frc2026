@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.654459391879978,
-        "y": 6.5345588645434285
+        "x": 7.597393258426967,
+        "y": 6.684662921348315
       },
       "isLocked": false,
       "linkedName": "Left Neutral Start"
     },
     {
       "anchor": {
-        "x": 7.495483146067415,
-        "y": 4.931808988764044
+        "x": 7.4343370786516845,
+        "y": 5.278303370786517
       },
       "prevControl": {
-        "x": 7.929625156454266,
-        "y": 5.304796162770924
+        "x": 7.8371526938928575,
+        "y": 5.604005341639955
       },
       "nextControl": {
-        "x": 7.063294582498767,
-        "y": 4.560500091889675
+        "x": 7.239934588552319,
+        "y": 5.121116628841893
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.355078459343795,
-        "y": 5.477660485021398
+        "x": 6.313325842696629,
+        "y": 5.971292134831461
       },
       "prevControl": {
-        "x": 6.665606276747502,
-        "y": 4.377874465049929
+        "x": 6.089123595505617,
+        "y": 4.92161797752809
       },
       "nextControl": null,
       "isLocked": false,
@@ -76,13 +76,13 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": -80.31121343963314
+    "velocity": 1.5,
+    "rotation": -80.0
   },
   "reversed": false,
   "folder": "Left Paths",
   "idealStartingState": {
-    "velocity": 4.0,
+    "velocity": 1.5,
     "rotation": -68.0
   },
   "useDefaultConstraints": true

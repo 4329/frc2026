@@ -9,7 +9,7 @@ import frc.robot.subsystems.SpindexterSubsystem;
 
 public class SpindexerKickerJamCommandGroup extends SequentialCommandGroup {
 
-    private static final double SPINDEXER_SPIN = -20.0;
+    private static final double SPINDEXER_SPIN = -40.0;
     private static final double KICKER_SPIN = -200.0;
 
     public SpindexerKickerJamCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker) {

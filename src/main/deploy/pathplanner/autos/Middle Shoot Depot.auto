@@ -64,12 +64,6 @@
           "data": {
             "name": "aimAndShoot"
           }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "intakeIn"
-          }
         }
       ]
     }

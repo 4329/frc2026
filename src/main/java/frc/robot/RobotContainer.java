@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AimAtHubCommand;
+import frc.robot.commands.AimAtPassCommand;
 import frc.robot.commands.DoAFunctionalCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.KickerSubsystem;
@@ -43,6 +44,7 @@ import frc.robot.commands.CommandGroups.HoodToZeroCommandGroup;
 import frc.robot.commands.CommandGroups.IntakeInCommandGroup;
 import frc.robot.commands.CommandGroups.IntakeOutCommandGroup;
 import frc.robot.commands.CommandGroups.IntakePivotToZeroCommandGroup;
+import frc.robot.commands.CommandGroups.PassCommandGroup;
 import frc.robot.commands.CommandGroups.RobotCentricFullTurretCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerAndKickerCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerKickerJamCommandGroup;
@@ -115,7 +117,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
 
         NamedCommands.registerCommand("intakeOut", new IntakePivotCommand(pivot, 6.3));
         NamedCommands.registerCommand("intakeSpin", new IntakeSpinCommand(spin, 40).withTimeout(1.7));
-        NamedCommands.registerCommand("intakeIn", new IntakePivotCommand(pivot, 0));
+        NamedCommands.registerCommand("intakeIn", new IntakePivotCommand(pivot, 1.0).withTimeout(1));
         NamedCommands.registerCommand("hoodZero", new HoodToZeroCommandGroup(hood));
         NamedCommands.registerCommand(
             "MSBShoot",
@@ -140,9 +142,11 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
             new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0).withTimeout(1.0),
             Commands.parallel(
                 new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0),
-                new SpindexerAndKickerCommandGroup(spindexter, kicker, pivot)).withTimeout(3.0),
-                new HoodToZeroCommandGroup(hood)
-        ));
+                new SpindexerAndKickerCommandGroup(spindexter, kicker, pivot, spin)).withTimeout(3.0),
+            Commands.parallel(
+                new HoodToZeroCommandGroup(hood),
+                new IntakePivotCommand(pivot, 1.0)).withTimeout(1)
+                ));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -219,7 +223,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         );
 
 
-        RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> vision.disablePoseEstimation()));
+        RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> vision.enablePoseEstimation()));
         RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> vision.enablePoseEstimation()));
 
 
@@ -231,9 +235,12 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
 
 
 
+        joystick.a().whileTrue(new PassCommandGroup(hood, shooter, drivetrain, joystick::getLeftX, joystick::getLeftY));
+        joystick.a().onFalse(new HoodToZeroCommandGroup(hood));
+
         joystick.b().whileTrue(new IntakeSpinCommand(spin, -60));
 
-        joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, pivot));
+        joystick.rightTrigger().whileTrue(new SpindexerAndKickerCommandGroup(spindexter, kicker, pivot, spin));
 
         joystick.leftTrigger().whileTrue(new FullTurretCommandGroup(hood, shooter, vision, drivetrain, joystick::getLeftX, joystick::getLeftY));
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
@@ -257,6 +264,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
 
         operator.leftTrigger().onTrue(new IntakePivotCommand(pivot, 0.0));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
+
         operator.a().whileTrue(new SpindexerKickerJamCommandGroup(spindexter, kicker));
         
         // operator.a().whileTrue(new SetHoodPositionCommand(hood, 5.0));
