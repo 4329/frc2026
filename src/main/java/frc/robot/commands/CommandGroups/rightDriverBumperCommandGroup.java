@@ -7,12 +7,12 @@ import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakePivotOscillateCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 
 public class rightDriverBumperCommandGroup extends ParallelCommandGroup{
-    public rightDriverBumperCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker, IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
+    public rightDriverBumperCommandGroup(SpindexerSubsystem spindexer, KickerSubsystem kicker, IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
         addCommands(
             new SpindexerCommand(spindexer, 85),
             new KickerSpinCommand(kicker, 200),

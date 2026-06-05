@@ -7,7 +7,7 @@ import frc.robot.commands.SpindexerCommand;
 import frc.robot.commands.IntakeCommands.IntakePivotOscillateCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 import yams.mechanisms.positional.Pivot;
@@ -29,7 +29,7 @@ public class SpindexerAndKickerCommandGroup extends ParallelCommandGroup {
         
     }
 
-    public SpindexerAndKickerCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker, IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
+    public SpindexerAndKickerCommandGroup(SpindexerSubsystem spindexer, KickerSubsystem kicker, IntakePivotSubsystem pivot, IntakeSpinSubsystem spin) {
         addCommands(
             new SpindexerCommand(spindexer, 85),
             new KickerSpinCommand(kicker, 200),

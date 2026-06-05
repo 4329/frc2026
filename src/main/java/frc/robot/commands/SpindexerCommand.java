@@ -1,14 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 
 public class SpindexerCommand extends Command {
-    private final SpindexterSubsystem Spindexer;
+    private final SpindexerSubsystem Spindexer;
     private final double rotationsPerSecond;
 
     
-    public SpindexerCommand(SpindexterSubsystem Spindexer, double rotationsPerSecond) {
+    public SpindexerCommand(SpindexerSubsystem Spindexer, double rotationsPerSecond) {
         this.Spindexer = Spindexer;
         this.rotationsPerSecond = rotationsPerSecond;
         addRequirements(Spindexer);

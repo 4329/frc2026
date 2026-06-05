@@ -51,7 +51,7 @@ import frc.robot.commands.CommandGroups.SpindexerAndKickerCommandGroup;
 import frc.robot.commands.CommandGroups.SpindexerKickerJamCommandGroup;
 import frc.robot.commands.CommandGroups.TurretCommandGroup;
 import frc.robot.commands.CommandGroups.rightDriverBumperCommandGroup;
-import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.commands.IntakeCommands.IntakePivotCommand;
 import frc.robot.commands.IntakeCommands.IntakeSpinCommand;
 import frc.robot.commands.IntakeCommands.IntakeZeroCommand;
@@ -91,7 +91,7 @@ public class RobotContainer {
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final SpindexterSubsystem spindexter = new SpindexterSubsystem();
+    private final SpindexerSubsystem spindexer = new SpindexerSubsystem();
     private final KickerSubsystem kicker = new KickerSubsystem();
     
 
@@ -132,7 +132,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
                     new ShooterVelocityCommand(shooter, 40),
                     new SetHoodPositionCommand(hood, 2.9),
                     new KickerSpinCommand(kicker, 200),
-                    new SpindexerCommand(spindexter, 85)
+                    new SpindexerCommand(spindexer, 85)
                 ).withTimeout(2),
                 new HoodToZeroCommandGroup(hood)
             )
@@ -143,7 +143,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
             new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0).withTimeout(1.0),
             Commands.parallel(
                 new FullTurretCommandGroup(hood, shooter, vision, drivetrain, () -> 0.0, () -> 0.0),
-                new SpindexerAndKickerCommandGroup(spindexter, kicker, pivot, spin)).withTimeout(3.0),
+                new SpindexerAndKickerCommandGroup(spindexer, kicker, pivot, spin)).withTimeout(3.0),
             Commands.parallel(
                 new HoodToZeroCommandGroup(hood),
                 new IntakePivotCommand(pivot, 1.0)).withTimeout(1)
@@ -240,7 +240,7 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         joystick.leftTrigger().onFalse(new HoodToZeroCommandGroup(hood));
 
         joystick.rightTrigger().whileTrue(new KickerSpinCommand(kicker, 200));
-        joystick.rightTrigger().whileTrue(new SpindexerCommand(spindexter, 80)); //80
+        joystick.rightTrigger().whileTrue(new SpindexerCommand(spindexer, 80)); //80
 
         joystick.x().onTrue(new HoodToZeroCommandGroup(hood));
         joystick.a().whileTrue(new IntakeSpinCommand(spin, 30));
@@ -276,10 +276,10 @@ private final LoggingSubsystem loggingSubsystem = new LoggingSubsystem(
         operator.leftTrigger().onTrue(new IntakePivotCommand(pivot, 0.0));
         operator.rightTrigger().onTrue(new HoodToZeroCommandGroup(hood));
 
-        operator.a().whileTrue(new SpindexerKickerJamCommandGroup(spindexter, kicker));
+        operator.a().whileTrue(new SpindexerKickerJamCommandGroup(spindexer, kicker));
 
 
-        functional.a().onTrue(new DoAFunctionalCommand(drivetrain, functional.getHID(), pivot, spin, spindexter, kicker, hood, shooter));
+        functional.a().onTrue(new DoAFunctionalCommand(drivetrain, functional.getHID(), pivot, spin, spindexer, kicker, hood, shooter));
 
 
         drivetrain.registerTelemetry(logger::telemeterize);                        

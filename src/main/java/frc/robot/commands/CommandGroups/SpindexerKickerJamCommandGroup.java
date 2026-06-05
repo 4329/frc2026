@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.KickerSpinCommand;
 import frc.robot.commands.SpindexerCommand;
 import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 
 public class SpindexerKickerJamCommandGroup extends SequentialCommandGroup {
 
     private static final double SPINDEXER_SPIN = -40.0;
     private static final double KICKER_SPIN = -200.0;
 
-    public SpindexerKickerJamCommandGroup(SpindexterSubsystem spindexer, KickerSubsystem kicker) {
+    public SpindexerKickerJamCommandGroup(SpindexerSubsystem spindexer, KickerSubsystem kicker) {
         addCommands(
 
             Commands.parallel(

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
 import frc.robot.subsystems.TurretSubsystem.ShooterSubsystem;
-import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class TurretCommandGroup extends SequentialCommandGroup {
@@ -56,7 +56,7 @@ public class TurretCommandGroup extends SequentialCommandGroup {
     public TurretCommandGroup(
             HoodSubsystem hood,
             ShooterSubsystem shooter,
-            SpindexterSubsystem spindexer,
+            SpindexerSubsystem spindexer,
             VisionSubsystem vision) {
 
         double[] lastKnownDistance = { DEFAULT_DISTANCE };

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.KickerSubsystem;
-import frc.robot.subsystems.SpindexterSubsystem;
+import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakePivotSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeSpinSubsystem;
 import frc.robot.subsystems.TurretSubsystem.HoodSubsystem;
@@ -22,7 +22,7 @@ public class DoAFunctionalCommand extends SequentialCommandGroup {
             XboxController controller,
             IntakePivotSubsystem intakePivot,
             IntakeSpinSubsystem intakeSpin,
-            SpindexterSubsystem spindexter,
+            SpindexerSubsystem spindexer,
             KickerSubsystem kicker,
             HoodSubsystem hood,
             ShooterSubsystem shooter) {

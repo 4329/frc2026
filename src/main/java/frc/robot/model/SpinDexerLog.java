@@ -3,7 +3,7 @@ package frc.robot.model;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class SpinDexerLog {
+public class SpindexerLog {
     public double positionRotations = 0.0;
     public double velocityRotationsPerSec = 0.0;
     public double appliedVolts = 0.0;

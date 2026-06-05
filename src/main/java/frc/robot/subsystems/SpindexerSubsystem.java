@@ -20,14 +20,14 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.LoggingSubsystem.LoggedSubsystem;
-import frc.robot.model.SpinDexerLogAutoLogged;
+import frc.robot.model.SpindexerLogAutoLogged;
 
-public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsystem {
+public class SpindexerSubsystem extends SubsystemBase implements LoggedSubsystem {
     private final TalonFX spindexMotor;
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final PositionVoltage positionRequest = new PositionVoltage(0);
     private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
-    private final SpinDexerLogAutoLogged spindexerLog = new SpinDexerLogAutoLogged();
+    private final SpindexerLogAutoLogged spindexerLog = new SpindexerLogAutoLogged();
 
     private static final double TOLERANCE = 0.5;
     private double targetPosition = 0.0;
@@ -39,7 +39,7 @@ public class SpindexterSubsystem extends SubsystemBase implements LoggedSubsyste
     private final StatusSignal<Current> torqueCurrentSignal;
     private final StatusSignal<Temperature> tempSignal;
 
-    public SpindexterSubsystem() {
+    public SpindexerSubsystem() {
         spindexMotor = new TalonFX(15);
 
         var motorOutputConfigs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
